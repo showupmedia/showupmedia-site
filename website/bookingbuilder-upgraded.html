@@ -1466,8 +1466,9 @@ function initiatePayment() {
   
   const planLink = STRIPE_LINKS[bData.plan] || STRIPE_LINKS.pro;
 
-  // If Stripe links are placeholders, show dev-mode success for testing
-  if(planLink.includes('YOUR_')) {
+  // If Stripe links are placeholders, check for test mode
+  const testMode = window.location.search.includes('test=true');
+  if(testMode) {
     // DEV MODE: skip Stripe and show success
     closeBuilder();
     showSuccess();
