@@ -1010,20 +1010,7 @@ textarea.field-input{resize:vertical;min-height:80px}
       <div class="video-section-label">What happens next</div>
     </div>
     
-    <!-- SHOW UP LAUNCH OFFER REMINDER -->
-    <div style="background:linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);border-radius:8px;padding:16px;margin-bottom:20px;border:1px solid rgba(255,255,255,0.1);">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
-        <div style="font-size:1.5rem;">🚀</div>
-        <div>
-          <h4 style="color:white;font-size:1.1rem;margin-bottom:4px;font-weight:700;">SHOW UP LAUNCH OFFER</h4>
-          <p style="color:rgba(255,255,255,0.9);font-size:0.85rem;margin:0;">Get your first month FREE with code: <strong style="color:#ffeb3b;">SHOWUPFREE</strong></p>
-        </div>
-      </div>
-      <div style="text-align:center;">
-        <p style="color:white;font-size:0.9rem;margin-bottom:8px;">Limited time offer - Sign up in April and pay NOTHING until May!</p>
-      </div>
-    </div>
-    
+        
     <div class="next-steps-grid">
       <div class="next-card">
         <div class="next-num">01</div>
@@ -1068,9 +1055,9 @@ textarea.field-input{resize:vertical;min-height:80px}
 // STRIPE LINKS — update these with your real Stripe URLs
 // ════════════════════════════════════════════════════════
 const STRIPE_LINKS = {
-  basic:   'https://buy.stripe.com/6oU3cwcgfcX40uaeEL5Ne0m?prefilled_promo_code=SHOWUPFREE',
-  pro:     'https://buy.stripe.com/4gM00k1BB0aidgW0NV5Ne0n?prefilled_promo_code=SHOWUPFREE',
-  premium: 'https://buy.stripe.com/fZubJ25RRcX490G68f5Ne0o?prefilled_promo_code=SHOWUPFREE',
+  basic:   'https://buy.stripe.com/6oU3cwcgfcX40uaeEL5Ne0m',
+  pro:     'https://buy.stripe.com/4gM00k1BB0aidgW0NV5Ne0n',
+  premium: 'https://buy.stripe.com/fZubJ25RRcX490G68f5Ne0o',
 };
 
 // Detect success redirect (Stripe appends ?success=true to your return URL)
@@ -1409,9 +1396,9 @@ function setHour(d, type, val) {
 
 function buildPlan() {
   const plans = [
-    { id:'basic',   name:'Basic',        price:'£6.99',  period:'/ month', feats:['Booking page live','Admin dashboard','Email confirmations','Subdomain included'],          popular:false, promo:'First Month FREE!', originalPrice:'£6.99', freePrice:'FREE' },
-    { id:'pro',     name:'Pro',          price:'£9.99',  period:'/ month', feats:['Everything in Basic','Downloadable mobile app','Real time phone notifications','Priority support','Up to 3 staff members'],           popular:true, promo:'First Month FREE!', originalPrice:'£9.99', freePrice:'FREE' },
-    { id:'premium', name:'Premium',      price:'£14.99', period:'/ month', feats:['Everything in Pro','Online payments','Advanced analytics','Revenue tracker','Up to 10 staff members'],    popular:false, promo:'First Month FREE!', originalPrice:'£14.99', freePrice:'FREE' },
+    { id:'basic',   name:'Basic',        price:'£6.99',  period:'/ month', feats:['Booking page live','Admin dashboard','Email confirmations','Subdomain included'],          popular:false },
+    { id:'pro',     name:'Pro',          price:'£9.99',  period:'/ month', feats:['Everything in Basic','Downloadable mobile app','Real time phone notifications','Priority support','Up to 3 staff members'],           popular:true },
+    { id:'premium', name:'Premium',      price:'£14.99', period:'/ month', feats:['Everything in Pro','Online payments','Advanced analytics','Revenue tracker','Up to 10 staff members'],    popular:false },
   ];
 
   const name = bData.businessName ? bData.businessName.split(' ')[0] : 'your business';
@@ -1432,12 +1419,9 @@ function buildPlan() {
     ${plans.map(p=>`
       <div class="plan-card${bData.plan===p.id?' sel':''}" id="bplan-${p.id}" onclick="selectPlan('${p.id}')">
         ${p.popular?'<div class="plan-badge">POPULAR</div>':''}
-        ${p.promo?'<div class="plan-badge" style="background:#ff6b6b;">'+p.promo+'</div>':''}
         <div class="plan-name">${p.name}</div>
-        <div class="plan-price">
-          ${p.promo?'<span style="text-decoration:line-through;opacity:0.6;font-size:0.8rem;">'+p.originalPrice+'</span><br><span style="color:#10b981;font-size:1.2rem;">'+p.freePrice+'</span>':p.price}
-        </div>
-        <div class="plan-period">${p.promo?'First month, then '+p.period:p.period}</div>
+        <div class="plan-price">${p.price}</div>
+        <div class="plan-period">${p.period}</div>
         <div class="plan-feats">
           ${p.feats.map(f=>`<div class="plan-feat">${f}</div>`).join('')}
         </div>
@@ -1479,16 +1463,8 @@ function initiatePayment() {
   // Save questionnaire data for post-payment recall
   localStorage.setItem('bb_qdata', JSON.stringify(bData));
 
-  // Check for promo code
-  const urlParams = new URLSearchParams(window.location.search);
-  const promoCode = urlParams.get('promo_code') || 'SHOWUPFREE';
-
+  
   const planLink = STRIPE_LINKS[bData.plan] || STRIPE_LINKS.pro;
-
-  // Update Stripe links with promo code
-  const updatedPlanLink = planLink.includes('?') ? 
-    planLink + (planLink.includes('promo_code=') ? '' : '&promo_code=') + promoCode :
-    planLink + '?promo_code=' + promoCode;
 
   // If Stripe links are placeholders, show dev-mode success for testing
   if(planLink.includes('YOUR_')) {
