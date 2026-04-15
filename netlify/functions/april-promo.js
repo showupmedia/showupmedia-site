@@ -107,6 +107,44 @@ async function validateAprilPromo(promoCode, email) {
       };
     }
 
+    // Insert sample April promotion data (for testing)
+    await supabase
+      .from('business_promotions')
+      .insert([
+        {
+          promo_code: 'SHOWUPFREE',
+          promo_type: 'show_up_launch',
+          discount_percentage: 100,
+          discount_amount: 0,
+          discount_duration_months: 1,
+          start_date: '2026-04-01T00:00:00Z',
+          end_date: '2026-05-01T00:00:00Z',
+          status: 'active'
+        },
+        {
+          promo_code: 'SHOWUP24',
+          promo_type: 'show_up_launch',
+          discount_percentage: 100,
+          discount_amount: 0,
+          discount_duration_months: 1,
+          start_date: '2026-04-01T00:00:00Z',
+          end_date: '2026-05-01T00:00:00Z',
+          status: 'active'
+        },
+        {
+          promo_code: 'LAUNCH26',
+          promo_type: 'show_up_launch',
+          discount_percentage: 100,
+          discount_amount: 0,
+          discount_duration_months: 1,
+          start_date: '2026-04-01T00:00:00Z',
+          end_date: '2026-05-01T00:00:00Z',
+          status: 'active'
+        }
+      ])
+      .onConflict('promo_code')
+      .doNothing();
+
     return {
       valid: true,
       message: 'Promo code valid! First month free.',

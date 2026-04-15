@@ -1009,6 +1009,21 @@ textarea.field-input{resize:vertical;min-height:80px}
     <div style="margin-bottom:20px">
       <div class="video-section-label">What happens next</div>
     </div>
+    
+    <!-- SHOW UP LAUNCH OFFER REMINDER -->
+    <div style="background:linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);border-radius:8px;padding:16px;margin-bottom:20px;border:1px solid rgba(255,255,255,0.1);">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+        <div style="font-size:1.5rem;">🚀</div>
+        <div>
+          <h4 style="color:white;font-size:1.1rem;margin-bottom:4px;font-weight:700;">SHOW UP LAUNCH OFFER</h4>
+          <p style="color:rgba(255,255,255,0.9);font-size:0.85rem;margin:0;">Get your first month FREE with code: <strong style="color:#ffeb3b;">SHOWUPFREE</strong></p>
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <p style="color:white;font-size:0.9rem;margin-bottom:8px;">Limited time offer - Sign up in April and pay NOTHING until May!</p>
+      </div>
+    </div>
+    
     <div class="next-steps-grid">
       <div class="next-card">
         <div class="next-num">01</div>
@@ -1464,8 +1479,17 @@ function initiatePayment() {
   // Save questionnaire data for post-payment recall
   localStorage.setItem('bb_qdata', JSON.stringify(bData));
 
+  // Check for promo code
+  const urlParams = new URLSearchParams(window.location.search);
+  const promoCode = urlParams.get('promo_code') || 'SHOWUPFREE';
+
   const planLink = STRIPE_LINKS[bData.plan] || STRIPE_LINKS.pro;
-  
+
+  // Update Stripe links with promo code
+  const updatedPlanLink = planLink.includes('?') ? 
+    planLink + (planLink.includes('promo_code=') ? '' : '&promo_code=') + promoCode :
+    planLink + '?promo_code=' + promoCode;
+
   // If Stripe links are placeholders, show dev-mode success for testing
   if(planLink.includes('YOUR_')) {
     // DEV MODE: skip Stripe and show success
