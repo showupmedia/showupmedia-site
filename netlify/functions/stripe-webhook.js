@@ -40,6 +40,9 @@ exports.handler = async (event, context) => {
       case 'invoice.payment_succeeded':
         await handlePaymentSucceeded(event.data.object);
         break;
+      case 'booking.created':
+        await handleBookingCreated(event.data.object);
+        break;
       case 'customer.subscription.created':
         await handleSubscriptionCreated(event.data.object);
         break;
@@ -124,6 +127,141 @@ async function handleCheckoutSession(session) {
   } catch (error) {
     console.error('Error in handleCheckoutSession:', error);
     throw error;
+  }
+}
+
+async function handleBookingCreated(booking) {
+  console.log('Processing booking created:', booking.id);
+  
+  try {
+    // Get booking details with business info
+    const { data: bookingData, error } = await supabase
+      .from('bookings')
+      .select(`
+        bookings.*,
+        services!inner(
+          name,
+          price
+        ),
+        businesses!inner(
+          name,
+          email
+        ),
+        staff!inner(
+          name
+        )
+      `)
+      .eq('bookings.id', booking.id)
+      .single();
+
+    if (error || !bookingData) {
+      console.error('Error fetching booking:', error);
+      return;
+    }
+
+    // Send booking confirmation email to customer
+    await sendBookingConfirmationEmail(bookingData, bookingData.services, bookingData.customer_email);
+
+    // Send notification email to business
+    await sendBusinessNotificationEmail(bookingData, bookingData.services, bookingData.businesses);
+
+    console.log('Booking confirmation sent successfully');
+
+  } catch (error) {
+    console.error('Error in handleBookingCreated:', error);
+  }
+}
+
+async function sendBusinessNotificationEmail(booking, service, business) {
+  try {
+    console.log(`Sending business notification to ${business.email}`);
+    
+    const emailContent = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>New Booking Alert - ${business.name}</title>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: #2563eb; color: white; padding: 30px; border-radius: 8px; text-align: center; margin-bottom: 30px; }
+            .logo { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+            .title { font-size: 18px; margin-bottom: 20px; }
+            .content { background: #f8f9fa; padding: 30px; border-radius: 8px; margin-bottom: 30px; }
+            .booking-details { background: #e3f2fd; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+            .detail-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+            .detail-label { font-weight: bold; color: #666; }
+            .detail-value { color: #333; }
+            .cta { background: #2563eb; color: white; padding: 15px 30px; border-radius: 8px; text-align: center; text-decoration: none; display: block; margin-top: 20px; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <div class="logo">📅</div>
+              <div class="title">New Booking Alert!</div>
+            </div>
+
+            <div class="content">
+              <p>Hi <strong>${business.name}</strong> Team,</p>
+              <p>You have a new booking! Here are the details:</p>
+
+              <div class="booking-details">
+                <div class="detail-row">
+                  <span class="detail-label">Customer:</span>
+                  <span class="detail-value">${booking.customer_name || 'Walk-in'}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Service:</span>
+                  <span class="detail-value">${service.name}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Date:</span>
+                  <span class="detail-value">${new Date(booking.booking_date + 'T' + booking.booking_time).toLocaleDateString()}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Time:</span>
+                  <span class="detail-value">${booking.booking_time}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Duration:</span>
+                  <span class="detail-value">${booking.duration_minutes} minutes</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Price:</span>
+                  <span class="detail-value">£${service.price}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Customer Contact:</span>
+                  <span class="detail-value">${booking.customer_email || 'Not provided'}</span>
+                </div>
+              </div>
+
+              <a href="https://showupmedia.org/crm" class="cta">View in Dashboard</a>
+            </div>
+
+            <div class="footer">
+              <p>Check your dashboard for more details and customer management.</p>
+              <p>© 2024 ${business.name}. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+    
+    console.log('Business notification email content generated');
+    
+    // In real implementation, you'd call your Resend function here
+    // For now, we'll just log the content
+    console.log('Email content:', emailContent);
+    
+    return true;
+  } catch (error) {
+    console.error('Error sending business notification:', error);
+    return false;
   }
 }
 
