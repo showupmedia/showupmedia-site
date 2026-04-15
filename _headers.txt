@@ -1,0 +1,2 @@
+/*
+  Content-Security-Policy: default-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.supabase.co https://cdn.jsdelivr.net https://www.googleapis.com https://api.twitch.tv https://id.twitch.tv; img-src * data:; connect-src *;

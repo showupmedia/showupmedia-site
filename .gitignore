@@ -1,0 +1,56 @@
+# Netlify
+.netlify
+
+# Dependencies
+node_modules/
+package.json
+package-lock.json
+
+# Environment files
+.env
+.env.local
+*.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Vercel
+.vercel
+
+# Logs
+*.log
+npm-debug.log*
+
+# Runtime
+.cache/
+.parcel-cache/
+
+# Build
+dist/
+build/
+
+# Database
+*.sqlite
+*.db
+
+# API Keys and Secrets
+RESEND_API_KEY
+STRIPE_SECRET_KEY
+TWILIO_*
+TWITCH_*
+YOUTUBE_*
+SUPABASE_*
+API_KEY
+SECRET_KEY
+PRIVATE_KEY
+ACCESS_TOKEN
+
+# Temporary files
+tmp/
+temp/
+*.tmp

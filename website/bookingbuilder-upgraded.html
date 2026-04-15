@@ -1,0 +1,2312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>BookingBuilder — Build Your Booking System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased}
+body{font-family:'DM Sans',sans-serif;background:#ffffff;color:#1a1a1a;line-height:1.6;min-height:100vh}
+
+:root{
+  --blue:#2D8EFF;
+  --blue-dim:rgba(45,142,255,0.12);
+  --blue-mid:rgba(45,142,255,0.25);
+  --white:#1a1a1a;
+  --muted:#6B6862;
+  --muted-mid:#9B9890;
+  --dark:#080808;
+  --card:#f8f9fa;
+  --card-border:rgba(0,0,0,0.1);
+}
+
+/* ══════════════════════════════════════
+   BUILDER MODAL OVERLAY
+══════════════════════════════════════ */
+#builderModal{
+  position:fixed;inset:0;z-index:9000;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(24px);
+  display:none;
+  overflow:hidden;
+}
+#builderModal.open{display:flex}
+
+/* ── SPLIT LAYOUT ── */
+.builder-layout{
+  display:grid;
+  grid-template-columns:480px 1fr;
+  width:100%;
+  height:100vh;
+  overflow:hidden;
+}
+@media(max-width:1000px){
+  .builder-layout{grid-template-columns:1fr}
+  .preview-panel{display:none}
+}
+
+/* ── LEFT: WIZARD PANEL ── */
+.wizard-panel{
+  display:flex;
+  flex-direction:column;
+  border-right:1px solid var(--card-border);
+  overflow:hidden;
+  position:relative;
+}
+
+.wizard-header{
+  padding:24px 32px 20px;
+  border-bottom:1px solid var(--card-border);
+  flex-shrink:0;
+}
+.wizard-header-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+}
+.wizard-logo{
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:0.85rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--blue);
+}
+.wizard-close{
+  width:32px;height:32px;
+  border-radius:50%;
+  border:1px solid var(--card-border);
+  background:transparent;
+  color:var(--muted-mid);
+  font-size:1rem;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+}
+.wizard-close:hover{border-color:rgba(255,255,255,0.3);color:var(--white)}
+
+/* Progress bar */
+.progress-track{
+  height:3px;
+  background:rgba(0,0,0,0.06);
+  border-radius:2px;
+  overflow:hidden;
+  margin-bottom:12px;
+}
+.progress-fill{
+  height:100%;
+  background:var(--blue);
+  border-radius:2px;
+  transition:width 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.step-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.step-dots{display:flex;gap:6px;align-items:center}
+.step-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(0,0,0,0.1);
+  transition:all 0.3s;
+}
+.step-dot.done{background:rgba(45,142,255,0.5)}
+.step-dot.active{
+  width:18px;border-radius:3px;
+  background:var(--blue);
+}
+.step-label{
+  font-size:0.68rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+/* Wizard content area */
+.wizard-body{
+  flex:1;
+  overflow-y:auto;
+  padding:28px 32px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,255,255,0.08) transparent;
+}
+.wizard-body::-webkit-scrollbar{width:4px}
+.wizard-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
+
+.step-title{
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:1.35rem;
+  letter-spacing:-0.02em;
+  color:var(--white);
+  margin-bottom:6px;
+}
+.step-sub{
+  font-size:0.85rem;
+  color:var(--muted);
+  margin-bottom:28px;
+  font-weight:300;
+  line-height:1.6;
+}
+
+/* Form fields */
+.field-label{
+  display:block;
+  font-size:0.7rem;
+  font-weight:600;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--muted-mid);
+  margin-bottom:8px;
+}
+.field-input{
+  width:100%;
+  padding:11px 14px;
+  border:1px solid rgba(0,0,0,0.1);
+  border-radius:8px;
+  background:#ffffff;
+  color:var(--white);
+  font-family:'DM Sans',sans-serif;
+  font-size:0.88rem;
+  outline:none;
+  transition:border-color 0.2s;
+}
+.field-input:focus{border-color:rgba(45,142,255,0.4);background:rgba(45,142,255,0.04)}
+.field-input::placeholder{color:rgba(0,0,0,0.3)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.field-group{margin-bottom:14px}
+textarea.field-input{resize:vertical;min-height:80px}
+
+/* Wizard footer */
+.wizard-footer{
+  padding:20px 32px;
+  border-top:1px solid var(--card-border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-shrink:0;
+  background:#ffffff;
+}
+.btn-back{
+  background:transparent;
+  border:1px solid rgba(0,0,0,0.1);
+  color:var(--muted-mid);
+  padding:10px 20px;
+  border-radius:8px;
+  font-family:'Syne',sans-serif;
+  font-weight:600;
+  font-size:0.75rem;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.btn-back:hover{border-color:rgba(255,255,255,0.25);color:var(--white)}
+.btn-back:disabled{opacity:0;pointer-events:none}
+.btn-next{
+  background:var(--blue);
+  border:none;
+  color:#fff;
+  padding:12px 28px;
+  border-radius:8px;
+  font-family:'Syne',sans-serif;
+  font-weight:700;
+  font-size:0.78rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:all 0.25s;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.btn-next:hover{background:#1A7AEE;transform:translateY(-1px);box-shadow:0 8px 24px rgba(45,142,255,0.3)}
+.btn-next.launch{
+  background:linear-gradient(135deg,#22C55E,#16A34A);
+  box-shadow:0 0 20px rgba(34,197,94,0.2);
+}
+.btn-next.launch:hover{
+  background:linear-gradient(135deg,#16A34A,#15803D);
+  box-shadow:0 8px 30px rgba(34,197,94,0.35);
+  transform:translateY(-2px);
+}
+
+/* ══════════════════════════════════════
+   RIGHT: LIVE PREVIEW PANEL
+══════════════════════════════════════ */
+.preview-panel{
+  display:flex;
+  flex-direction:column;
+  background:#ffffff;
+  overflow:hidden;
+  position:relative;
+}
+.preview-header{
+  padding:16px 28px;
+  border-bottom:1px solid var(--card-border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-shrink:0;
+}
+.preview-header-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.preview-badge{
+  font-size:0.62rem;
+  font-weight:700;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--blue);
+  background:rgba(45,142,255,0.08);
+  border:1px solid rgba(45,142,255,0.2);
+  padding:4px 10px;
+  border-radius:100px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.preview-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--blue);
+  animation:blink 2s infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.preview-url{
+  font-family:monospace;
+  font-size:0.72rem;
+  color:var(--muted);
+  background:rgba(255,255,255,0.03);
+  padding:5px 12px;
+  border-radius:6px;
+  border:1px solid var(--card-border);
+  max-width:280px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.preview-url span{color:var(--blue)}
+
+.preview-frame-wrap{
+  flex:1;
+  overflow:hidden;
+  padding:24px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+}
+.preview-frame-outer{
+  width:100%;
+  max-width:560px;
+  height:calc(100vh - 140px);
+  border-radius:12px;
+  overflow:hidden;
+  border:1px solid var(--card-border);
+  box-shadow:0 24px 80px rgba(0,0,0,0.5);
+  position:relative;
+}
+.preview-frame-bar{
+  height:32px;
+  background:#f8f9fa;
+  border-bottom:1px solid rgba(0,0,0,0.1);
+  display:flex;
+  align-items:center;
+  padding:0 12px;
+  gap:6px;
+}
+.preview-frame-btn{
+  width:10px;height:10px;border-radius:50%;
+}
+.preview-frame-btn:nth-child(1){background:#FF5F57}
+.preview-frame-btn:nth-child(2){background:#FFBD2E}
+.preview-frame-btn:nth-child(3){background:#28CA41}
+.preview-content{
+  height:calc(100% - 32px);
+  overflow-y:auto;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,255,255,0.06) transparent;
+}
+.preview-content::-webkit-scrollbar{width:3px}
+.preview-content::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06)}
+
+/* ══════════════════════════════════════
+   TEMPLATE SELECTOR
+══════════════════════════════════════ */
+.tmpl-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.tmpl-card{
+  border:1.5px solid rgba(255,255,255,0.06);
+  border-radius:10px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:all 0.25s;
+  position:relative;
+}
+.tmpl-card:hover{border-color:rgba(45,142,255,0.3);transform:translateY(-2px)}
+.tmpl-card.selected{border-color:var(--blue);box-shadow:0 0 0 3px rgba(45,142,255,0.12)}
+.tmpl-preview-area{
+  height:120px;
+  overflow:hidden;
+  position:relative;
+  pointer-events:none;
+}
+.tmpl-check{
+  display:none;
+  position:absolute;top:8px;right:8px;
+  width:22px;height:22px;border-radius:50%;
+  background:var(--blue);
+  color:#fff;font-size:0.6rem;
+  align-items:center;justify-content:center;
+}
+.tmpl-card.selected .tmpl-check{display:flex}
+.tmpl-meta{padding:10px 12px;background:rgba(255,255,255,0.02)}
+.tmpl-name{font-family:'Syne',sans-serif;font-weight:700;font-size:0.82rem;color:var(--white);margin-bottom:2px}
+.tmpl-desc{font-size:0.72rem;color:var(--muted)}
+
+/* ══════════════════════════════════════
+   COLOR SWATCHES
+══════════════════════════════════════ */
+.color-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.color-swatch{
+  width:32px;height:32px;border-radius:8px;
+  border:2px solid transparent;
+  cursor:pointer;
+  transition:all 0.2s;
+  position:relative;
+}
+.color-swatch:hover{transform:scale(1.1)}
+.color-swatch.sel{
+  border-color:#fff;
+  box-shadow:0 0 0 2px rgba(255,255,255,0.15);
+}
+.color-swatch.sel::after{
+  content:'✓';
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:0.65rem;font-weight:700;
+  text-shadow:0 1px 3px rgba(0,0,0,0.6);
+}
+
+/* ══════════════════════════════════════
+   SERVICE ITEMS
+══════════════════════════════════════ */
+.svc-item{
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:10px;
+  padding:14px;
+  margin-bottom:10px;
+  transition:border-color 0.2s;
+}
+.svc-item:focus-within{border-color:rgba(45,142,255,0.25)}
+.svc-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:12px;
+}
+.svc-num{
+  font-size:0.62rem;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--muted);
+}
+.svc-del{
+  width:24px;height:24px;border-radius:50%;
+  background:rgba(255,59,48,0.1);
+  border:none;color:#ff3b30;
+  font-size:1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+}
+.svc-del:hover{background:rgba(255,59,48,0.2)}
+
+/* ══════════════════════════════════════
+   HOURS GRID
+══════════════════════════════════════ */
+.hours-row{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.hours-row:last-child{border-bottom:none}
+.hours-day{
+  font-size:0.8rem;font-weight:500;
+  color:rgba(255,255,255,0.6);
+  width:82px;flex-shrink:0;
+}
+.toggle-btn{
+  width:38px;height:20px;
+  background:rgba(255,255,255,0.08);
+  border:none;border-radius:100px;
+  position:relative;cursor:pointer;
+  transition:background 0.2s;flex-shrink:0;
+  padding:0;
+}
+.toggle-btn.on{background:var(--blue)}
+.toggle-btn::after{
+  content:'';position:absolute;
+  top:2px;left:2px;
+  width:16px;height:16px;
+  background:#fff;border-radius:50%;
+  transition:transform 0.2s;
+  box-shadow:0 1px 4px rgba(0,0,0,0.3);
+}
+.toggle-btn.on::after{transform:translateX(18px)}
+.hours-times{display:flex;gap:8px;align-items:center;flex:1}
+.time-select{
+  flex:1;padding:7px 10px;
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:7px;
+  font-size:0.78rem;
+  font-family:'DM Sans',sans-serif;
+  color:var(--white);
+  background:rgba(255,255,255,0.03);
+  outline:none;cursor:pointer;
+}
+.time-sep{font-size:0.75rem;color:var(--muted)}
+
+/* ══════════════════════════════════════
+   PLAN SELECTOR
+══════════════════════════════════════ */
+.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.plan-card{
+  border:1.5px solid rgba(255,255,255,0.07);
+  border-radius:10px;
+  padding:18px 14px;
+  cursor:pointer;
+  transition:all 0.25s;
+  position:relative;
+  background:rgba(255,255,255,0.02);
+  text-align:center;
+}
+.plan-card:hover{border-color:rgba(45,142,255,0.3)}
+.plan-card.sel{border-color:var(--blue);background:rgba(45,142,255,0.06)}
+.plan-badge{
+  position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+  background:var(--blue);color:#fff;
+  font-size:0.58rem;font-weight:700;letter-spacing:0.1em;
+  padding:3px 10px;border-radius:100px;
+  white-space:nowrap;font-family:'Syne',sans-serif;
+}
+.plan-name{font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;margin-bottom:4px}
+.plan-price{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--blue);letter-spacing:-0.02em;line-height:1;margin-bottom:2px}
+.plan-period{font-size:0.68rem;color:var(--muted);margin-bottom:12px}
+.plan-feats{text-align:left;display:flex;flex-direction:column;gap:5px}
+.plan-feat{font-size:0.72rem;color:var(--muted-mid);display:flex;gap:6px;align-items:flex-start;line-height:1.4}
+.plan-feat::before{content:'→';color:var(--blue);flex-shrink:0;font-size:0.65rem;margin-top:2px}
+
+/* ══════════════════════════════════════
+   PAYMENT / SUCCESS SCREENS
+══════════════════════════════════════ */
+.payment-screen{
+  display:flex;flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:40px 32px;
+  min-height:400px;
+}
+.payment-icon{
+  width:72px;height:72px;
+  border-radius:50%;
+  background:rgba(45,142,255,0.1);
+  border:1px solid rgba(45,142,255,0.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;
+  margin:0 auto 20px;
+  animation:pulse-ring 2s infinite;
+}
+@keyframes pulse-ring{
+  0%,100%{box-shadow:0 0 0 0 rgba(45,142,255,0.2)}
+  50%{box-shadow:0 0 0 12px rgba(45,142,255,0)}
+}
+.payment-title{
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:1.5rem;
+  letter-spacing:-0.02em;
+  margin-bottom:10px;
+}
+.payment-sub{
+  font-size:0.88rem;
+  color:var(--muted-mid);
+  line-height:1.7;
+  max-width:340px;
+  margin:0 auto 28px;
+  font-weight:300;
+}
+.plan-summary{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px;
+  padding:12px 20px;
+  margin-bottom:28px;
+}
+.plan-summary-name{font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem}
+.plan-summary-price{font-family:'Syne',sans-serif;font-weight:800;font-size:0.9rem;color:var(--blue)}
+.stripe-btn{
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,#635bff,#4b44e8);
+  color:#fff;
+  border:none;
+  padding:14px 32px;
+  border-radius:10px;
+  font-family:'Syne',sans-serif;
+  font-weight:700;
+  font-size:0.82rem;
+  letter-spacing:0.08em;
+  cursor:pointer;
+  transition:all 0.25s;
+  margin-bottom:14px;
+  box-shadow:0 8px 24px rgba(99,91,255,0.25);
+}
+.stripe-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 32px rgba(99,91,255,0.35);
+  background:linear-gradient(135deg,#7a74ff,#635bff);
+}
+.stripe-note{
+  font-size:0.72rem;
+  color:var(--muted);
+  display:flex;align-items:center;gap:6px;
+}
+
+/* ══════════════════════════════════════
+   SUCCESS SCREEN
+══════════════════════════════════════ */
+.success-screen{
+  display:none;
+  position:fixed;inset:0;z-index:9100;
+  background:#ffffff;
+  overflow-y:auto;
+}
+.success-screen.show{display:block}
+.success-inner{
+  max-width:760px;
+  margin:0 auto;
+  padding:60px 32px;
+}
+.success-top{
+  text-align:center;
+  margin-bottom:52px;
+}
+.success-check{
+  width:80px;height:80px;
+  border-radius:50%;
+  background:rgba(34,197,94,0.1);
+  border:1.5px solid rgba(34,197,94,0.35);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2rem;
+  margin:0 auto 24px;
+  box-shadow:0 0 40px rgba(34,197,94,0.12);
+}
+.success-title{
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  letter-spacing:-0.03em;
+  margin-bottom:12px;
+}
+.success-title span{color:#22C55E}
+.success-sub{
+  font-size:0.95rem;
+  color:var(--muted-mid);
+  line-height:1.75;
+  max-width:500px;
+  margin:0 auto;
+  font-weight:300;
+}
+.success-url-wrap{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(34,197,94,0.05);
+  border:1px solid rgba(34,197,94,0.2);
+  border-radius:10px;
+  padding:14px 20px;
+  margin:28px 0 0;
+  font-family:monospace;
+  font-size:0.85rem;
+  color:#22C55E;
+}
+.success-url-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#22C55E;
+  flex-shrink:0;
+  animation:blink 2s infinite;
+}
+
+/* Video section */
+.video-section{
+  margin-bottom:40px;
+}
+.video-section-label{
+  font-size:0.68rem;
+  font-weight:700;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--blue);
+  margin-bottom:16px;
+}
+.video-title{
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:1.4rem;
+  letter-spacing:-0.02em;
+  margin-bottom:8px;
+}
+.video-desc{
+  font-size:0.88rem;
+  color:var(--muted-mid);
+  margin-bottom:20px;
+  line-height:1.65;
+  font-weight:300;
+}
+.video-embed{
+  width:100%;
+  aspect-ratio:16/9;
+  border-radius:12px;
+  overflow:hidden;
+  background:#0C0C0C;
+  border:1px solid var(--card-border);
+  position:relative;
+}
+.video-embed iframe{
+  width:100%;height:100%;border:none;
+}
+/* placeholder when no video yet */
+.video-placeholder{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:16px;
+  background:linear-gradient(135deg,#0C0C0C,#111);
+}
+.video-play-btn{
+  width:64px;height:64px;
+  border-radius:50%;
+  background:rgba(45,142,255,0.15);
+  border:1.5px solid rgba(45,142,255,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;
+  cursor:pointer;
+  transition:all 0.25s;
+}
+.video-play-btn:hover{
+  background:rgba(45,142,255,0.25);
+  transform:scale(1.08);
+}
+.video-placeholder-text{
+  font-size:0.8rem;
+  color:var(--muted);
+  text-align:center;
+}
+
+/* What happens next cards */
+.next-steps-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-bottom:40px;
+}
+@media(max-width:600px){.next-steps-grid{grid-template-columns:1fr}}
+.next-card{
+  background:var(--card);
+  border:1px solid var(--card-border);
+  border-radius:10px;
+  padding:20px;
+}
+.next-num{
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:2rem;
+  color:rgba(45,142,255,0.15);
+  letter-spacing:-0.04em;
+  line-height:1;
+  margin-bottom:10px;
+}
+.next-title{
+  font-family:'Syne',sans-serif;
+  font-weight:700;
+  font-size:0.88rem;
+  margin-bottom:6px;
+}
+.next-desc{
+  font-size:0.78rem;
+  color:var(--muted);
+  line-height:1.6;
+  font-weight:300;
+}
+.next-time{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(45,142,255,0.08);
+  border:1px solid rgba(45,142,255,0.15);
+  border-radius:100px;
+  padding:3px 10px;
+  font-size:0.65rem;font-weight:600;
+  letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--blue);
+  margin-top:12px;
+}
+
+/* Admin access card */
+.admin-card{
+  background:rgba(45,142,255,0.05);
+  border:1px solid rgba(45,142,255,0.2);
+  border-radius:12px;
+  padding:24px;
+  margin-bottom:40px;
+  display:grid;grid-template-columns:1fr auto;
+  align-items:center;gap:20px;
+}
+@media(max-width:600px){.admin-card{grid-template-columns:1fr}}
+.admin-card-title{
+  font-family:'Syne',sans-serif;font-weight:700;
+  font-size:0.95rem;margin-bottom:6px;
+}
+.admin-card-sub{
+  font-size:0.82rem;color:var(--muted-mid);line-height:1.5;font-weight:300;
+}
+.admin-btn{
+  background:var(--blue);
+  color:#fff;
+  border:none;
+  padding:11px 22px;
+  border-radius:8px;
+  font-family:'Syne',sans-serif;
+  font-weight:700;
+  font-size:0.75rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:all 0.2s;
+}
+.admin-btn:hover{background:#1A7AEE;transform:translateY(-1px)}
+
+/* ══════════════════════════════════════
+   DEMO TRIGGER (replaces the live button)
+══════════════════════════════════════ */
+.demo-trigger-wrap{
+  text-align:center;
+  padding:40px 20px;
+}
+.demo-trigger-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--blue);
+  color:#fff;
+  border:none;
+  padding:16px 36px;
+  border-radius:10px;
+  font-family:'Syne',sans-serif;
+  font-weight:700;
+  font-size:0.88rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:all 0.3s;
+  box-shadow:0 8px 32px rgba(45,142,255,0.2);
+}
+.demo-trigger-btn:hover{
+  background:#1A7AEE;
+  transform:translateY(-2px);
+  box-shadow:0 12px 40px rgba(45,142,255,0.35);
+}
+
+/* ══════════════════════════════════════
+   MINI BOOKING PREVIEWS (template renders)
+══════════════════════════════════════ */
+.preview-noir{background:#0A0705;font-family:'Georgia',serif;height:100%;padding:0}
+.preview-noir-nav{background:#111;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(201,168,76,0.2)}
+.preview-noir-logo{font-size:0.8rem;font-weight:400;letter-spacing:0.2em;text-transform:uppercase}
+.preview-noir-cta{font-size:0.6rem;background:transparent;border:1px solid;padding:4px 10px;border-radius:2px;letter-spacing:0.12em;text-transform:uppercase}
+.preview-noir-hero{padding:20px 16px 16px;border-bottom:1px solid rgba(201,168,76,0.1)}
+.preview-noir-eyebrow{font-size:0.55rem;letter-spacing:0.22em;text-transform:uppercase;margin-bottom:6px}
+.preview-noir-title{font-size:1.05rem;line-height:1.25;font-weight:400;margin-bottom:8px}
+.preview-noir-hours-wrap{padding:12px 16px;background:rgba(201,168,76,0.04);border-bottom:1px solid rgba(201,168,76,0.1)}
+.preview-noir-hours-lbl{font-size:0.55rem;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px}
+.preview-noir-h-row{font-size:0.62rem;display:flex;justify-content:space-between;margin-bottom:3px}
+.preview-noir-svcs{padding:12px 16px}
+.preview-noir-svcs-lbl{font-size:0.55rem;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px}
+.preview-noir-svc{padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;justify-content:space-between;align-items:center}
+.preview-noir-svc-name{font-size:0.7rem;font-weight:400}
+.preview-noir-svc-price{font-size:0.7rem;font-weight:700}
+.preview-noir-book-btn{margin:12px 16px;padding:10px;text-align:center;font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;border-radius:2px;cursor:pointer}
+
+.preview-mint{background:#F7FAF9;color:#1A2E1A;height:100%;font-family:'DM Sans',sans-serif}
+.preview-mint-nav{background:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #E8F0EE;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.preview-mint-logo{font-size:0.75rem;font-weight:600;color:#1A2E1A}
+.preview-mint-cta{font-size:0.6rem;padding:4px 10px;border-radius:100px;font-weight:600}
+.preview-mint-hero{padding:16px;background:#fff;border-bottom:1px solid #E8F0EE}
+.preview-mint-title{font-size:0.9rem;font-weight:700;margin-bottom:4px}
+.preview-mint-sub{font-size:0.62rem;opacity:0.7;margin-bottom:10px}
+.preview-mint-slots{padding:10px 16px}
+.preview-mint-slots-lbl{font-size:0.55rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;color:#6B9E95}
+.preview-mint-slot{display:flex;align-items:center;gap:8px;padding:7px 10px;background:#fff;border-radius:8px;margin-bottom:5px;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.preview-mint-time{font-size:0.62rem;font-weight:700;color:#6B9E95;min-width:40px}
+.preview-mint-sname{font-size:0.65rem;flex:1}
+.preview-mint-sprice{font-size:0.62rem;font-weight:600}
+
+.preview-editorial{background:#F5EDD0;color:#1A0A0A;height:100%;font-family:'Georgia',serif}
+.preview-edit-nav{background:#1A0A0A;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.preview-edit-logo{font-size:0.75rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#F5EDD0}
+.preview-edit-hero{padding:20px 16px;border-bottom:2px solid #1A0A0A}
+.preview-edit-tag{font-size:0.52rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:8px}
+.preview-edit-title{font-size:1.1rem;font-weight:700;line-height:1.2;margin-bottom:6px}
+.preview-edit-divider{height:2px;background:#1A0A0A;width:40px;margin-bottom:10px}
+.preview-edit-svcs{padding:12px 16px}
+.preview-edit-svc{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(26,10,10,0.12)}
+.preview-edit-svc-name{font-size:0.68rem}
+.preview-edit-svc-price{font-size:0.68rem;font-weight:700}
+.preview-edit-btn{margin:10px 16px;padding:10px;text-align:center;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:700;cursor:pointer;background:#1A0A0A;color:#F5EDD0;border-radius:3px}
+
+.preview-coastal{background:#F0F7F9;color:#1A2A2E;height:100%;font-family:'DM Sans',sans-serif}
+.preview-coastal-nav{background:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #D8ECEF}
+.preview-coastal-logo{font-size:0.72rem;font-weight:700;letter-spacing:0.05em}
+.preview-coastal-hero{padding:16px;background:#fff;margin-bottom:10px}
+.preview-coastal-title{font-size:0.88rem;font-weight:700;margin-bottom:4px}
+.preview-coastal-sub{font-size:0.62rem;opacity:0.6;margin-bottom:8px}
+.preview-coastal-slots{padding:0 16px}
+.preview-coastal-lbl{font-size:0.55rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;color:#4A8B96}
+.preview-coastal-slot{background:#fff;border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;margin-bottom:5px;border:1px solid #D8ECEF}
+.preview-coastal-time{font-size:0.62rem;font-weight:700;color:#4A8B96}
+.preview-coastal-sname{font-size:0.65rem}
+.preview-coastal-price{font-size:0.62rem;font-weight:600}
+
+.preview-artisan{background:#F9F4EE;color:#1A1208;height:100%;font-family:'DM Sans',sans-serif}
+.preview-artisan-nav{background:#F9F4EE;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #1A1208}
+.preview-artisan-logo{font-size:0.72rem;font-weight:900;letter-spacing:0.02em}
+.preview-artisan-hero{padding:16px;border-bottom:1.5px solid rgba(26,18,8,0.12)}
+.preview-artisan-title{font-size:0.92rem;font-weight:800;margin-bottom:4px}
+.preview-artisan-sub{font-size:0.62rem;opacity:0.6;margin-bottom:10px}
+.preview-artisan-svcs{padding:12px 16px}
+.preview-artisan-svc{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(26,18,8,0.08)}
+.preview-artisan-svc-name{font-size:0.68rem;font-weight:600}
+.preview-artisan-svc-price{font-size:0.68rem;font-weight:800}
+.preview-artisan-btn{margin:10px 16px;padding:10px;text-align:center;font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;cursor:pointer;border:2px solid #1A1208;border-radius:3px;background:transparent;color:#1A1208}
+</style>
+</head>
+<body>
+
+
+<!-- ══════════════════════════════════════════════
+     BUILDER MODAL
+══════════════════════════════════════════════ -->
+<div id="builderModal">
+  <div class="builder-layout">
+
+    <!-- LEFT: WIZARD -->
+    <div class="wizard-panel">
+      <div class="wizard-header">
+        <div class="wizard-header-top">
+          <div class="wizard-logo">BookingBuilder</div>
+          <button class="wizard-close" onclick="closeBuilder()">✕</button>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill" style="width:16%"></div>
+        </div>
+        <div class="step-meta">
+          <div class="step-dots" id="stepDots"></div>
+          <div class="step-label" id="stepLabel">Step 1 of 6</div>
+        </div>
+      </div>
+
+      <div class="wizard-body" id="wizardBody"></div>
+
+      <div class="wizard-footer">
+        <button class="btn-back" id="btnBack" onclick="goStep(currentStep-1)" disabled>← Back</button>
+        <button class="btn-next" id="btnNext" onclick="stepNext()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: LIVE PREVIEW -->
+    <div class="preview-panel">
+      <div class="preview-header">
+        <div class="preview-header-left">
+          <div class="preview-badge">LIVE PREVIEW</div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <button onclick="switchPreview('booking')" id="bookingPageBtn" style="background:var(--blue);color:white;border:none;padding:6px 12px;border-radius:6px;font-size:0.68rem;font-weight:600;cursor:pointer;transition:all 0.2s">Booking Page</button>
+            <button onclick="switchPreview('admin')" id="adminPageBtn" style="background:transparent;color:var(--muted);border:1px solid var(--card-border);padding:6px 12px;border-radius:6px;font-size:0.68rem;font-weight:600;cursor:pointer;transition:all 0.2s">Admin Page</button>
+          </div>
+        </div>
+        <div class="preview-url" id="previewUrl">
+          <span>showupmedia.org/booking</span>
+        </div>
+      </div>
+      <div class="preview-frame-wrap" style="position:relative;">
+        <div style="position:absolute;top:50%;right:0px;z-index:10;transform:translateY(-50%)">
+          <button onclick="switchPreview(previewMode === 'booking' ? 'admin' : 'booking')" style="background:var(--blue);color:white;border:none;padding:12px;border-radius:50%;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;width:48px;height:48px;box-shadow:0 4px 12px rgba(45,142,255,0.4)">
+            <span id="arrowIcon">→</span>
+          </button>
+        </div>
+        <div class="preview-frame-outer">
+          <div class="preview-frame-bar">
+            <div class="preview-frame-btn"></div>
+            <div class="preview-frame-btn"></div>
+            <div class="preview-frame-btn"></div>
+          </div>
+          <div class="preview-content" id="previewContent">
+            <!-- Rendered live here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SUCCESS SCREEN (post-payment)
+══════════════════════════════════════════════ -->
+<div class="success-screen" id="successScreen">
+  <div class="success-inner">
+
+    <div class="success-top">
+      <div class="success-check">🎉</div>
+      <div class="success-title">You're <span>live</span>,<br id="successName"> </div>
+      <div class="success-sub">Your booking system is being built right now. Here's everything you need to get started.</div>
+      <div class="success-url-wrap">
+        <div class="success-url-dot"></div>
+        <span id="successUrl">bookingbuilder.io/your-business</span>
+      </div>
+    </div>
+
+    <!-- WALKTHROUGH VIDEO -->
+    <div class="video-section">
+      <div class="video-section-label">Your walkthrough</div>
+      <div class="video-title">How your booking system works</div>
+      <div class="video-desc">A 5-minute video explaining everything — your admin dashboard, how customers book, how to manage appointments, and how to update your services.</div>
+      <div class="video-embed">
+        <!-- 
+          REPLACE THE SRC BELOW with your actual Loom/YouTube/Vimeo walkthrough video URL.
+          Example Loom: https://www.loom.com/embed/YOUR_LOOM_ID
+          Example YouTube: https://www.youtube.com/embed/YOUR_VIDEO_ID
+          Example Vimeo: https://player.vimeo.com/video/YOUR_VIDEO_ID
+        -->
+        <div class="video-placeholder" id="videoPlaceholder">
+          <div class="video-play-btn">▶</div>
+          <div class="video-placeholder-text">
+            <strong style="color:var(--white);font-size:0.85rem">Walkthrough video</strong><br>
+            <span style="font-size:0.75rem">Add your Loom/YouTube URL in the code</span>
+          </div>
+        </div>
+        <!-- Uncomment and replace with your embed URL:
+        <iframe src="YOUR_VIDEO_EMBED_URL" allowfullscreen allow="autoplay; fullscreen"></iframe>
+        -->
+      </div>
+    </div>
+
+    <!-- WHAT HAPPENS NEXT -->
+    <div style="margin-bottom:20px">
+      <div class="video-section-label">What happens next</div>
+    </div>
+    <div class="next-steps-grid">
+      <div class="next-card">
+        <div class="next-num">01</div>
+        <div class="next-title">We build your page</div>
+        <div class="next-desc">Your booking page is generated from everything you just filled in. We'll QA it and make sure it looks perfect.</div>
+        <div class="next-time">⏱ Within 2 hours</div>
+      </div>
+      <div class="next-card">
+        <div class="next-num">02</div>
+        <div class="next-title">You get the link</div>
+        <div class="next-desc">We'll email you your live booking URL and your admin dashboard login so you can manage everything.</div>
+        <div class="next-time">⏱ Same day</div>
+      </div>
+      <div class="next-card">
+        <div class="next-num">03</div>
+        <div class="next-title">Customers start booking</div>
+        <div class="next-desc">Share your link on social, add it to your Google profile, or paste it in your Instagram bio. Done.</div>
+        <div class="next-time">⏱ Day one</div>
+      </div>
+    </div>
+
+    <!-- ADMIN ACCESS -->
+    <div class="admin-card">
+      <div>
+        <div class="admin-card-title">Access your admin dashboard</div>
+        <div class="admin-card-sub">Manage bookings, block time off, update services, and see your earnings. Your login details will be emailed to you shortly.</div>
+      </div>
+      <button class="admin-btn" onclick="alert('Your admin link will be emailed once your system is live!')">Open Dashboard →</button>
+    </div>
+
+    <!-- CONTACT -->
+    <div style="text-align:center;padding:20px 0 40px;border-top:1px solid var(--card-border)">
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:8px">Questions? We're here.</div>
+      <a href="mailto:hello@showupmedia.org" style="color:var(--blue);font-size:0.85rem;text-decoration:none">hello@showupmedia.org</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+//  STRIPE LINKS — update these with your real Stripe URLs
+// ══════════════════════════════════════════════════════════
+const STRIPE_LINKS = {
+  basic:   'https://buy.stripe.com/6oU3cwcgfcX40uaeEL5Ne0m',
+  pro:     'https://buy.stripe.com/4gM00k1BB0aidgW0NV5Ne0n',
+  premium: 'https://buy.stripe.com/fZubJ25RRcX490G68f5Ne0o',
+};
+
+// Detect success redirect (Stripe appends ?success=true to your return URL)
+// Set your Stripe success URL to: https://yoursite.com/booking?success=true
+(function checkPaymentReturn(){
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('success') === 'true') {
+    const saved = localStorage.getItem('bb_qdata');
+    if(saved) {
+      try { bData = JSON.parse(saved); } catch(e){}
+    }
+    showSuccess();
+  }
+})();
+
+// ══════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════
+let currentStep = 0;
+let bData = {
+  template: 'noir',
+  color: '#C9A84C',
+  businessName: '',
+  businessType: '',
+  tagline: '',
+  phone: '',
+  address: '',
+  about: '',
+  services: [{ name:'', price:'', duration:'', desc:'' }],
+  days: { mon:true,tue:true,wed:true,thu:true,fri:true,sat:true,sun:false },
+  hours: {},
+  plan: 'pro',
+  wantDomain: false,
+  domainName: '',
+};
+
+let previewMode = 'booking'; // 'booking' or 'admin'
+
+const STEPS = [
+  { id:'template', title:'Choose your template', sub:'Pick a starting point. We\'ll customize everything in the next steps.' },
+  { id:'branding', title:'Make it yours', sub:'Pick your accent colour. This affects buttons, highlights, and key elements.' },
+  { id:'business', title:'Your business details', sub:'The basics your customers will see. Takes about 60 seconds.' },
+  { id:'services', title:'Add your services', sub:'What do you offer? Add each service with a price and duration.' },
+  { id:'hours',    title:'Set your opening hours', sub:'Customers see this front and centre — no more calls asking when you\'re open.' },
+  { id:'plan',     title:'Choose your plan', sub:'Your demo is ready. Pick a plan and your booking system goes live today.' },
+];
+
+// ── OPEN / CLOSE ──
+function openBuilder() {
+  document.getElementById('builderModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  currentStep = 0;
+  renderStep();
+  renderPreview();
+}
+function closeBuilder() {
+  document.getElementById('builderModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── NAVIGATION ──
+function goStep(n) {
+  if(n < 0 || n >= STEPS.length) return;
+  currentStep = n;
+  renderStep();
+  renderPreview();
+  document.querySelector('.wizard-body').scrollTo({top:0,behavior:'smooth'});
+}
+function stepNext() {
+  if(currentStep < STEPS.length - 1) {
+    goStep(currentStep + 1);
+  } else {
+    initiatePayment();
+  }
+}
+
+// ── HEADER META ──
+function updateHeader() {
+  const pct = Math.round(((currentStep + 1) / STEPS.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stepLabel').textContent = `Step ${currentStep+1} of ${STEPS.length}`;
+  document.getElementById('btnBack').disabled = currentStep === 0;
+
+  const isLast = currentStep === STEPS.length - 1;
+  const btn = document.getElementById('btnNext');
+  btn.textContent = isLast ? '🚀  Buy Now' : 'Continue →';
+  btn.className = 'btn-next' + (isLast ? ' launch' : '');
+
+  let dots = '';
+  STEPS.forEach((s,i) => {
+    const cls = i < currentStep ? 'done' : i === currentStep ? 'active' : '';
+    dots += `<div class="step-dot ${cls}"></div>`;
+  });
+  document.getElementById('stepDots').innerHTML = dots;
+}
+
+// ── RENDER STEP ──
+function renderStep() {
+  updateHeader();
+  const step = STEPS[currentStep];
+  const html = `
+    <div class="step-title">${step.title}</div>
+    <div class="step-sub">${step.sub}</div>
+    ${buildStep(step.id)}
+  `;
+  document.getElementById('wizardBody').innerHTML = html;
+  bindStep(step.id);
+}
+
+function buildStep(id) {
+  switch(id) {
+    case 'template': return buildTemplates();
+    case 'branding':  return buildBranding();
+    case 'business':  return buildBusiness();
+    case 'services':  return buildServices();
+    case 'hours':     return buildHours();
+    case 'plan':      return buildPlan();
+  }
+  return '';
+}
+
+// ══════════════════════════════════════
+// STEP BUILDERS
+// ══════════════════════════════════════
+
+function buildTemplates() {
+  const tmpls = [
+    { id:'noir',       name:'Noir Luxury',    desc:'Dark & gold premium',       bg:'#0A0705', accent:'#C9A84C' },
+    { id:'mint',       name:'Fresh Mint',     desc:'Airy, wellness-forward',    bg:'#F7FAF9', accent:'#6B9E95' },
+    { id:'editorial',  name:'Editorial Bold', desc:'Magazine-style',            bg:'#F5EDD0', accent:'#C4485A' },
+    { id:'coastal',    name:'Coastal Clean',  desc:'Professional & clean',      bg:'#F0F7F9', accent:'#4A8B96' },
+    { id:'artisan',    name:'Warm Artisan',   desc:'Earthy & independent',      bg:'#F9F4EE', accent:'#D4A96A' },
+  ];
+  return `<div class="tmpl-grid">
+    ${tmpls.map(t => `
+      <div class="tmpl-card${bData.template===t.id?' selected':''}" onclick="selectTemplate('${t.id}')" id="tmpl-${t.id}">
+        <div class="tmpl-preview-area" style="background:${t.bg};display:flex;align-items:center;justify-content:center;gap:0;flex-direction:column;padding:10px">
+          <div style="width:100%;background:${t.bg === '#0A0705' ? '#111' : '#fff'};border-radius:4px;padding:6px 8px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(${t.bg==='#0A0705'?'201,168,76':'0,0,0'},0.15)">
+            <div style="font-size:0.48rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:${t.bg === '#0A0705'?'#F0EEE8':'#1A1A1A'}">${bData.businessName||'YOUR BRAND'}</div>
+            <div style="font-size:0.42rem;background:${t.accent};color:${t.bg==='#F5EDD0'||t.bg==='#F9F4EE'?'#fff':'#fff'};padding:2px 6px;border-radius:2px;letter-spacing:0.06em">Book</div>
+          </div>
+          <div style="width:100%;padding:6px 8px">
+            <div style="font-size:0.55rem;font-weight:700;color:${t.bg==='#0A0705'?'#F0EEE8':'#1A1A1A'};margin-bottom:3px;line-height:1.2">${bData.tagline||'Premium service for you'}</div>
+            <div style="height:1px;background:${t.accent};width:24px;margin-bottom:6px;opacity:0.6"></div>
+            ${(bData.services.filter(s=>s.name).length>0?bData.services.filter(s=>s.name):['Hair Cut','Styling']).slice(0,2).map((s,i) => `
+              <div style="display:flex;justify-content:space-between;font-size:0.42rem;padding:2px 0;border-bottom:1px solid rgba(${t.bg==='#0A0705'?'255,255,255':'0,0,0'},0.06);color:${t.bg==='#0A0705'?'rgba(240,238,232,0.7)':'rgba(0,0,0,0.65)'}">
+                <span>${typeof s==='string'?s:s.name}</span>
+                <span style="font-weight:700;color:${t.accent}">${typeof s==='string'?'£'+(30+i*20):s.price?'£'+s.price:''}</span>
+              </div>`).join('')}
+          </div>
+        </div>
+        <div class="tmpl-check">✓</div>
+        <div class="tmpl-meta">
+          <div class="tmpl-name">${t.name}</div>
+          <div class="tmpl-desc">${t.desc}</div>
+        </div>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function selectTemplate(id) {
+  bData.template = id;
+  document.querySelectorAll('.tmpl-card').forEach(c => c.classList.remove('selected'));
+  const el = document.getElementById('tmpl-' + id);
+  if(el) el.classList.add('selected');
+  renderPreview();
+}
+
+function buildBranding() {
+  const colors = ['#C9A84C','#0B7A6E','#C4485A','#2B3A5C','#7B5EA7','#2D8EFF','#E8593C','#D4A96A','#4A8B96','#22C55E'];
+  const names = {noir:'Noir Luxury',mint:'Fresh Mint',editorial:'Editorial Bold',coastal:'Coastal Clean',artisan:'Warm Artisan'};
+  return `
+    <div class="field-group">
+      <label class="field-label">Accent colour</label>
+      <div class="color-row">
+        ${colors.map(c=>`<div class="color-swatch${bData.color===c?' sel':''}" style="background:${c}" data-c="${c}" onclick="selectColor('${c}',this)"></div>`).join('')}
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Or enter a custom hex</label>
+      <input class="field-input" type="text" placeholder="#2D8EFF" value="${colors.includes(bData.color)?'':bData.color}" oninput="bData.color=this.value;renderPreview()">
+    </div>
+    <div class="field-group" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:14px">
+      <div style="font-size:0.72rem;color:var(--muted-mid);margin-bottom:4px">Template selected</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.88rem">${names[bData.template]||bData.template}</div>
+        <button onclick="goStep(0)" style="background:none;border:none;color:var(--blue);font-size:0.75rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0">Change</button>
+      </div>
+    </div>`;
+}
+
+function selectColor(c, el) {
+  bData.color = c;
+  document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('sel'));
+  el.classList.add('sel');
+  renderPreview();
+}
+
+function buildBusiness() {
+  return `
+    <div class="field-row">
+      <div>
+        <label class="field-label">Business name *</label>
+        <input class="field-input" type="text" id="f-bname" placeholder="e.g. Lumière Hair Studio" value="${bData.businessName}" oninput="bData.businessName=this.value;renderPreview();updateSlug()">
+      </div>
+      <div>
+        <label class="field-label">Industry</label>
+        <select class="field-input" onchange="bData.businessType=this.value">
+          <option value="">Select...</option>
+          ${['Hair Salon / Barber','Spa / Wellness','Clinic / Medical','Fitness / PT','Beauty / Nails','Consultant / Coach','Other'].map(v=>`<option${bData.businessType===v?' selected':''}>${v}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Tagline <span style="text-transform:none;letter-spacing:0;font-weight:400;font-size:0.72rem;color:var(--muted)">optional</span></label>
+      <input class="field-input" type="text" placeholder="Where beauty meets precision" value="${bData.tagline}" oninput="bData.tagline=this.value;renderPreview()">
+    </div>
+    <div class="field-row">
+      <div>
+        <label class="field-label">Phone</label>
+        <input class="field-input" type="tel" placeholder="07700 900 123" value="${bData.phone}" oninput="bData.phone=this.value;renderPreview()">
+      </div>
+      <div>
+        <label class="field-label">Address</label>
+        <input class="field-input" type="text" placeholder="14 King's Road, Leeds" value="${bData.address}" oninput="bData.address=this.value;renderPreview()">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">About <span style="text-transform:none;letter-spacing:0;font-weight:400;font-size:0.72rem;color:var(--muted)">optional</span></label>
+      <textarea class="field-input" placeholder="Tell customers what makes you special..." oninput="bData.about=this.value;renderPreview()">${bData.about}</textarea>
+    </div>`;
+}
+
+function buildServices() {
+  let html = '<div id="svc-container">';
+  bData.services.forEach((s,i) => { html += svcItem(s, i); });
+  html += `</div>
+  <button onclick="addService()" style="width:100%;padding:12px;border:1.5px dashed rgba(255,255,255,0.1);border-radius:10px;background:transparent;font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--muted-mid);cursor:pointer;transition:all 0.2s;margin-top:4px"
+    onmouseenter="this.style.borderColor='rgba(45,142,255,0.4)';this.style.color='var(--blue)'"
+    onmouseleave="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='var(--muted-mid)'">
+    + Add Another Service
+  </button>`;
+  return html;
+}
+
+function svcItem(s, i) {
+  return `<div class="svc-item" id="svc-${i}">
+    <div class="svc-header">
+      <div class="svc-num">Service ${i+1}</div>
+      ${i>0?`<button class="svc-del" onclick="delService(${i})">×</button>`:''}
+    </div>
+    <div class="field-row">
+      <div>
+        <label class="field-label">Service name</label>
+        <input class="field-input" type="text" placeholder="e.g. Cut & Style" value="${s.name||''}" oninput="bData.services[${i}].name=this.value;renderPreview()">
+      </div>
+      <div>
+        <label class="field-label">Price (£)</label>
+        <input class="field-input" type="text" placeholder="45" value="${s.price||''}" oninput="bData.services[${i}].price=this.value;renderPreview()">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Duration</label>
+      <select class="field-input" onchange="bData.services[${i}].duration=this.value;renderPreview()">
+        ${['15 min','30 min','45 min','60 min','75 min','90 min','2 hours','2.5 hours','3 hours'].map(d=>`<option${s.duration===d?' selected':''}>${d}</option>`).join('')}
+      </select>
+    </div>
+  </div>`;
+}
+
+function addService() {
+  bData.services.push({name:'',price:'',duration:'30 min',desc:''});
+  const i = bData.services.length - 1;
+  const wrap = document.createElement('div');
+  wrap.innerHTML = svcItem({},i);
+  document.getElementById('svc-container').appendChild(wrap.firstElementChild);
+  renderPreview();
+}
+
+function delService(i) {
+  bData.services.splice(i, 1);
+  const container = document.getElementById('svc-container');
+  container.innerHTML = '';
+  bData.services.forEach((s,idx) => {
+    const wrap = document.createElement('div');
+    wrap.innerHTML = svcItem(s, idx);
+    container.appendChild(wrap.firstElementChild);
+  });
+  renderPreview();
+}
+
+function buildHours() {
+  const days = [['mon','Monday'],['tue','Tuesday'],['wed','Wednesday'],['thu','Thursday'],['fri','Friday'],['sat','Saturday'],['sun','Sunday']];
+  const times = ['7:00','7:30','8:00','8:30','9:00','9:30','10:00','10:30','11:00','11:30','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00'];
+  const defOpen = {mon:'9:00',tue:'9:00',wed:'9:00',thu:'9:00',fri:'9:00',sat:'10:00',sun:'9:00'};
+  const defClose = {mon:'18:00',tue:'18:00',wed:'18:00',thu:'18:00',fri:'18:00',sat:'17:00',sun:'17:00'};
+  let html = '<div>';
+  days.forEach(([d,label]) => {
+    const on = bData.days[d];
+    html += `<div class="hours-row">
+      <div class="hours-day">${label}</div>
+      <button class="toggle-btn${on?' on':''}" id="htog-${d}" onclick="toggleDay('${d}')"></button>
+      <div class="hours-times" id="htimes-${d}" style="${on?'':'opacity:0.3;pointer-events:none'}">
+        <select class="time-select" id="hopen-${d}" onchange="setHour('${d}','open',this.value)">
+          ${times.map(t=>`<option${t===(bData.hours[d+'_open']||defOpen[d])?' selected':''}>${t}</option>`).join('')}
+        </select>
+        <span class="time-sep">–</span>
+        <select class="time-select" id="hclose-${d}" onchange="setHour('${d}','close',this.value)">
+          ${times.map(t=>`<option${t===(bData.hours[d+'_close']||defClose[d])?' selected':''}>${t}</option>`).join('')}
+        </select>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+  html += `<div class="field-group" style="margin-top:16px">
+    <label class="field-label">Special notice <span style="text-transform:none;letter-spacing:0;font-weight:400;font-size:0.72rem;color:var(--muted)">optional</span></label>
+    <input class="field-input" type="text" placeholder="e.g. Closed bank holidays" value="${bData.notice||''}" oninput="bData.notice=this.value;renderPreview()">
+  </div>`;
+  return html;
+}
+
+function toggleDay(d) {
+  bData.days[d] = !bData.days[d];
+  const on = bData.days[d];
+  document.getElementById('htog-'+d).classList.toggle('on', on);
+  const times = document.getElementById('htimes-'+d);
+  times.style.opacity = on ? '1' : '0.3';
+  times.style.pointerEvents = on ? '' : 'none';
+  renderPreview();
+}
+function setHour(d, type, val) {
+  bData.hours[d+'_'+type] = val;
+  renderPreview();
+}
+
+function buildPlan() {
+  const plans = [
+    { id:'basic',   name:'Basic',        price:'£6.99',  period:'/ month', feats:['Booking page live','Admin dashboard','Email confirmations','Subdomain included'],          popular:false },
+    { id:'pro',     name:'Pro',          price:'£9.99',  period:'/ month', feats:['Everything in Basic','Downloadable mobile app','Real time phone notifications','Priority support','Up to 3 staff members'],           popular:true },
+    { id:'premium', name:'Premium',      price:'£14.99', period:'/ month', feats:['Everything in Pro','Online payments','Advanced analytics','Revenue tracker','Up to 10 staff members'],    popular:false },
+  ];
+
+  const name = bData.businessName ? bData.businessName.split(' ')[0] : 'your business';
+  const svcCount = bData.services.filter(s=>s.name).length;
+  const tmplNames = {noir:'Noir Luxury',mint:'Fresh Mint',editorial:'Editorial Bold',coastal:'Coastal Clean',artisan:'Warm Artisan'};
+
+  return `
+  <div style="background:rgba(45,142,255,0.05);border:1px solid rgba(45,142,255,0.15);border-radius:10px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;gap:12px">
+    <div style="font-size:1.2rem">✅</div>
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;margin-bottom:2px">Your demo is ready!</div>
+      <div style="font-size:0.78rem;color:var(--muted-mid)">
+        ${svcCount} service${svcCount!==1?'s':''} · ${tmplNames[bData.template]} template
+      </div>
+    </div>
+      </div>
+  <div class="plan-grid">
+    ${plans.map(p=>`
+      <div class="plan-card${bData.plan===p.id?' sel':''}" id="bplan-${p.id}" onclick="selectPlan('${p.id}')">
+        ${p.popular?'<div class="plan-badge">POPULAR</div>':''}
+        <div class="plan-name">${p.name}</div>
+        <div class="plan-price">${p.price}</div>
+        <div class="plan-period">${p.period}</div>
+        <div class="plan-feats">
+          ${p.feats.map(f=>`<div class="plan-feat">${f}</div>`).join('')}
+        </div>
+      </div>
+    `).join('')}
+  </div>
+  <div style="margin-top:16px;padding:14px 16px;border:1px solid rgba(255,255,255,0.06);border-radius:10px;background:rgba(255,255,255,0.02)">
+    <div style="display:flex;align-items:flex-start;gap:10px">
+      <input type="checkbox" id="domain-check" style="margin-top:3px;width:15px;height:15px;cursor:pointer;accent-color:var(--blue)"
+        ${bData.wantDomain?'checked':''}
+        onchange="bData.wantDomain=this.checked;document.getElementById('domain-input-row').style.display=this.checked?'block':'none'">
+      <div>
+        <label for="domain-check" style="font-size:0.84rem;color:#1a1a1a;cursor:pointer;line-height:1.4">I want a custom domain (e.g. mybusiness.com)</label>
+        <div style="font-size:0.72rem;color:var(--muted);margin-top:2px">We'll contact you within 24hrs to arrange setup</div>
+      </div>
+    </div>
+    <div id="domain-input-row" style="margin-top:10px;display:${bData.wantDomain?'block':'none'}">
+      <input class="field-input" type="text" placeholder="e.g. hairbylumiere.com" value="${bData.domainName||''}" oninput="bData.domainName=this.value">
+    </div>
+  </div>`;
+}
+
+function selectPlan(id) {
+  bData.plan = id;
+  document.querySelectorAll('.plan-card').forEach(c=>c.classList.remove('sel'));
+  const el = document.getElementById('bplan-'+id);
+  if(el) el.classList.add('sel');
+  renderPreview();
+}
+
+function bindStep(id) {
+  // Nothing extra needed — all inputs use oninput
+}
+
+// ══════════════════════════════════════
+// PAYMENT — saves data, redirects Stripe
+// ══════════════════════════════════════
+function initiatePayment() {
+  // Save questionnaire data for post-payment recall
+  localStorage.setItem('bb_qdata', JSON.stringify(bData));
+
+  const planLink = STRIPE_LINKS[bData.plan] || STRIPE_LINKS.pro;
+  
+  // If Stripe links are placeholders, show dev-mode success for testing
+  if(planLink.includes('YOUR_')) {
+    // DEV MODE: skip Stripe and show success
+    closeBuilder();
+    showSuccess();
+    return;
+  }
+
+  // Redirect to Stripe
+  window.location.href = planLink;
+}
+
+// ══════════════════════════════════════
+// SUCCESS SCREEN
+// ══════════════════════════════════════
+function showSuccess() {
+  const saved = localStorage.getItem('bb_qdata');
+  if(saved) {
+    try { bData = JSON.parse(saved); } catch(e){}
+  }
+
+  const name = bData.businessName ? bData.businessName.split(' ')[0] : 'there';
+  const slug = (bData.businessName||'your-business').toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+
+  document.getElementById('successName').textContent = name + '!';
+  document.getElementById('successUrl').textContent = 'bookingbuilder.io/' + slug;
+
+  document.getElementById('successScreen').classList.add('show');
+  document.body.style.overflow = '';
+  
+  // Clear stored data
+  localStorage.removeItem('bb_qdata');
+  
+  // Remove URL params cleanly
+  window.history.replaceState({}, '', window.location.pathname);
+}
+
+// ══════════════════════════════════════
+// LIVE PREVIEW RENDERER
+// ══════════════════════════════════════
+function updateSlug() {
+  document.getElementById('previewUrl').innerHTML = `<span>showupmedia.org/booking</span>`;
+}
+
+function switchPreview(mode) {
+  previewMode = mode;
+  
+  // Update button styles
+  const bookingBtn = document.getElementById('bookingPageBtn');
+  const adminBtn = document.getElementById('adminPageBtn');
+  const arrowIcon = document.getElementById('arrowIcon');
+  
+  if (mode === 'booking') {
+    bookingBtn.style.background = 'var(--blue)';
+    bookingBtn.style.color = 'white';
+    bookingBtn.style.border = 'none';
+    adminBtn.style.background = 'transparent';
+    adminBtn.style.color = 'var(--muted)';
+    adminBtn.style.border = '1px solid var(--card-border)';
+    arrowIcon.textContent = '→';
+  } else {
+    adminBtn.style.background = 'var(--blue)';
+    adminBtn.style.color = 'white';
+    adminBtn.style.border = 'none';
+    bookingBtn.style.background = 'transparent';
+    bookingBtn.style.color = 'var(--muted)';
+    bookingBtn.style.border = '1px solid var(--card-border)';
+    arrowIcon.textContent = '←';
+  }
+  
+  renderPreview();
+}
+
+function renderPreview() {
+  updateSlug();
+  const html = buildPreviewHTML();
+  const previewContent = document.getElementById('previewContent');
+  // Use requestAnimationFrame for smoother rendering
+  requestAnimationFrame(() => {
+    previewContent.innerHTML = html;
+  });
+}
+
+function buildPreviewHTML() {
+  if (previewMode === 'admin') {
+    return buildAdminPreviewHTML();
+  }
+  
+  const t = bData.template;
+  const c = bData.color || '#2D8EFF';
+  const name = bData.businessName || 'YOUR BUSINESS';
+  const tagline = bData.tagline || 'Premium service, zero hassle';
+  const svcs = bData.services.filter(s => s.name) || [];
+  const daysOpen = Object.entries(bData.days).filter(([,v])=>v).map(([d])=>d);
+  
+  // Build hours display
+  const defOpen = {mon:'9:00',tue:'9:00',wed:'9:00',thu:'9:00',fri:'9:00',sat:'10:00',sun:'9:00'};
+  const defClose = {mon:'18:00',tue:'18:00',wed:'18:00',thu:'18:00',fri:'18:00',sat:'17:00',sun:'17:00'};
+  const dayLabels = {mon:'Monday',tue:'Tuesday',wed:'Wednesday',thu:'Thursday',fri:'Friday',sat:'Saturday',sun:'Sunday'};
+  
+  // Group consecutive open days
+  const openDaysList = Object.entries(bData.days).filter(([,v])=>v).map(([d])=>d);
+  
+  const hoursRows = ['mon','tue','wed','thu','fri','sat','sun'].map(d => {
+    const isOpen = bData.days[d];
+    return `<div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:0.68rem">
+      <span>${dayLabels[d]||d}</span>
+      <span style="font-weight:600">${isOpen ? (bData.hours[d+'_open']||defOpen[d]) + ' - ' + (bData.hours[d+'_close']||defClose[d]) : 'Closed'}</span>
+    </div>`;
+  }).join('');
+
+  const svcRows = (svcs.length ? svcs : [{name:'Cut & Style',price:'45'},{name:'Colour Treatment',price:'75'}]).slice(0,4).map(s =>
+    `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(BORDER,0.08)">
+      <div>
+        <div style="font-size:0.82rem;font-weight:600">SERVICE_NAME</div>
+        ${s.duration?`<div style="font-size:0.68rem;opacity:0.55;margin-top:1px">${s.duration}</div>`:''}
+      </div>
+      <div style="font-weight:800;font-size:0.9rem;color:ACCENT">PRICE_DISPLAY</div>
+    </div>`
+    .replace('SERVICE_NAME', s.name)
+    .replace('PRICE_DISPLAY', s.price?'£'+s.price:'POA')
+    .replace('ACCENT', c)
+  ).join('');
+
+  if(t === 'noir') {
+    const textColor = '#F0EEE8';
+    const bg = '#0A0705';
+    const navBg = '#111';
+    const border = `rgba(${hexToRgb(c)},0.15)`;
+    return `
+      <div style="background:${bg};min-height:100%;font-family:Georgia,serif;color:${textColor}">
+        <div style="background:${navBg};padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid ${border}">
+          <div style="font-size:0.75rem;font-weight:400;letter-spacing:0.22em;text-transform:uppercase">${name}</div>
+          <div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:${c}">Services · Gallery</div>
+        </div>
+        <div style="padding:24px 20px 16px;border-bottom:1px solid ${border}">
+          <div style="font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:${c};margin-bottom:8px">Premium Booking</div>
+          <div style="font-size:1.3rem;font-weight:400;line-height:1.25;margin-bottom:8px">${tagline}</div>
+          <div style="display:inline-block;padding:8px 18px;border:1px solid ${c};font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:${c};cursor:pointer;margin-top:4px">Book an Appointment</div>
+        </div>
+        <div style="padding:16px 20px;border-bottom:1px solid ${border}">
+          <div style="font-size:0.55rem;letter-spacing:0.16em;text-transform:uppercase;color:${c};opacity:0.7;margin-bottom:10px">Opening Hours</div>
+          ${hoursRows.replace(/BORDER/g, '201,168,76')}
+        </div>
+        <div style="padding:16px 20px">
+          <div style="font-size:0.55rem;letter-spacing:0.16em;text-transform:uppercase;color:${c};opacity:0.7;margin-bottom:10px">Services</div>
+          ${svcRows.replace(/BORDER/g, '255,255,255')}
+        </div>
+        ${bData.about?`<div style="padding:0 20px 16px;font-size:0.78rem;color:rgba(240,238,232,0.55);line-height:1.7;font-style:italic">"${bData.about}"</div>`:''}
+        <div style="padding:12px 20px;border-top:1px solid ${border};display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:0.6rem;color:rgba(240,238,232,0.35)">${bData.phone||'Call to book'}</div>
+          <div style="font-size:0.6rem;color:rgba(240,238,232,0.35)">${bData.address||''}</div>
+        </div>
+      </div>`;
+  }
+
+  if(t === 'mint') {
+    const bg = '#F7FAF9';
+    const text = '#1A2E1A';
+    return `
+      <div style="background:${bg};min-height:100%;font-family:'DM Sans',sans-serif;color:${text}">
+        <div style="background:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #E8F0EE;box-shadow:0 1px 4px rgba(0,0,0,0.04)">
+          <div style="font-size:0.8rem;font-weight:700">${name}</div>
+          <div style="font-size:0.62rem;background:${c};color:#fff;padding:5px 12px;border-radius:100px;font-weight:600">Book Now</div>
+        </div>
+        <div style="padding:20px 20px 16px;background:#fff;border-bottom:1px solid #E8F0EE;margin-bottom:12px">
+          <div style="font-size:0.95rem;font-weight:700;margin-bottom:4px">${tagline}</div>
+          <div style="font-size:0.75rem;opacity:0.6;margin-bottom:10px">${bData.address||'Leeds, UK'}</div>
+          <div style="display:flex;gap:8px">
+            <div style="flex:1;background:${hexWithAlpha(c,0.08)};border:1px solid ${hexWithAlpha(c,0.2)};border-radius:8px;padding:8px;text-align:center">
+              <div style="font-size:0.58rem;font-weight:600;color:${c};letter-spacing:0.06em;text-transform:uppercase">Services</div>
+              <div style="font-size:1rem;font-weight:800;color:${text}">${svcs.length||'—'}</div>
+            </div>
+            <div style="flex:1;background:#f8fffe;border:1px solid #e0f0ee;border-radius:8px;padding:8px;text-align:center">
+              <div style="font-size:0.58rem;font-weight:600;color:#6B9E95;letter-spacing:0.06em;text-transform:uppercase">Days Open</div>
+              <div style="font-size:1rem;font-weight:800;color:${text}">${openDaysList.length}</div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:0 20px 16px">
+          <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:${c};margin-bottom:10px">Services</div>
+          ${svcRows.replace(/BORDER/g, '0,0,0')}
+        </div>
+        <div style="padding:0 20px 20px">
+          <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:${c};margin-bottom:10px">Hours</div>
+          ${hoursRows.replace(/BORDER/g, '0,0,0').replace(/font-size:0.68rem/g,'font-size:0.72rem;color:#333')}
+        </div>
+      </div>`;
+  }
+
+  if(t === 'editorial') {
+    const bg = '#F5EDD0';
+    const text = '#1A0A0A';
+    return `
+      <div style="background:${bg};min-height:100%;font-family:Georgia,serif;color:${text}">
+        <div style="background:${text};padding:12px 20px;display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:${bg}">${name}</div>
+          <div style="font-size:0.58rem;color:rgba(245,237,208,0.5)">Gallery · Team</div>
+        </div>
+        <div style="padding:20px;border-bottom:2px solid ${text}">
+          <div style="font-size:0.55rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${c};margin-bottom:8px">Booking Open</div>
+          <div style="font-size:1.4rem;font-weight:700;line-height:1.15;margin-bottom:8px">${tagline}</div>
+          <div style="height:2px;background:${text};width:36px;margin-bottom:12px"></div>
+          <div style="display:inline-block;background:${text};color:${bg};font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:8px 16px;border-radius:2px;cursor:pointer">Book Now ↗</div>
+        </div>
+        <div style="padding:16px 20px;border-bottom:1px solid rgba(26,10,10,0.12)">
+          <div style="font-size:0.55rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:8px">Services</div>
+          ${svcRows.replace(/BORDER/g,'26,10,10').replace(/color:ACCENT/g,`color:${c}`)}
+        </div>
+        <div style="padding:16px 20px">
+          <div style="font-size:0.55rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:8px">Hours</div>
+          ${hoursRows.replace(/font-size:0.68rem/g,'font-size:0.72rem;color:#333')}
+        </div>
+      </div>`;
+  }
+
+  if(t === 'coastal') {
+    const bg = '#F0F7F9';
+    return `
+      <div style="background:${bg};min-height:100%;font-family:'DM Sans',sans-serif;color:#1A2A2E">
+        <div style="background:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #D8ECEF">
+          <div style="font-size:0.78rem;font-weight:700;letter-spacing:0.04em">${name}</div>
+          <div style="font-size:0.6rem;background:${c};color:#fff;padding:5px 12px;border-radius:4px;font-weight:600">Book</div>
+        </div>
+        <div style="background:#fff;padding:16px 20px;margin-bottom:12px;border-bottom:1px solid #D8ECEF">
+          <div style="font-size:0.88rem;font-weight:700;margin-bottom:4px">${tagline}</div>
+          <div style="font-size:0.72rem;color:rgba(26,42,46,0.5)">Professional · Reliable · Local</div>
+          ${bData.phone?`<div style="margin-top:8px;font-size:0.7rem;color:${c};font-weight:600">📞 ${bData.phone}</div>`:''}
+        </div>
+        <div style="padding:0 20px 16px">
+          <div style="font-size:0.58rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:${c};margin-bottom:10px">Services</div>
+          ${svcRows.replace(/BORDER/g,'0,0,0').replace(/color:ACCENT/g,`color:${c}`)}
+        </div>
+        <div style="padding:0 20px 20px">
+          <div style="font-size:0.58rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:${c};margin-bottom:10px">Opening Hours</div>
+          ${hoursRows.replace(/font-size:0.68rem/g,'font-size:0.72rem;color:#2A4A4E')}
+        </div>
+        ${bData.about?`<div style="padding:0 20px 16px;font-size:0.78rem;color:rgba(26,42,46,0.6);line-height:1.65;border-top:1px solid #D8ECEF;padding-top:16px">${bData.about}</div>`:''}
+      </div>`;
+  }
+
+  // Artisan (default)
+  return `
+    <div style="background:#F9F4EE;min-height:100%;font-family:'DM Sans',sans-serif;color:#1A1208">
+      <div style="background:#F9F4EE;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #1A1208">
+        <div style="font-size:0.78rem;font-weight:900;letter-spacing:0.02em">${name}</div>
+        <div style="font-size:0.58rem;color:rgba(26,18,8,0.5)">Menu · Book</div>
+      </div>
+      <div style="padding:16px 20px;border-bottom:1.5px solid rgba(26,18,8,0.1)">
+        <div style="font-size:0.92rem;font-weight:800;margin-bottom:4px">${tagline}</div>
+        <div style="font-size:0.72rem;color:rgba(26,18,8,0.5);margin-bottom:10px">${bData.address||'Independent & proud'}</div>
+        <div style="display:inline-block;border:2px solid #1A1208;padding:7px 14px;font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;cursor:pointer;border-radius:2px;background:${c};color:#fff">Reserve Your Spot</div>
+      </div>
+      <div style="padding:16px 20px;border-bottom:1px solid rgba(26,18,8,0.08)">
+        <div style="font-size:0.55rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:10px;color:rgba(26,18,8,0.5)">Services</div>
+        ${svcRows.replace(/BORDER/g,'26,18,8').replace(/color:ACCENT/g,`color:${c}`)}
+      </div>
+      <div style="padding:16px 20px">
+        <div style="font-size:0.55rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px;color:rgba(26,18,8,0.5)">Opening Hours</div>
+        ${hoursRows.replace(/font-size:0.68rem/g,'font-size:0.72rem;color:#3A2E1A')}
+      </div>
+      ${bData.about?`<div style="padding:0 20px 16px;font-size:0.78rem;color:rgba(26,18,8,0.6);line-height:1.65;font-style:italic;border-top:1px solid rgba(26,18,8,0.08);padding-top:12px">"${bData.about}"</div>`:''}
+    </div>`;
+}
+
+function buildAdminPreviewHTML() {
+  const t = bData.template;
+  const c = bData.color || '#2D8EFF';
+  const name = bData.businessName || 'Your Business';
+  const plan = bData.plan || 'basic';
+  const svcs = bData.services.filter(s => s.name) || [];
+  
+  // Staff limits based on plan
+  const staffLimits = { basic: 1, pro: 3, premium: 10 };
+  const maxStaff = staffLimits[plan] || 1;
+  
+  // Template-specific styling
+  if (t === 'noir') {
+    return buildNoirAdminHTML(name, plan, svcs, maxStaff, c);
+  } else if (t === 'mint') {
+    return buildMintAdminHTML(name, plan, svcs, maxStaff, c);
+  } else if (t === 'editorial') {
+    return buildEditorialAdminHTML(name, plan, svcs, maxStaff, c);
+  } else if (t === 'coastal') {
+    return buildCoastalAdminHTML(name, plan, svcs, maxStaff, c);
+  } else if (t === 'artisan') {
+    return buildArtisanAdminHTML(name, plan, svcs, maxStaff, c);
+  }
+  
+  // Default (artisan) styling
+  return buildArtisanAdminHTML(name, plan, svcs, maxStaff, c);
+}
+
+function buildNoirAdminHTML(name, plan, svcs, maxStaff, c) {
+  const textColor = '#F0EEE8';
+  const bg = '#0A0705';
+  const navBg = '#111';
+  const border = `rgba(${hexToRgb(c)},0.15)`;
+  
+  return `
+    <div style="background:${bg};min-height:100%;font-family:Georgia,serif;color:${textColor}">
+      <!-- Admin Header -->
+      <div style="background:${navBg};padding:16px 20px;border-bottom:1px solid ${border};display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:32px;height:32px;background:${c};border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.8rem">${name.charAt(0).toUpperCase()}</div>
+          <div>
+            <div style="font-size:0.9rem;font-weight:700">${name} Admin</div>
+            <div style="font-size:0.68rem;color:rgba(240,238,232,0.5);text-transform:capitalize">${plan} Plan</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div style="width:8px;height:8px;background:#28a745;border-radius:50%"></div>
+          <div style="font-size:0.68rem;color:rgba(240,238,232,0.5)">Live</div>
+        </div>
+      </div>
+
+      <!-- Pro Plan Notifications -->
+      ${plan === 'pro' ? `
+        <div style="background:rgba(${hexToRgb(c)},0.1);margin:16px 20px;padding:12px 16px;border-radius:8px;border-left:4px solid ${c}">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <div style="font-size:0.78rem;font-weight:600;color:${c};margin-bottom:2px">Enable Notifications</div>
+              <div style="font-size:0.68rem;color:rgba(240,238,232,0.6)">Get real-time alerts for new bookings</div>
+            </div>
+            <div style="width:44px;height:24px;background:${c};border-radius:12px;position:relative;cursor:pointer">
+              <div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;top:2px;right:2px;box-shadow:0 2px 4px rgba(0,0,0,0.2)"></div>
+            </div>
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- Premium Plan Revenue Tracker -->
+      ${plan === 'premium' ? `
+        <div style="background:rgba(240,238,232,0.05);margin:16px 20px;padding:16px;border-radius:8px;border:1px solid ${border}">
+          <div style="font-size:0.78rem;font-weight:600;margin-bottom:12px">Revenue Tracker</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="background:rgba(240,238,232,0.03);padding:12px;border-radius:6px">
+              <div style="font-size:0.68rem;color:rgba(240,238,232,0.5);margin-bottom:4px">This Month</div>
+              <div style="font-size:1.1rem;font-weight:700;color:#28a745">£1,247</div>
+            </div>
+            <div style="background:rgba(240,238,232,0.03);padding:12px;border-radius:6px">
+              <div style="font-size:0.68rem;color:rgba(240,238,232,0.5);margin-bottom:4px">Total Bookings</div>
+              <div style="font-size:1.1rem;font-weight:700">47</div>
+            </div>
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- Dashboard Stats -->
+      <div style="padding:16px 20px">
+        <div style="font-size:0.78rem;font-weight:600;margin-bottom:12px">Dashboard Overview</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+          <div style="background:rgba(240,238,232,0.03);padding:12px;border-radius:8px;border:1px solid ${border}">
+            <div style="font-size:0.68rem;color:rgba(240,238,232,0.5);margin-bottom:4px">Today's Bookings</div>
+            <div style="font-size:1.2rem;font-weight:700">3</div>
+          </div>
+          <div style="background:rgba(240,238,232,0.03);padding:12px;border-radius:8px;border:1px solid ${border}">
+            <div style="font-size:0.68rem;color:rgba(240,238,232,0.5);margin-bottom:4px">Pending</div>
+            <div style="font-size:1.2rem;font-weight:700">2</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Staff Management -->
+      <div style="padding:0 20px 16px">
+        <div style="font-size:0.78rem;font-weight:600;margin-bottom:12px">Staff Management (${maxStaff} max)</div>
+        <div style="background:rgba(240,238,232,0.03);border-radius:8px;border:1px solid ${border}">
+          ${Array.from({length: Math.min(2, maxStaff)}, (_, i) => `
+            <div style="padding:12px;border-bottom:1px solid ${border};display:flex;align-items:center;gap:12px">
+              <div style="width:32px;height:32px;background:rgba(240,238,232,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:600">S${i+1}</div>
+              <div style="flex:1">
+                <div style="font-size:0.78rem;font-weight:600">Staff Member ${i+1}</div>
+                <div style="font-size:0.68rem;color:rgba(240,238,232,0.5)">Available</div>
+              </div>
+              <div style="font-size:0.68rem;color:#28a745">Active</div>
+            </div>
+          `).join('')}
+          ${maxStaff > 2 ? `
+            <div style="padding:12px;display:flex;align-items:center;justify-content:center;color:rgba(240,238,232,0.5);font-size:0.68rem">
+              +${maxStaff - 2} more staff members
+            </div>
+          ` : ''}
+        </div>
+      </div>
+
+      <!-- Recent Bookings -->
+      <div style="padding:0 20px 16px">
+        <div style="font-size:0.78rem;font-weight:600;margin-bottom:12px">Recent Bookings</div>
+        <div style="background:rgba(240,238,232,0.03);border-radius:8px;border:1px solid ${border}">
+          ${svcs.slice(0, 3).map((svc, i) => `
+            <div style="padding:12px;border-bottom:1px solid ${border}">
+              <div style="display:flex;justify-content:space-between;align-items:start">
+                <div>
+                  <div style="font-size:0.78rem;font-weight:600">${svc.name}</div>
+                  <div style="font-size:0.68rem;color:rgba(240,238,232,0.5)">Customer ${i+1} · Today ${9+i}:00</div>
+                </div>
+                <div style="font-size:0.78rem;font-weight:600;color:#28a745">£${svc.price || '45'}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+function buildMintAdminHTML(name, plan, svcs, maxStaff, c) {
+  return `
+    <div style="background:#F7FAF9;min-height:100%;font-family:'DM Sans',sans-serif;color:#1A2E1A">
+      <!-- Admin Header -->
+      <div style="background:#fff;padding:16px 20px;border-bottom:1px solid #E8F0EE;box-shadow:0 1px 4px rgba(0,0,0,0.04);display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:32px;height:32px;background:#6B9E95;border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.8rem">${name.charAt(0).toUpperCase()}</div>
+          <div>
+            <div style="font-size:0.9rem;font-weight:700;color:#1A2E1A">${name} Admin</div>
+            <div style="font-size:0.68rem;color:#6B9E95;text-transform:capitalize">${plan} Plan</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div style="width:8px;height:8px;background:#28a745;border-radius:50%"></div>
+          <div style="font-size:0.68rem;color:#6B9E95">Live</div>
+        </div>
+      </div>
+
+      <!-- Pro Plan Notifications -->
+      ${plan === 'pro' ? `
+        <div style="background:#E8F0EE;margin:16px 20px;padding:12px 16px;border-radius:8px;border-left:4px solid #6B9E95">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <div style="font-size:0.78rem;font-weight:600;color:#6B9E95;margin-bottom:2px">Enable Notifications</div>
+              <div style="font-size:0.68rem;color:#6B9E95">Get real-time alerts for new bookings</div>
+            </div>
+            <div style="width:44px;height:24px;background:#6B9E95;border-radius:12px;position:relative;cursor:pointer">
+              <div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;top:2px;right:2px;box-shadow:0 2px 4px rgba(0,0,0,0.2)"></div>
+            </div>
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- Premium Plan Revenue Tracker -->
+      ${plan === 'premium' ? `
+        <div style="background:#fff;margin:16px 20px;padding:16px;border-radius:8px;border:1px solid #E8F0EE;box-shadow:0 1px 4px rgba(0,0,0,0.04)">
+          <div style="font-size:0.78rem;font-weight:600;color:#1A2E1A;margin-bottom:12px">Revenue Tracker</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="background:#F7FAF9;padding:12px;border-radius:6px">
+              <div style="font-size:0.68rem;color:#6B9E95;margin-bottom:4px">This Month</div>
+              <div style="font-size:1.1rem;font-weight:700;color:#28a745">£1,247</div>
+            </div>
+            <div style="background:#F7FAF9;padding:12px;border-radius:6px">
+              <div style="font-size:0.68rem;color:#6B9E95;margin-bottom:4px">Total Bookings</div>
+              <div style="font-size:1.1rem;font-weight:700">47</div>
+            </div>
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- Dashboard Stats -->
+      <div style="padding:16px 20px">
+        <div style="font-size:0.78rem;font-weight:600;color:#1A2E1A;margin-bottom:12px">Dashboard Overview</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+          <div style="background:#fff;padding:12px;border-radius:8px;border:1px solid #E8F0EE;box-shadow:0 1px 4px rgba(0,0,0,0.04)">
+            <div style="font-size:0.68rem;color:#6B9E95;margin-bottom:4px">Today's Bookings</div>
+            <div style="font-size:1.2rem;font-weight:700;color:#1A2E1A">3</div>
+          </div>
+          <div style="background:#fff;padding:12px;border-radius:8px;border:1px solid #E8F0EE;box-shadow:0 1px 4px rgba(0,0,0,0.04)">
+            <div style="font-size:0.68rem;color:#6B9E95;margin-bottom:4px">Pending</div>
+            <div style="font-size:1.2rem;font-weight:700;color:#1A2E1A">2</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Staff Management -->
+      <div style="padding:0 20px 16px">
+        <div style="font-size:0.78rem;font-weight:600;color:#1A2E1A;margin-bottom:12px">Staff Management (${maxStaff} max)</div>
+        <div style="background:#fff;border-radius:8px;border:1px solid #E8F0EE;box-shadow:0 1px 4px rgba(0,0,0,0.04)">
+          ${Array.from({length: Math.min(2, maxStaff)}, (_, i) => `
+            <div style="padding:12px;border-bottom:1px solid #E8F0EE;display:flex;align-items:center;gap:12px">
+              <div style="width:32px;height:32px;background:#E8F0EE;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:600;color:#6B9E95">S${i+1}</div>
+              <div style="flex:1">
+                <div style="font-size:0.78rem;font-weight:600;color:#1A2E1A">Staff Member ${i+1}</div>
+                <div style="font-size:0.68rem;color:#6B9E95">Available</div>
+              </div>
+              <div style="font-size:0.68rem;color:#28a745">Active</div>
+            </div>
+          `).join('')}
+          ${maxStaff > 2 ? `
+            <div style="padding:12px;display:flex;align-items:center;justify-content:center;color:#6B9E95;font-size:0.68rem">
+              +${maxStaff - 2} more staff members
+            </div>
+          ` : ''}
+        </div>
+      </div>
+
+      <!-- Recent Bookings -->
+      <div style="padding:0 20px 16px">
+        <div style="font-size:0.78rem;font-weight:600;color:#1A2E1A;margin-bottom:12px">Recent Bookings</div>
+        <div style="background:#fff;border-radius:8px;border:1px solid #E8F0EE;box-shadow:0 1px 4px rgba(0,0,0,0.04)">
+          ${svcs.slice(0, 3).map((svc, i) => `
+            <div style="padding:12px;border-bottom:1px solid #E8F0EE">
+              <div style="display:flex;justify-content:space-between;align-items:start">
+                <div>
+                  <div style="font-size:0.78rem;font-weight:600;color:#1A2E1A">${svc.name}</div>
+                  <div style="font-size:0.68rem;color:#6B9E95">Customer ${i+1} · Today ${9+i}:00</div>
+                </div>
+                <div style="font-size:0.78rem;font-weight:600;color:#28a745">£${svc.price || '45'}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+function buildEditorialAdminHTML(name, plan, svcs, maxStaff, c) {
+  return `
+    <div style="background:#F5EDD0;min-height:100%;font-family:Georgia,serif;color:#1A0A0A">
+      <!-- Admin Header -->
+      <div style="background:#1A0A0A;padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:32px;height:32px;background:#F5EDD0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#1A0A0A;font-weight:700;font-size:0.8rem">${name.charAt(0).toUpperCase()}</div>
+          <div>
+            <div style="font-size:0.9rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#F5EDD0">${name} Admin</div>
+            <div style="font-size:0.68rem;color:rgba(245,237,208,0.7);text-transform:capitalize">${plan} Plan</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div style="width:8px;height:8px;background:#28a745;border-radius:50%"></div>
+          <div style="font-size:0.68rem;color:rgba(245,237,208,0.7)">Live</div>
+        </div>
+      </div>
+
+      <!-- Pro Plan Notifications -->
+      ${plan === 'pro' ? `
+        <div style="background:rgba(26,10,10,0.1);margin:16px 20px;padding:12px 16px;border-radius:8px;border-left:4px solid ${c}">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <div style="font-size:0.78rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:${c};margin-bottom:2px">Enable Notifications</div>
+              <div style="font-size:0.68rem;color:rgba(26,10,10,0.6)">Get real-time alerts for new bookings</div>
+            </div>
+            <div style="width:44px;height:24px;background:${c};border-radius:12px;position:relative;cursor:pointer">
+              <div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;top:2px;right:2px;box-shadow:0 2px 4px rgba(0,0,0,0.2)"></div>
+            </div>
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- Premium Plan Revenue Tracker -->
+      ${plan === 'premium' ? `
+        <div style="background:#fff;margin:16px 20px;padding:16px;border-radius:8px;border:2px solid #1A0A0A">
+          <div style="font-size:0.78rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px">Revenue Tracker</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="background:#F5EDD0;padding:12px;border-radius:6px">
+              <div style="font-size:0.68rem;color:rgba(26,10,10,0.5);margin-bottom:4px">This Month</div>
+              <div style="font-size:1.1rem;font-weight:700;color:#28a745">£1,247</div>
+            </div>
+            <div style="background:#F5EDD0;padding:12px;border-radius:6px">
+              <div style="font-size:0.68rem;color:rgba(26,10,10,0.5);margin-bottom:4px">Total Bookings</div>
+              <div style="font-size:1.1rem;font-weight:700">47</div>
+            </div>
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- Dashboard Stats -->
+      <div style="padding:16px 20px">
+        <div style="font-size:0.78rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px">Dashboard Overview</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+          <div style="background:#fff;padding:12px;border-radius:8px;border:2px solid #1A0A0A">
+            <div style="font-size:0.68rem;color:rgba(26,10,10,0.5);margin-bottom:4px">Today's Bookings</div>
+            <div style="font-size:1.2rem;font-weight:700">3</div>
+          </div>
+          <div style="background:#fff;padding:12px;border-radius:8px;border:2px solid #1A0A0A">
+            <div style="font-size:0.68rem;color:rgba(26,10,10,0.5);margin-bottom:4px">Pending</div>
+            <div style="font-size:1.2rem;font-weight:700">2</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Staff Management -->
+      <div style="padding:0 20px 16px">
+        <div style="font-size:0.78rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px">Staff Management (${maxStaff} max)</div>
+        <div style="background:#fff;border-radius:8px;border:2px solid #1A0A0A">
+          ${Array.from({length: Math.min(2, maxStaff)}, (_, i) => `
+            <div style="padding:12px;border-bottom:2px solid rgba(26,10,10,0.12);display:flex;align-items:center;gap:12px">
+              <div style="width:32px;height:32px;background:#F5EDD0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700">S${i+1}</div>
+              <div style="flex:1">
+                <div style="font-size:0.78rem;font-weight:700">Staff Member ${i+1}</div>
+                <div style="font-size:0.68rem;color:rgba(26,10,10,0.5)">Available</div>
+              </div>
+              <div style="font-size:0.68rem;color:#28a745">Active</div>
+            </div>
+          `).join('')}
+          ${maxStaff > 2 ? `
+            <div style="padding:12px;display:flex;align-items:center;justify-content:center;color:rgba(26,10,10,0.5);font-size:0.68rem">
+              +${maxStaff - 2} more staff members
+            </div>
+          ` : ''}
+        </div>
+      </div>
+
+      <!-- Recent Bookings -->
+      <div style="padding:0 20px 16px">
+        <div style="font-size:0.78rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px">Recent Bookings</div>
+        <div style="background:#fff;border-radius:8px;border:2px solid #1A0A0A">
+          ${svcs.slice(0, 3).map((svc, i) => `
+            <div style="padding:12px;border-bottom:2px solid rgba(26,10,10,0.12)">
+              <div style="display:flex;justify-content:space-between;align-items:start">
+                <div>
+                  <div style="font-size:0.78rem;font-weight:700">${svc.name}</div>
+                  <div style="font-size:0.68rem;color:rgba(26,10,10,0.5)">Customer ${i+1} · Today ${9+i}:00</div>
+                </div>
+                <div style="font-size:0.78rem;font-weight:700;color:#28a745">£${svc.price || '45'}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+function buildCoastalAdminHTML(name, plan, svcs, maxStaff, c) {
+  return `
+    <div style="background:#F0F7F9;min-height:100%;font-family:'DM Sans',sans-serif;color:#1A2A2E">
+      <!-- Admin Header -->
+      <div style="background:#fff;padding:16px 20px;border-bottom:1px solid #D8ECEF;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:32px;height:32px;background:#4A8B96;border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.8rem">${name.charAt(0).toUpperCase()}</div>
+          <div>
+            <div style="font-size:0.9rem;font-weight:700;color:#1A2A2E">${name} Admin</div>
+            <div style="font-size:0.68rem;color:#4A8B96;text-transform:capitalize">${plan} Plan</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div style="width:8px;height:8px;background:#28a745;border-radius:50%"></div>
+          <div style="font-size:0.68rem;color:#4A8B96">Live</div>
+        </div>
+      </div>
+
+      <!-- Pro Plan Notifications -->
+      ${plan === 'pro' ? `
+        <div style="background:#E8F4F7;margin:16px 20px;padding:12px 16px;border-radius:8px;border-left:4px solid #4A8B96">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <div style="font-size:0.78rem;font-weight:700;color:#4A8B96;margin-bottom:2px">Enable Notifications</div>
+              <div style="font-size:0.68rem;color:#4A8B96">Get real-time alerts for new bookings</div>
+            </div>
+            <div style="width:44px;height:24px;background:#4A8B96;border-radius:12px;position:relative;cursor:pointer">
+              <div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;top:2px;right:2px;box-shadow:0 2px 4px rgba(0,0,0,0.2)"></div>
+            </div>
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- Premium Plan Revenue Tracker -->
+      ${plan === 'premium' ? `
+        <div style="background:#fff;margin:16px 20px;padding:16px;border-radius:8px;border:1px solid #D8ECEF">
+          <div style="font-size:0.78rem;font-weight:700;color:#1A2A2E;margin-bottom:12px">Revenue Tracker</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="background:#F0F7F9;padding:12px;border-radius:6px">
+              <div style="font-size:0.68rem;color:#4A8B96;margin-bottom:4px">This Month</div>
+              <div style="font-size:1.1rem;font-weight:700;color:#28a745">£1,247</div>
+            </div>
+            <div style="background:#F0F7F9;padding:12px;border-radius:6px">
+              <div style="font-size:0.68rem;color:#4A8B96;margin-bottom:4px">Total Bookings</div>
+              <div style="font-size:1.1rem;font-weight:700">47</div>
+            </div>
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- Dashboard Stats -->
+      <div style="padding:16px 20px">
+        <div style="font-size:0.78rem;font-weight:700;color:#1A2A2E;margin-bottom:12px">Dashboard Overview</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+          <div style="background:#fff;padding:12px;border-radius:8px;border:1px solid #D8ECEF">
+            <div style="font-size:0.68rem;color:#4A8B96;margin-bottom:4px">Today's Bookings</div>
+            <div style="font-size:1.2rem;font-weight:700;color:#1A2A2E">3</div>
+          </div>
+          <div style="background:#fff;padding:12px;border-radius:8px;border:1px solid #D8ECEF">
+            <div style="font-size:0.68rem;color:#4A8B96;margin-bottom:4px">Pending</div>
+            <div style="font-size:1.2rem;font-weight:700;color:#1A2A2E">2</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Staff Management -->
+      <div style="padding:0 20px 16px">
+        <div style="font-size:0.78rem;font-weight:700;color:#1A2A2E;margin-bottom:12px">Staff Management (${maxStaff} max)</div>
+        <div style="background:#fff;border-radius:8px;border:1px solid #D8ECEF">
+          ${Array.from({length: Math.min(2, maxStaff)}, (_, i) => `
+            <div style="padding:12px;border-bottom:1px solid #D8ECEF;display:flex;align-items:center;gap:12px">
+              <div style="width:32px;height:32px;background:#E8F4F7;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;color:#4A8B96">S${i+1}</div>
+              <div style="flex:1">
+                <div style="font-size:0.78rem;font-weight:700;color:#1A2A2E">Staff Member ${i+1}</div>
+                <div style="font-size:0.68rem;color:#4A8B96">Available</div>
+              </div>
+              <div style="font-size:0.68rem;color:#28a745">Active</div>
+            </div>
+          `).join('')}
+          ${maxStaff > 2 ? `
+            <div style="padding:12px;display:flex;align-items:center;justify-content:center;color:#4A8B96;font-size:0.68rem">
+              +${maxStaff - 2} more staff members
+            </div>
+          ` : ''}
+        </div>
+      </div>
+
+      <!-- Recent Bookings -->
+      <div style="padding:0 20px 16px">
+        <div style="font-size:0.78rem;font-weight:700;color:#1A2A2E;margin-bottom:12px">Recent Bookings</div>
+        <div style="background:#fff;border-radius:8px;border:1px solid #D8ECEF">
+          ${svcs.slice(0, 3).map((svc, i) => `
+            <div style="padding:12px;border-bottom:1px solid #D8ECEF">
+              <div style="display:flex;justify-content:space-between;align-items:start">
+                <div>
+                  <div style="font-size:0.78rem;font-weight:700;color:#1A2A2E">${svc.name}</div>
+                  <div style="font-size:0.68rem;color:#4A8B96">Customer ${i+1} · Today ${9+i}:00</div>
+                </div>
+                <div style="font-size:0.78rem;font-weight:700;color:#28a745">£${svc.price || '45'}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+function buildArtisanAdminHTML(name, plan, svcs, maxStaff, c) {
+  return `
+    <div style="background:#F9F4EE;min-height:100%;font-family:'DM Sans',sans-serif;color:#1A1208">
+      <!-- Admin Header -->
+      <div style="background:#F9F4EE;padding:16px 20px;border-bottom:2px solid #1A1208;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:32px;height:32px;background:${c};border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.8rem">${name.charAt(0).toUpperCase()}</div>
+          <div>
+            <div style="font-size:0.9rem;font-weight:900;letter-spacing:0.02em">${name} Admin</div>
+            <div style="font-size:0.68rem;color:rgba(26,18,8,0.5);text-transform:capitalize">${plan} Plan</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div style="width:8px;height:8px;background:#28a745;border-radius:50%"></div>
+          <div style="font-size:0.68rem;color:rgba(26,18,8,0.5)">Live</div>
+        </div>
+      </div>
+
+      <!-- Pro Plan Notifications -->
+      ${plan === 'pro' ? `
+        <div style="background:rgba(26,18,8,0.05);margin:16px 20px;padding:12px 16px;border-radius:8px;border-left:4px solid ${c}">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <div style="font-size:0.78rem;font-weight:600;color:${c};margin-bottom:2px">Enable Notifications</div>
+              <div style="font-size:0.68rem;color:rgba(26,18,8,0.6)">Get real-time alerts for new bookings</div>
+            </div>
+            <div style="width:44px;height:24px;background:${c};border-radius:12px;position:relative;cursor:pointer">
+              <div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;top:2px;right:2px;box-shadow:0 2px 4px rgba(0,0,0,0.2)"></div>
+            </div>
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- Premium Plan Revenue Tracker -->
+      ${plan === 'premium' ? `
+        <div style="background:#fff;margin:16px 20px;padding:16px;border-radius:8px;border:1px solid rgba(26,18,8,0.08)">
+          <div style="font-size:0.78rem;font-weight:600;margin-bottom:12px">Revenue Tracker</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="background:#F9F4EE;padding:12px;border-radius:6px">
+              <div style="font-size:0.68rem;color:rgba(26,18,8,0.5);margin-bottom:4px">This Month</div>
+              <div style="font-size:1.1rem;font-weight:700;color:#28a745">£1,247</div>
+            </div>
+            <div style="background:#F9F4EE;padding:12px;border-radius:6px">
+              <div style="font-size:0.68rem;color:rgba(26,18,8,0.5);margin-bottom:4px">Total Bookings</div>
+              <div style="font-size:1.1rem;font-weight:700">47</div>
+            </div>
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- Dashboard Stats -->
+      <div style="padding:16px 20px">
+        <div style="font-size:0.78rem;font-weight:600;margin-bottom:12px">Dashboard Overview</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+          <div style="background:#fff;padding:12px;border-radius:8px;border:1px solid rgba(26,18,8,0.08)">
+            <div style="font-size:0.68rem;color:rgba(26,18,8,0.5);margin-bottom:4px">Today's Bookings</div>
+            <div style="font-size:1.2rem;font-weight:700">3</div>
+          </div>
+          <div style="background:#fff;padding:12px;border-radius:8px;border:1px solid rgba(26,18,8,0.08)">
+            <div style="font-size:0.68rem;color:rgba(26,18,8,0.5);margin-bottom:4px">Pending</div>
+            <div style="font-size:1.2rem;font-weight:700">2</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Staff Management -->
+      <div style="padding:0 20px 16px">
+        <div style="font-size:0.78rem;font-weight:600;margin-bottom:12px">Staff Management (${maxStaff} max)</div>
+        <div style="background:#fff;border-radius:8px;border:1px solid rgba(26,18,8,0.08)">
+          ${Array.from({length: Math.min(2, maxStaff)}, (_, i) => `
+            <div style="padding:12px;border-bottom:1px solid rgba(26,18,8,0.08);display:flex;align-items:center;gap:12px">
+              <div style="width:32px;height:32px;background:#F9F4EE;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:600">S${i+1}</div>
+              <div style="flex:1">
+                <div style="font-size:0.78rem;font-weight:600">Staff Member ${i+1}</div>
+                <div style="font-size:0.68rem;color:rgba(26,18,8,0.5)">Available</div>
+              </div>
+              <div style="font-size:0.68rem;color:#28a745">Active</div>
+            </div>
+          `).join('')}
+          ${maxStaff > 2 ? `
+            <div style="padding:12px;display:flex;align-items:center;justify-content:center;color:rgba(26,18,8,0.5);font-size:0.68rem">
+              +${maxStaff - 2} more staff members
+            </div>
+          ` : ''}
+        </div>
+      </div>
+
+      <!-- Recent Bookings -->
+      <div style="padding:0 20px 16px">
+        <div style="font-size:0.78rem;font-weight:600;margin-bottom:12px">Recent Bookings</div>
+        <div style="background:#fff;border-radius:8px;border:1px solid rgba(26,18,8,0.08)">
+          ${svcs.slice(0, 3).map((svc, i) => `
+            <div style="padding:12px;border-bottom:1px solid rgba(26,18,8,0.08)">
+              <div style="display:flex;justify-content:space-between;align-items:start">
+                <div>
+                  <div style="font-size:0.78rem;font-weight:600">${svc.name}</div>
+                  <div style="font-size:0.68rem;color:rgba(26,18,8,0.5)">Customer ${i+1} · Today ${9+i}:00</div>
+                </div>
+                <div style="font-size:0.78rem;font-weight:600;color:#28a745">£${svc.price || '45'}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── HELPERS ──
+function hexToRgb(hex) {
+  const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return r ? `${parseInt(r[1],16)},${parseInt(r[2],16)},${parseInt(r[3],16)}` : '45,142,255';
+}
+function hexWithAlpha(hex, a) {
+  const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return r ? `rgba(${parseInt(r[1],16)},${parseInt(r[2],16)},${parseInt(r[3],16)},${a})` : `rgba(45,142,255,${a})`;
+}
+// Auto-open builder when page loads
+window.addEventListener('load', function() {
+  setTimeout(openBuilder, 500);
+});
+</script>
+</body>
+</html>

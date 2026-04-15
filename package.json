@@ -1,0 +1,13 @@
+{
+  "name": "showupmedia-functions",
+  "version": "1.0.0",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.4",
+    "node-fetch": "^2.6.9",
+    "twilio": "^4.19.0",
+    "stripe": "^14.9.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

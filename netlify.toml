@@ -1,0 +1,62 @@
+[build]
+  publish = "website"
+  command = "echo 'Static site ready'"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[functions.node_version]
+  node_version = "18"
+
+# Main website - index-booking.html
+[[redirects]]
+  from = "/"
+  to = "/index-booking.html"
+  status = 200
+
+# Booking Builder
+[[redirects]]
+  from = "/booking"
+  to = "/bookingbuilder-upgraded.html"
+  status = 200
+
+[[redirects]]
+  from = "/booking-builder"
+  to = "/bookingbuilder-upgraded.html"
+  status = 200
+
+# CRM
+[[redirects]]
+  from = "/crm"
+  to = "/crm/crm.html"
+  status = 200
+
+# API redirects for future functionality
+[[redirects]]
+  from = "/api/booking"
+  to = "/.netlify/functions/booking"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin"
+  to = "/.netlify/functions/admin"
+  status = 200
+
+[[redirects]]
+  from = "/api/auth"
+  to = "/.netlify/functions/auth"
+  status = 200
+
+# Environment variables (to be set in Netlify dashboard)
+[build.environment]
+  NODE_VERSION = "18"
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"

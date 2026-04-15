@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>Show Up Media — Clipping Services & Portfolio</title>
+<meta name="description" content="Professional clipping services for streamers and content creators. Turn your best moments into scroll-stopping short-form content. View our portfolio of work.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cellipse cx='16' cy='16' rx='15' ry='10' fill='%230a0a0a' stroke='%232D8EFF' stroke-width='1.5'/%3E%3Ccircle cx='16' cy='16' r='6' fill='url(%23blueGrad)'/%3E%3Ccircle cx='18' cy='14' r='2.2' fill='white' opacity='0.55'/%3E%3Cpolygon points='14,13 14,19 20,16' fill='white'/%3E%3Cdefs%3E%3CradialGradient id='blueGrad' cx='40%25' cy='35%25' r='65%25'%3E%3Cstop offset='0%25' stop-color='%235BB8FF'/%3E%3Cstop offset='100%25' stop-color='%231A5FCC'/%3E%3C/radialGradient%3E%3C/defs%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:'DM Sans',sans-serif;background:#080808;color:#F0EEE8;overflow-x:hidden;line-height:1.6;cursor:none}
+
+/* ── CUSTOM CURSOR ── */
+.cursor{position:fixed;width:10px;height:10px;background:#2D8EFF;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.1s,width 0.25s,height 0.25s,opacity 0.25s;mix-blend-mode:difference}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid rgba(45,142,255,0.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.12s ease,width 0.3s,height 0.3s}
+.cursor.hovering{width:20px;height:20px}
+.cursor-ring.hovering{width:56px;height:56px;border-color:rgba(45,142,255,0.25)}
+
+:root{
+  --blue:#2D8EFF;
+  --blue-dim:rgba(45,142,255,0.12);
+  --blue-mid:rgba(45,142,255,0.25);
+  --white:#F0EEE8;
+  --muted:#6B6862;
+  --muted-mid:#9B9890;
+  --dark:#080808;
+  --card:#0F0F0F;
+  --card-border:rgba(255,255,255,0.06);
+  --card-hover:rgba(255,255,255,0.04);
+}
+
+a{color:inherit;text-decoration:none}
+
+/* ── NAV ── */
+header{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 48px;height:72px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,8,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--card-border)}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--white);display:flex;align-items:center;gap:10px;cursor:pointer}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{font-size:0.78rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted-mid);transition:color 0.2s;cursor:none}
+.nav-links a:hover{color:var(--white)}
+.nav-cta{background:var(--blue);color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;padding:10px 24px;border-radius:3px;border:none;cursor:none;transition:all 0.2s}
+.nav-cta:hover{background:#1A7AEE;transform:translateY(-1px)}
+.nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:4px}
+.nav-toggle span{display:block;width:22px;height:1.5px;background:var(--white);margin:6px 0;transition:0.3s}
+@media(max-width:860px){
+  header{padding:0 24px}
+  .nav-toggle{display:block}
+  .nav-links{position:fixed;top:72px;left:0;right:0;background:rgba(8,8,8,0.99);flex-direction:column;align-items:center;padding:32px 0;transform:translateY(-120%);transition:0.35s;border-bottom:1px solid var(--card-border)}
+  .nav-links.open{transform:translateY(0)}
+  .nav-links a{padding:12px 0;font-size:0.9rem}
+  .nav-cta-wrap{display:none}
+}
+
+/* ── HERO ── */
+#hero{min-height:60vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:72px 48px 0}
+.hero-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(45,142,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(45,142,255,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 40%,transparent 100%)}
+.hero-glow{position:absolute;top:20%;left:50%;transform:translateX(-50%);width:700px;height:400px;background:radial-gradient(ellipse,rgba(45,142,255,0.08) 0%,transparent 70%);pointer-events:none}
+.hero-inner{position:relative;z-index:1;max-width:1200px;margin:0 auto;width:100%;padding:80px 0 80px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;background:rgba(45,142,255,0.08);border:1px solid rgba(45,142,255,0.2);border-radius:2px;padding:7px 16px;margin-bottom:32px}
+.hero-eyebrow span{font-size:0.68rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--blue)}
+.hero-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.hero-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(3rem,7.5vw,5.5rem);line-height:1.0;letter-spacing:-0.02em;margin-bottom:24px;max-width:860px}
+.hero-title .accent{color:var(--blue)}
+.hero-sub{font-size:1.1rem;color:var(--muted-mid);line-height:1.7;max-width:520px;margin-bottom:48px;font-weight:300}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:3px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.25s;cursor:none;border:none}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:#1A7AEE;transform:translateY(-2px);box-shadow:0 12px 40px rgba(45,142,255,0.3)}
+.btn-ghost{background:transparent;color:var(--white);border:1px solid rgba(255,255,255,0.15)}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.04);transform:translateY(-2px)}
+@media(max-width:860px){#hero{padding:72px 24px 0}.hero-inner{padding:60px 0 60px}}
+
+/* ── SECTION SHARED ── */
+.section{padding:100px 48px}
+.container{max-width:1200px;margin:0 auto}
+.sec-eyebrow{font-size:0.68rem;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--blue);margin-bottom:16px}
+.sec-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2rem,4.5vw,3.2rem);letter-spacing:-0.02em;line-height:1.1;margin-bottom:20px}
+.sec-sub{color:var(--muted-mid);font-size:0.98rem;line-height:1.75;max-width:520px;font-weight:300}
+@media(max-width:640px){.section{padding:72px 24px}}
+
+/* ── CLIPPING CARDS ── */
+.clip-card{background:var(--card);padding:36px 32px;transition:background 0.2s;position:relative}
+.clip-card:hover{background:var(--card-hover)}
+.clip-card-featured{background:#0A1628;border-left:1px solid rgba(45,142,255,0.2);border-right:1px solid rgba(45,142,255,0.2)}
+.clip-featured-badge{position:absolute;top:0;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;font-family:'Syne',sans-serif;font-size:0.58rem;font-weight:700;letter-spacing:0.16em;padding:4px 14px;border-radius:0 0 4px 4px}
+.clip-label{font-size:0.65rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.clip-price{font-family:'Syne',sans-serif;font-weight:800;font-size:2.8rem;color:var(--white);letter-spacing:-0.04em;line-height:1}
+.clip-sup{font-size:1.3rem;vertical-align:super}
+.clip-sup-blue{color:var(--blue)}
+.clip-per{font-size:0.78rem;color:var(--muted);margin:8px 0 20px;font-weight:300}
+.clip-features{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.clip-features li{font-size:0.82rem;color:var(--muted-mid);display:flex;gap:8px;font-weight:300;align-items:flex-start}
+.cf-arrow{flex-shrink:0}
+.cf-arrow.blue{color:var(--blue)}
+.clip-btn{width:100%;padding:12px;border-radius:3px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.2s;cursor:none;border:none}
+.clip-btn-ghost{background:transparent;color:var(--white);border:1px solid rgba(255,255,255,0.12)}
+.clip-btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
+.clip-btn-solid{background:var(--blue);color:#fff;border:1px solid var(--blue)}
+.clip-btn-solid:hover{background:#1A7AEE}
+
+/* ── FAQ ── */
+.faq-list{display:flex;flex-direction:column;gap:0;border:1px solid var(--card-border);border-radius:4px;overflow:hidden;margin-top:48px}
+.faq-item{border-bottom:1px solid var(--card-border)}
+.faq-item:last-child{border-bottom:none}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:24px 28px;cursor:none;background:var(--card);transition:background 0.2s;gap:16px}
+.faq-q:hover{background:var(--card-hover)}
+.faq-q-text{font-family:'Syne',sans-serif;font-weight:600;font-size:0.95rem;letter-spacing:-0.01em}
+.faq-icon{width:24px;height:24px;border:1px solid var(--card-border);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;color:var(--blue);font-size:0.9rem;line-height:1}
+.faq-item.open .faq-icon{background:var(--blue);border-color:var(--blue);color:#fff;transform:rotate(45deg)}
+.faq-a{display:none;padding:0 28px 24px;font-size:0.88rem;color:var(--muted-mid);line-height:1.75;font-weight:300}
+.faq-item.open .faq-a{display:block}
+
+/* ── CTA BAND ── */
+.cta-band{background:linear-gradient(135deg,#0A1628 0%,#080808 60%);border-top:1px solid rgba(45,142,255,0.15);border-bottom:1px solid rgba(45,142,255,0.15);padding:100px 48px;text-align:center;position:relative;overflow:hidden}
+.cta-band-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(45,142,255,0.08) 0%,transparent 70%);pointer-events:none}
+.cta-band .sec-title{margin:0 auto 20px;max-width:640px;position:relative}
+.cta-band .sec-sub{margin:0 auto 40px;position:relative}
+.cta-band-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative}
+
+/* ── FOOTER ── */
+footer{background:#050505;border-top:1px solid var(--card-border);padding:48px 48px 32px}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+.footer-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:0.95rem;letter-spacing:0.08em;text-transform:uppercase}
+.footer-copy{font-size:0.72rem;color:var(--muted)}
+.footer-back{font-size:0.78rem;color:var(--muted-mid);transition:color 0.2s;cursor:none}
+.footer-back:hover{color:var(--blue)}
+
+/* ── ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.2s}
+.reveal-delay-3{transition-delay:0.3s}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:800;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(8px)}
+.modal-overlay.open{display:flex}
+.modal{background:#0F0F0F;border:1px solid rgba(45,142,255,0.2);border-radius:6px;max-width:480px;width:100%;padding:40px;position:relative}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:1px solid var(--card-border);color:var(--muted-mid);width:32px;height:32px;border-radius:2px;cursor:none;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.modal-close:hover{border-color:var(--blue);color:var(--white)}
+.modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;letter-spacing:-0.02em;margin-bottom:6px}
+.modal-price{font-family:'Syne',sans-serif;font-weight:800;font-size:2.2rem;color:var(--blue);letter-spacing:-0.03em;margin-bottom:28px}
+.modal-features{list-style:none;margin-bottom:32px;display:flex;flex-direction:column;gap:10px}
+.modal-features li{font-size:0.85rem;color:var(--muted-mid);display:flex;gap:10px;font-weight:300}
+.modal-features li::before{content:'✓';color:var(--blue);flex-shrink:0}
+.stripe-pay-btn{width:100%;padding:16px;background:var(--blue);color:#fff;border:none;border-radius:4px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;cursor:none;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:10px}
+.stripe-pay-btn:hover{background:#1A7AEE;transform:translateY(-1px)}
+.stripe-note{text-align:center;font-size:0.68rem;color:var(--muted);margin-top:12px;letter-spacing:0.06em}
+
+/* ── MOBILE ── */
+@media(max-width:640px){
+  body{cursor:auto}
+  .cursor,.cursor-ring{display:none}
+  .btn,.clip-btn,.nav-cta,.stripe-pay-btn{cursor:pointer}
+  header{padding:0 20px;height:64px}
+  .section{padding:56px 20px}
+  #hero{padding:64px 20px 0;min-height:auto}
+  .hero-inner{padding:48px 0 48px}
+  .hero-title{font-size:2.2rem}
+  .hero-sub{font-size:0.92rem;margin-bottom:24px}
+  .clip-card{padding:24px 18px}
+  .clip-price{font-size:2.2rem}
+  .clip-featured-badge{font-size:0.55rem;padding:4px 12px}
+  div[style*="grid-template-columns:repeat(3,1fr)"]{grid-template-columns:1fr!important}
+  .cta-band{padding:64px 20px}
+  .cta-band-btns{flex-direction:column;align-items:center}
+  .cta-band-btns .btn{width:100%;max-width:320px;justify-content:center}
+  footer{padding:32px 20px}
+  .footer-inner{flex-direction:column;text-align:center;gap:12px}
+  .faq-q{padding:18px 20px}
+  .faq-a{padding:0 20px 18px;font-size:0.84rem}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ═══ NAV ═══ -->
+<header>
+  <a class="nav-logo" href="https://www.showupmedia.org">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+      <ellipse cx="16" cy="16" rx="15" ry="10" fill="#0a0a0a" stroke="#2D8EFF" stroke-width="1.5"/>
+      <circle cx="16" cy="16" r="6" fill="url(#blueGrad2)"/>
+      <circle cx="18" cy="14" r="2.2" fill="white" opacity="0.55"/>
+      <polygon points="14,13 14,19 20,16" fill="white"/>
+      <defs>
+        <radialGradient id="blueGrad2" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#5BB8FF"/>
+          <stop offset="100%" stop-color="#1A5FCC"/>
+        </radialGradient>
+      </defs>
+    </svg>
+    <div style="display:flex;flex-direction:column;line-height:1.1">
+      <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:0.95rem;letter-spacing:0.08em;text-transform:uppercase;color:#fff">Show Up</span>
+      <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:0.95rem;letter-spacing:0.08em;text-transform:uppercase;color:#2D8EFF">Media</span>
+    </div>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="https://www.showupmedia.org" onclick="closeNav()">Home</a></li>
+    <li><a href="https://www.showupmedia.org#pricing" onclick="closeNav()">Booking Systems</a></li>
+    <li><a href="#pricing" onclick="closeNav()">Clipping Pricing</a></li>
+    <li><a href="#faq" onclick="closeNav()">FAQ</a></li>
+  </ul>
+  <div class="nav-cta-wrap">
+    <button class="nav-cta" onclick="window.open('https://calendly.com/admin-showupmedia/30min','_blank')">Book a Call</button>
+  </div>
+  <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+</header>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow reveal">
+      <div class="hero-eyebrow-dot"></div>
+      <span>Streamers &amp; YouTubers</span>
+    </div>
+    <h1 class="hero-title reveal reveal-delay-1">
+      Your Best Moments,<br><span class="accent">Clip-Ready.</span>
+    </h1>
+    <p class="hero-sub reveal reveal-delay-2">We clip your streams and long-form videos into scroll-stopping short-form content. Sound effects, subtitles, dynamic cuts — fully polished and ready to post.</p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap" class="reveal reveal-delay-3">
+      <button class="btn btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">
+        See Pricing →
+      </button>
+      <button class="btn btn-ghost" onclick="window.open('https://calendly.com/admin-showupmedia/30min','_blank')">Book a Free Call</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WHAT YOU GET ═══ -->
+<section class="section" style="background:#0C0C0C">
+  <div class="container">
+    <div class="sec-eyebrow reveal">What's Included</div>
+    <h2 class="sec-title reveal reveal-delay-1">Production-Quality.<br><span style="color:var(--blue)">Ready to Post.</span></h2>
+    <p class="sec-sub reveal reveal-delay-2">Every clip is edited to stop the scroll — not just cut and cropped.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--card-border);border:1px solid var(--card-border);border-radius:4px;overflow:hidden;margin-top:56px" class="reveal">
+      <div style="background:var(--card);padding:36px 28px;transition:background 0.2s" onmouseenter="this.style.background='var(--card-hover)'" onmouseleave="this.style.background='var(--card)'">
+        <div style="width:40px;height:40px;border-radius:8px;background:var(--blue-dim);border:1px solid var(--blue-mid);display:flex;align-items:center;justify-content:center;margin-bottom:20px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--blue)"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+        </div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:8px">Sound Effects</div>
+        <div style="font-size:0.84rem;color:var(--muted-mid);font-weight:300;line-height:1.65">Punchy, platform-tuned SFX that make your clips hit harder and feel more professional.</div>
+      </div>
+      <div style="background:var(--card);padding:36px 28px;border-left:1px solid var(--card-border);border-right:1px solid var(--card-border);transition:background 0.2s" onmouseenter="this.style.background='var(--card-hover)'" onmouseleave="this.style.background='var(--card)'">
+        <div style="width:40px;height:40px;border-radius:8px;background:var(--blue-dim);border:1px solid var(--blue-mid);display:flex;align-items:center;justify-content:center;margin-bottom:20px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--blue)"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        </div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:8px">Subtitles &amp; On-Screen Text</div>
+        <div style="font-size:0.84rem;color:var(--muted-mid);font-weight:300;line-height:1.65">Dynamic captions and text overlays that keep viewers watching even with sound off.</div>
+      </div>
+      <div style="background:var(--card);padding:36px 28px;transition:background 0.2s" onmouseenter="this.style.background='var(--card-hover)'" onmouseleave="this.style.background='var(--card)'">
+        <div style="width:40px;height:40px;border-radius:8px;background:var(--blue-dim);border:1px solid var(--blue-mid);display:flex;align-items:center;justify-content:center;margin-bottom:20px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--blue)"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+        </div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:8px">Dynamic Cuts</div>
+        <div style="font-size:0.84rem;color:var(--muted-mid);font-weight:300;line-height:1.65">Each clip is 30–90 seconds, cut for maximum retention. Optimised for TikTok, Reels &amp; Shorts.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRICING ═══ -->
+<section class="section" id="pricing" style="background:var(--dark)">
+  <div class="container">
+    <div class="sec-eyebrow reveal">Clipping Pricing</div>
+    <h2 class="sec-title reveal reveal-delay-1">Fully Polished Clips</h2>
+    <p class="sec-sub reveal reveal-delay-2">One-time payment. No contracts. Choose how many clips you need — the more you order, the lower the cost per clip.</p>
+
+    <!-- Polished Clips -->
+    <div class="reveal" style="margin-bottom:2px;background:var(--card);border:1px solid var(--card-border);border-radius:4px 4px 0 0;padding:28px 32px 20px;margin-top:48px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--blue);flex-shrink:0"></div>
+        <div style="font-size:0.68rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--blue)">Fully Polished · 30–90 seconds</div>
+      </div>
+      <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:-0.01em;margin-bottom:6px">Sound Effects · Subtitles · On-Screen Text · Dynamic Cuts</h3>
+      <p style="font-size:0.84rem;color:var(--muted);font-weight:300;line-height:1.6">Full production-quality clips, ready to post. Every detail handled — from punchy SFX to eye-catching subtitles.</p>
+    </div>
+    <div class="reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--card-border);border:1px solid var(--card-border);border-top:none;border-radius:0 0 4px 4px;overflow:hidden;margin-bottom:48px">
+
+      <div class="clip-card">
+        <div class="clip-label">30 Clips</div>
+        <div class="clip-price" id="clip30Price"><sup class="clip-sup clip-sup-blue">$</sup>150</div>
+        <div class="clip-per" id="clip30Was" style="font-size:0.7rem;color:var(--muted);text-decoration:line-through">Was $250</div>
+        <ul class="clip-features">
+          <li><span class="cf-arrow blue">&#8594;</span>30 fully polished clips</li>
+          <li><span class="cf-arrow blue">&#8594;</span>Sound effects included</li>
+          <li><span class="cf-arrow blue">&#8594;</span>Subtitles &amp; on-screen text</li>
+          <li><span class="cf-arrow blue">&#8594;</span>Dynamic cuts, 30–90 sec</li>
+          <li><span class="cf-arrow blue">&#8594;</span>TikTok · Reels · Shorts</li>
+        </ul>
+        <button class="clip-btn clip-btn-ghost" onclick="goToStripe('clip_polished_30')">Get Started &#8594;</button>
+      </div>
+
+      <div class="clip-card">
+        <div class="clip-label">60 Clips</div>
+        <div class="clip-price" id="clip60Price"><sup class="clip-sup clip-sup-blue">$</sup>250</div>
+        <div class="clip-per" id="clip60Was" style="font-size:0.7rem;color:var(--muted);text-decoration:line-through">Was $350</div>
+        <ul class="clip-features">
+          <li><span class="cf-arrow blue">&#8594;</span>60 fully polished clips</li>
+          <li><span class="cf-arrow blue">&#8594;</span>Sound effects included</li>
+          <li><span class="cf-arrow blue">&#8594;</span>Subtitles &amp; on-screen text</li>
+          <li><span class="cf-arrow blue">&#8594;</span>Dynamic cuts, 30–90 sec</li>
+          <li><span class="cf-arrow blue">&#8594;</span>TikTok · Reels · Shorts</li>
+        </ul>
+        <button class="clip-btn clip-btn-ghost" onclick="goToStripe('clip_polished_60')">Get Started &#8594;</button>
+      </div>
+
+      <div class="clip-card clip-card-featured">
+        <div class="clip-featured-badge">BEST VALUE</div>
+        <div class="clip-label" style="margin-top:16px">90 Clips</div>
+        <div class="clip-price" id="clip90Price"><sup class="clip-sup clip-sup-blue">$</sup>325</div>
+        <div class="clip-per" id="clip90Was" style="font-size:0.7rem;color:var(--muted);text-decoration:line-through">Was $425</div>
+        <ul class="clip-features">
+          <li><span class="cf-arrow blue">&#8594;</span>90 fully polished clips</li>
+          <li><span class="cf-arrow blue">&#8594;</span>Sound effects included</li>
+          <li><span class="cf-arrow blue">&#8594;</span>Subtitles &amp; on-screen text</li>
+          <li><span class="cf-arrow blue">&#8594;</span>Dynamic cuts, 30–90 sec</li>
+          <li><span class="cf-arrow blue">&#8594;</span>TikTok · Reels · Shorts</li>
+        </ul>
+        <button class="clip-btn clip-btn-solid" onclick="goToStripe('clip_polished_90')">Get Started &#8594;</button>
+      </div>
+
+    </div>
+
+    <!-- Raw Cuts -->
+    <div class="reveal" style="margin-bottom:2px;background:var(--card);border:1px solid var(--card-border);border-radius:4px 4px 0 0;padding:28px 32px 20px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0"></div>
+        <div style="font-size:0.68rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted-mid)">Raw Cuts · Up to 30 seconds</div>
+      </div>
+      <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:-0.01em;margin-bottom:6px">Chopped &amp; Platform-Formatted</h3>
+      <p style="font-size:0.84rem;color:var(--muted);font-weight:300;line-height:1.6">Clean cuts ready to post or build on yourself. No SFX, subtitles or on-screen text — just the raw clip, formatted for short-form.</p>
+    </div>
+    <div class="reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--card-border);border:1px solid var(--card-border);border-top:none;border-radius:0 0 4px 4px;overflow:hidden">
+
+      <div class="clip-card">
+        <div class="clip-label">30 Raw Cuts</div>
+        <div class="clip-price" id="clipRaw30Price"><sup class="clip-sup" style="color:var(--muted-mid);font-size:1.3rem;vertical-align:super">$</sup>60</div>
+        <div class="clip-per">$2.00 per clip</div>
+        <ul class="clip-features">
+          <li><span class="cf-arrow" style="color:var(--muted-mid)">&#8594;</span>30 raw cut clips</li>
+          <li><span class="cf-arrow" style="color:var(--muted-mid)">&#8594;</span>Chopped &amp; formatted</li>
+          <li><span class="cf-arrow" style="color:var(--muted-mid)">&#8594;</span>Up to 30 seconds each</li>
+          <li><span class="cf-arrow" style="color:var(--muted-mid)">&#8594;</span>No SFX or subtitles</li>
+        </ul>
+        <button class="clip-btn clip-btn-ghost" onclick="goToStripe('clip_raw_30')">Get Started &#8594;</button>
+      </div>
+
+      <div class="clip-card" style="border-left:1px solid var(--card-border);border-right:1px solid var(--card-border)">
+        <div class="clip-label">60 Raw Cuts</div>
+        <div class="clip-price" id="clipRaw60Price"><sup class="clip-sup" style="color:var(--muted-mid);font-size:1.3rem;vertical-align:super">$</sup>100</div>
+        <div class="clip-per">$1.67 per clip</div>
+        <ul class="clip-features">
+          <li><span class="cf-arrow" style="color:var(--muted-mid)">&#8594;</span>60 raw cut clips</li>
+          <li><span class="cf-arrow" style="color:var(--muted-mid)">&#8594;</span>Chopped &amp; formatted</li>
+          <li><span class="cf-arrow" style="color:var(--muted-mid)">&#8594;</span>Up to 30 seconds each</li>
+          <li><span class="cf-arrow" style="color:var(--muted-mid)">&#8594;</span>No SFX or subtitles</li>
+        </ul>
+        <button class="clip-btn clip-btn-ghost" onclick="goToStripe('clip_raw_60')">Get Started &#8594;</button>
+      </div>
+
+      <div class="clip-card">
+        <div class="clip-label">90 Raw Cuts</div>
+        <div class="clip-price" id="clipRaw90Price"><sup class="clip-sup" style="color:var(--muted-mid);font-size:1.3rem;vertical-align:super">$</sup>130</div>
+        <div class="clip-per">$1.44 per clip</div>
+        <ul class="clip-features">
+          <li><span class="cf-arrow" style="color:var(--muted-mid)">&#8594;</span>90 raw cut clips</li>
+          <li><span class="cf-arrow" style="color:var(--muted-mid)">&#8594;</span>Chopped &amp; formatted</li>
+          <li><span class="cf-arrow" style="color:var(--muted-mid)">&#8594;</span>Up to 30 seconds each</li>
+          <li><span class="cf-arrow" style="color:var(--muted-mid)">&#8594;</span>No SFX or subtitles</li>
+        </ul>
+        <button class="clip-btn clip-btn-ghost" onclick="goToStripe('clip_raw_90')">Get Started &#8594;</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section class="section" id="faq" style="background:#0C0C0C">
+  <div class="container" style="max-width:860px">
+    <div class="sec-eyebrow reveal">FAQ</div>
+    <h2 class="sec-title reveal reveal-delay-1">Common Questions</h2>
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text">What do I need to provide?</span>
+          <div class="faq-icon">+</div>
+        </div>
+        <div class="faq-a">Just share access to your stream VODs, YouTube videos or any long-form footage. We'll handle everything from there — finding the best moments, editing, formatting and delivering the finished clips.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text">What's the difference between Polished and Raw Cuts?</span>
+          <div class="faq-icon">+</div>
+        </div>
+        <div class="faq-a">Polished clips are fully produced — sound effects, dynamic subtitles, on-screen text and tightly edited for maximum retention. They're ready to post straight away. Raw cuts are simply chopped and platform-formatted clips with no production work — great if you want to add your own style on top, or just need the volume fast.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text">How long does delivery take?</span>
+          <div class="faq-icon">+</div>
+        </div>
+        <div class="faq-a">Turnaround depends on the volume ordered. Typically 3–5 business days for a 30-clip order, 5–7 days for 60 clips, and 7–10 days for 90 clips. We'll confirm an exact timeline after you order.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text">Which platforms are the clips optimised for?</span>
+          <div class="faq-icon">+</div>
+        </div>
+        <div class="faq-a">TikTok, Instagram Reels and YouTube Shorts by default. All clips are formatted in 9:16 vertical, with platform-appropriate captions and timing. Let us know if you need a specific platform priority.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text">Do I own the clips?</span>
+          <div class="faq-icon">+</div>
+        </div>
+        <div class="faq-a">Yes, completely. All delivered clips come with full commercial rights. Post them anywhere, monetise them, repurpose them however you like — forever. One-time payment covers all future usage.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text">Is payment secure?</span>
+          <div class="faq-icon">+</div>
+        </div>
+        <div class="faq-a">Yes. All payments are processed through Stripe — bank-level 256-bit SSL encryption on every transaction. Your card details are never stored on our servers.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA BAND ═══ -->
+<div class="cta-band">
+  <div class="cta-band-glow"></div>
+  <div class="sec-eyebrow reveal" style="justify-content:center;display:flex">Ready to Clip?</div>
+  <h2 class="sec-title reveal reveal-delay-1">Your Content.<br><span style="color:var(--blue)">Everywhere.</span></h2>
+  <p class="sec-sub reveal reveal-delay-2" style="margin:0 auto 40px">Order your clips above or book a free call if you want to chat through what works best for your content.</p>
+  <div class="cta-band-btns reveal reveal-delay-3">
+    <button class="btn btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">See Pricing →</button>
+    <button class="btn btn-ghost" onclick="window.open('https://drive.proton.me/urls/GES2V8KS28#LeFIjDOVOMKJ','_blank')">View Portfolio →</button>
+    <button class="btn btn-ghost" onclick="window.open('https://calendly.com/admin-showupmedia/30min','_blank')">Book a Free Call</button>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">Show Up Media</div>
+    <a href="index.html" class="footer-back">← Back to main site</a>
+    <div class="footer-copy">© 2026 Show Up Media. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- ═══ PAYMENT MODAL ═══ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalBox">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+if(window.matchMedia('(pointer:fine)').matches) {
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
+    ring.style.left = e.clientX + 'px'; ring.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a,button,.faq-q,.clip-card').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.classList.add('hovering'); ring.classList.add('hovering'); });
+    el.addEventListener('mouseleave', () => { cursor.classList.remove('hovering'); ring.classList.remove('hovering'); });
+  });
+}
+
+// ── NAV ──
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+function closeNav() { document.getElementById('navLinks').classList.remove('open'); }
+
+// ── REVEAL ON SCROLL ──
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ── FAQ ──
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ── CURRENCY ──
+function detectCurrency() {
+  const isUK = Intl.DateTimeFormat().resolvedOptions().timeZone.includes('London') ||
+               navigator.language.toLowerCase().includes('gb') ||
+               navigator.language.toLowerCase().includes('uk');
+
+  const clip30 = document.getElementById('clip30Price');
+  const clip60 = document.getElementById('clip60Price');
+  const clip90 = document.getElementById('clip90Price');
+  const clip30Was = document.getElementById('clip30Was');
+  const clip60Was = document.getElementById('clip60Was');
+  const clip90Was = document.getElementById('clip90Was');
+
+  if (isUK) {
+    if (clip30) clip30.innerHTML = '<sup class="clip-sup clip-sup-blue">£</sup>119';
+    if (clip60) clip60.innerHTML = '<sup class="clip-sup clip-sup-blue">£</sup>199';
+    if (clip90) clip90.innerHTML = '<sup class="clip-sup clip-sup-blue">£</sup>249';
+    if (clip30Was) clip30Was.textContent = 'Was £149';
+    if (clip60Was) clip60Was.textContent = 'Was £249';
+    if (clip90Was) clip90Was.textContent = 'Was £299';
+  }
+}
+document.addEventListener('DOMContentLoaded', detectCurrency);
+
+// ── PAYMENTS ──
+const packages = {
+  clip_polished_30: {
+    name: 'Polished Clips — 30 Clips', price: '$150', priceUK: '£119',
+    desc: 'Fully polished · 30–90 sec',
+    features: ['30 fully polished clips','Sound effects on every clip','Dynamic subtitles & on-screen text','Dynamic cuts optimised for short-form','Formatted for TikTok, Reels & Shorts'],
+    link: 'https://buy.stripe.com/8x24gA7ZZ9KSa4K2W35Ne05'
+  },
+  clip_polished_60: {
+    name: 'Polished Clips — 60 Clips', price: '$250', priceUK: '£199',
+    desc: 'Fully polished · 30–90 sec · Best value',
+    features: ['60 fully polished clips','Sound effects on every clip','Dynamic subtitles & on-screen text','Dynamic cuts optimised for short-form','Formatted for TikTok, Reels & Shorts'],
+    link: 'https://buy.stripe.com/fZu4gA3JJ0ai4Kq54b5Ne06'
+  },
+  clip_polished_90: {
+    name: 'Polished Clips — 90 Clips', price: '$325', priceUK: '£249',
+    desc: 'Fully polished · 30–90 sec',
+    features: ['90 fully polished clips','Sound effects on every clip','Dynamic subtitles & on-screen text','Dynamic cuts optimised for short-form','Formatted for TikTok, Reels & Shorts'],
+    link: 'https://buy.stripe.com/bJe00kgwv8GO1ye4075Ne07'
+  },
+  clip_raw_30: {
+    name: 'Raw Cuts — 30 Clips', price: '$60', priceUK: '£49',
+    desc: 'Raw cuts · Up to 30 sec',
+    features: ['30 raw cut clips','Chopped & platform formatted','Up to 30 seconds each','No SFX, subtitles or on-screen text','Ready to post or build on yourself'],
+    link: 'https://buy.stripe.com/3cIeVe7ZZ3mub8Obsz5Ne08'
+  },
+  clip_raw_60: {
+    name: 'Raw Cuts — 60 Clips', price: '$100', priceUK: '£79',
+    desc: 'Raw cuts · Up to 30 sec',
+    features: ['60 raw cut clips','Chopped & platform formatted','Up to 30 seconds each','No SFX, subtitles or on-screen text','Ready to post or build on yourself'],
+    link: 'https://buy.stripe.com/eVqdRa1BB2iq2Ci0NV5Ne09'
+  },
+  clip_raw_90: {
+    name: 'Raw Cuts — 90 Clips', price: '$130', priceUK: '£99',
+    desc: 'Raw cuts · Up to 30 sec',
+    features: ['90 raw cut clips','Chopped & platform formatted','Up to 30 seconds each','No SFX, subtitles or on-screen text','Ready to post or build on yourself'],
+    link: 'https://buy.stripe.com/bJedRa0xx7CKel07cj5Ne0a'
+  }
+};
+
+const ukLinks = {
+  clip_polished_30: 'https://buy.stripe.com/bJebJ2dkjaOWgt8bsz5Ne0d',
+  clip_polished_60: 'https://buy.stripe.com/cNibJ2cgf4qy4Kq9kr5Ne0c',
+  clip_polished_90: 'https://buy.stripe.com/7sYeVe2FF3mu90G1RZ5Ne0b'
+};
+
+function isUKUser() {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone.includes('London') ||
+         navigator.language.toLowerCase().includes('gb') ||
+         navigator.language.toLowerCase().includes('uk');
+}
+
+function goToStripe(id) {
+  const p = packages[id];
+  let link = p.link;
+  if (isUKUser() && ukLinks[id]) link = ukLinks[id];
+  window.open(link, '_blank');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modalOverlay') || e.target === document.querySelector('.modal-close')) {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+}
+</script>
+</body>
+</html>

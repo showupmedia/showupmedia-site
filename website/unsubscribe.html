@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsubscribe - Show Up Media</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cellipse cx='16' cy='16' rx='15' ry='10' fill='%230a0a0a' stroke='%232D8EFF' stroke-width='1.5'/%3E%3Ccircle cx='16' cy='16' r='6' fill='url(%23blueGrad)'/%3E%3Ccircle cx='18' cy='14' r='2.2' fill='white' opacity='0.55'/%3E%3Cpolygon points='14,13 14,19 20,16' fill='white'/%3E%3Cdefs%3E%3CradialGradient id='blueGrad' cx='40%25' cy='35%25' r='65%25'%3E%3Cstop offset='0%25' stop-color='%235BB8FF'/%3E%3Cstop offset='100%25' stop-color='%231A5FCC'/%3E%3C/radialGradient%3E%3C/defs%3E%3C/svg%3E">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #080808;
+            color: #F0EEE8;
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(45, 142, 255, 0.1);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2D8EFF;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #F0EEE8;
+        }
+        
+        p {
+            color: rgba(240, 238, 232, 0.7);
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        input[type="email"] {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(45, 142, 255, 0.2);
+            border-radius: 8px;
+            color: #F0EEE8;
+            font-size: 16px;
+            font-family: 'DM Sans', sans-serif;
+            box-sizing: border-box;
+        }
+        
+        input[type="email"]::placeholder {
+            color: rgba(240, 238, 232, 0.4);
+        }
+        
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #2D8EFF;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .btn {
+            background: #2D8EFF;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        
+        .btn:hover {
+            background: #1e7ae8;
+        }
+        
+        .btn:disabled {
+            background: rgba(45, 142, 255, 0.3);
+            cursor: not-allowed;
+        }
+        
+        .message {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .success {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            color: #28a745;
+        }
+        
+        .error {
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            color: #dc3545;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            font-size: 13px;
+            color: rgba(240, 238, 232, 0.5);
+        }
+        
+        .footer a {
+            color: #2D8EFF;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 15px;
+            }
+            
+            .container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">Show Up Media</div>
+        <h1>Unsubscribe</h1>
+        <p>We're sorry to see you go. Enter your email address below to unsubscribe from our marketing communications.</p>
+        
+        <form id="unsubscribeForm">
+            <div class="form-group">
+                <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+            </div>
+            <button type="submit" class="btn">Unsubscribe</button>
+        </form>
+        
+        <div id="message"></div>
+        
+        <div class="footer">
+            Questions? <a href="mailto:hello@showupmedia.org">hello@showupmedia.org</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('unsubscribeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const messageDiv = document.getElementById('message');
+            const btn = document.querySelector('.btn');
+            
+            // Disable button during submission
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+            
+            try {
+                // Store unsubscribed emails locally (for demo)
+                let unsubscribed = JSON.parse(localStorage.getItem('unsubscribed') || '[]');
+                
+                if (unsubscribed.includes(email)) {
+                    messageDiv.innerHTML = '<div class="message error">This email is already unsubscribed.</div>';
+                    return;
+                }
+                
+                unsubscribed.push(email);
+                localStorage.setItem('unsubscribed', JSON.stringify(unsubscribed));
+                
+                messageDiv.innerHTML = '<div class="message success">You have been successfully unsubscribed. We will no longer send you marketing emails.</div>';
+                document.getElementById('email').value = '';
+                
+                // In production, you'd also:
+                // 1. Add to Resend suppression list
+                // 2. Update your database
+                // 3. Send confirmation email
+                
+            } catch (error) {
+                messageDiv.innerHTML = '<div class="message error">An error occurred. Please try again.</div>';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Unsubscribe';
+            }
+        });
+        
+        // Pre-fill email from URL parameter if available
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+        if (email) {
+            document.getElementById('email').value = email;
+        }
+    </script>
+</body>
+</html>
