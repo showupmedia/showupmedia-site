@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Up Media - April Launch Special!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        .hero .tagline {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .hero .countdown {
+            font-size: 1.2rem;
+            background: rgba(255,255,255,0.2);
+            padding: 15px 30px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .promo-banner {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 30px 0;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .promo-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .plan-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+        
+        .plan-card.featured {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .plan-card.featured::before {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 40px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transform: rotate(45deg);
+        }
+        
+        .plan-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .plan-price {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .plan-price .original {
+            font-size: 1.5rem;
+            text-decoration: line-through;
+            opacity: 0.6;
+            margin-right: 10px;
+        }
+        
+        .plan-price .free {
+            color: #10b981;
+            font-size: 2rem;
+        }
+        
+        .plan-price .period {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        .plan-features {
+            list-style: none;
+            margin: 30px 0;
+        }
+        
+        .plan-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .plan-features .check {
+            color: #10b981;
+            font-size: 1.2rem;
+        }
+        
+        .plan-features .check.featured {
+            color: #667eea;
+        }
+        
+        .cta-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            margin-top: 20px;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .plan-card.featured .cta-button {
+            background: white;
+            color: #667eea;
+        }
+        
+        .features-section {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 30px;
+            margin: 50px 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .feature-item {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .feature-description {
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .testimonials {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 30px;
+            margin: 50px 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .testimonial-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        
+        .testimonial-author {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .testimonial-business {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .urgency-section {
+            text-align: center;
+            padding: 40px 20px;
+            margin: 50px 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .urgency-timer {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin: 20px 0;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .plan-card.featured {
+                transform: scale(1);
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .testimonial-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🚀 April Launch Special!</h1>
+            <div class="tagline">Transform Your Business with Professional Booking System</div>
+            <div class="countdown">⏰ Limited Time Offer - April Only!</div>
+        </div>
+        
+        <div class="promo-banner">
+            🎉 FIRST MONTH FREE - Sign up in April and pay NOTHING until May!
+        </div>
+        
+        <div class="plans-grid">
+            <div class="plan-card">
+                <div class="plan-name">Basic</div>
+                <div class="plan-price">
+                    <span class="original">£6.99</span>
+                    <span class="free">FREE</span>
+                    <div class="period">First Month, then £6.99/month</div>
+                </div>
+                <ul class="plan-features">
+                    <li><span class="check">✅</span> Core booking system</li>
+                    <li><span class="check">✅</span> Customer management</li>
+                    <li><span class="check">✅</span> Basic analytics</li>
+                    <li><span class="check">✅</span> Email support</li>
+                    <li><span class="check">✅</span> Mobile responsive</li>
+                </ul>
+                <a href="https://buy.stripe.com/9aW8k1BB0aidgW0NV5Ne0n?locale=en-GB&prefilled_promo_code=APRILFREE" class="cta-button">Start Free Month</a>
+            </div>
+            
+            <div class="plan-card featured">
+                <div class="plan-name">Pro</div>
+                <div class="plan-price">
+                    <span class="original">£9.99</span>
+                    <span class="free">FREE</span>
+                    <div class="period">First Month, then £9.99/month</div>
+                </div>
+                <ul class="plan-features">
+                    <li><span class="check featured">✅</span> Everything in Basic</li>
+                    <li><span class="check featured">✅</span> Staff management</li>
+                    <li><span class="check featured">✅</span> Advanced analytics</li>
+                    <li><span class="check featured">✅</span> Priority support</li>
+                    <li><span class="check featured">✅</span> Custom branding</li>
+                    <li><span class="check featured">✅</span> Real-time notifications</li>
+                </ul>
+                <a href="https://buy.stripe.com/4gM00k1BB0aidgW0NV5Ne0n?locale=en-GB&prefilled_promo_code=APRILFREE" class="cta-button">Start Free Month</a>
+            </div>
+            
+            <div class="plan-card">
+                <div class="plan-name">Premium</div>
+                <div class="plan-price">
+                    <span class="original">£14.99</span>
+                    <span class="free">FREE</span>
+                    <div class="period">First Month, then £14.99/month</div>
+                </div>
+                <ul class="plan-features">
+                    <li><span class="check">✅</span> Everything in Pro</li>
+                    <li><span class="check">✅</span> Online payment processing</li>
+                    <li><span class="check">✅</span> Bank transfer payouts</li>
+                    <li><span class="check">✅</span> Dedicated account manager</li>
+                    <li><span class="check">✅</span> 24/7 phone support</li>
+                    <li><span class="check">✅</span> Custom domain support</li>
+                    <li><span class="check">✅</span> Mobile app deployment</li>
+                </ul>
+                <a href="https://buy.stripe.com/fZubJ25RRcX490G68f5Ne0o?locale=en-GB&prefilled_promo_code=APRILFREE" class="cta-button">Start Free Month</a>
+            </div>
+        </div>
+        
+        <div class="features-section">
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 20px; color: #333;">🎯 Why Choose Show Up Media?</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <span class="feature-icon">📱</span>
+                    <div class="feature-title">Mobile Apps</div>
+                    <div class="feature-description">Deploy your own iOS, Android, and web apps for customers to book on the go</div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">⚡</span>
+                    <div class="feature-title">Real-time Updates</div>
+                    <div class="feature-description">Live booking notifications and instant synchronization across all devices</div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">📊</span>
+                    <div class="feature-title">Advanced Analytics</div>
+                    <div class="feature-description">Track revenue, customer behavior, and staff performance in real-time</div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">👥</span>
+                    <div class="feature-title">Staff Management</div>
+                    <div class="feature-description">Manage your team, schedules, and performance from one dashboard</div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">💳</span>
+                    <div class="feature-title">Payment Processing</div>
+                    <div class="feature-description">Accept online payments with Stripe and manage automatic payouts</div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">📧</span>
+                    <div class="feature-title">Automated Emails</div>
+                    <div class="feature-description">Send confirmations, reminders, and notifications automatically</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="testimonials">
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 20px; color: #333;">💬 What Businesses Are Saying</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-text">"Show Up Media transformed our salon! We're booking 40% more appointments and our staff loves the easy scheduling system."</div>
+                    <div class="testimonial-author">Sarah Johnson</div>
+                    <div class="testimonial-business">Glamour Hair Salon</div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-text">"The analytics dashboard gives us insights we never had before. Our revenue has increased by 25% since switching!"</div>
+                    <div class="testimonial-author">Michael Chen</div>
+                    <div class="testimonial-business">Wellness Spa Center</div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-text">"Having our own mobile app has been a game-changer. Customers love booking on their phones!"</div>
+                    <div class="testimonial-author">Emma Davis</div>
+                    <div class="testimonial-business">Fitness Studio Pro</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="urgency-section">
+            <h2 style="font-size: 2rem; margin-bottom: 20px;">⏰ Don't Miss Out!</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 20px;">This April launch special ends when April ends!</p>
+            <div class="urgency-timer" id="countdown">Loading...</div>
+            <p style="margin-top: 20px;">Sign up now and get your first month completely FREE!</p>
+            <a href="https://showupmedia.org/booking-builder.html" class="cta-button" style="font-size: 1.3rem; padding: 20px 50px;">Start Your Free Month Now!</a>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 Show Up Media. All rights reserved.</p>
+            <p>Questions? Contact us at <a href="mailto:support@showupmedia.org" style="color: white;">support@showupmedia.org</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Countdown timer
+        function updateCountdown() {
+            const now = new Date();
+            const aprilEnd = new Date('2024-05-01T00:00:00');
+            const timeLeft = aprilEnd - now;
+            
+            if (timeLeft <= 0) {
+                document.getElementById('countdown').innerHTML = 'Offer Ended';
+                return;
+            }
+            
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            
+            document.getElementById('countdown').innerHTML = 
+                `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+        
+        // Update countdown every second
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+        
+        // Track promotion clicks
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                // Track conversion event
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'conversion', {
+                        'event_category': 'April Promotion',
+                        'event_label': this.textContent
+                    });
+                }
+                
+                // Store promotion data
+                localStorage.setItem('april_promo_used', 'true');
+                localStorage.setItem('april_promo_date', new Date().toISOString());
+            });
+        });
+        
+        // Show urgency for returning visitors
+        if (localStorage.getItem('april_promo_used')) {
+            const promoDate = new Date(localStorage.getItem('april_promo_date'));
+            const now = new Date();
+            const hoursSinceVisit = Math.floor((now - promoDate) / (1000 * 60 * 60));
+            
+            if (hoursSinceVisit < 24) {
+                document.querySelector('.urgency-section').innerHTML += 
+                    '<p style="color: #ff6b6b; font-weight: bold; margin-top: 20px;">You already viewed this offer - complete your signup before it expires!</p>';
+            }
+        }
+    </script>
+</body>
+</html>

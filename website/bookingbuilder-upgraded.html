@@ -491,11 +491,13 @@ textarea.field-input{resize:vertical;min-height:80px}
   position:absolute;top:-10px;left:50%;transform:translateX(-50%);
   background:var(--blue);color:#fff;
   font-size:0.58rem;font-weight:700;letter-spacing:0.1em;
-  padding:3px 10px;border-radius:100px;
-  white-space:nowrap;font-family:'Syne',sans-serif;
+  padding:2px 8px;border-radius:4px;
 }
-.plan-name{font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;margin-bottom:4px}
 .plan-price{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--blue);letter-spacing:-0.02em;line-height:1;margin-bottom:2px}
+.plan-price span{display:block}
+.plan-price .original-price{font-size:0.8rem;opacity:0.6;text-decoration:line-through}
+.plan-price .free-price{color:#10b981;font-size:1.2rem}
+.plan-name{font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;margin-bottom:4px}
 .plan-period{font-size:0.68rem;color:var(--muted);margin-bottom:12px}
 .plan-feats{text-align:left;display:flex;flex-direction:column;gap:5px}
 .plan-feat{font-size:0.72rem;color:var(--muted-mid);display:flex;gap:6px;align-items:flex-start;line-height:1.4}
@@ -1392,9 +1394,9 @@ function setHour(d, type, val) {
 
 function buildPlan() {
   const plans = [
-    { id:'basic',   name:'Basic',        price:'£6.99',  period:'/ month', feats:['Booking page live','Admin dashboard','Email confirmations','Subdomain included'],          popular:false },
-    { id:'pro',     name:'Pro',          price:'£9.99',  period:'/ month', feats:['Everything in Basic','Downloadable mobile app','Real time phone notifications','Priority support','Up to 3 staff members'],           popular:true },
-    { id:'premium', name:'Premium',      price:'£14.99', period:'/ month', feats:['Everything in Pro','Online payments','Advanced analytics','Revenue tracker','Up to 10 staff members'],    popular:false },
+    { id:'basic',   name:'Basic',        price:'£6.99',  period:'/ month', feats:['Booking page live','Admin dashboard','Email confirmations','Subdomain included'],          popular:false, promo:'First Month FREE!', originalPrice:'£6.99', freePrice:'FREE' },
+    { id:'pro',     name:'Pro',          price:'£9.99',  period:'/ month', feats:['Everything in Basic','Downloadable mobile app','Real time phone notifications','Priority support','Up to 3 staff members'],           popular:true, promo:'First Month FREE!', originalPrice:'£9.99', freePrice:'FREE' },
+    { id:'premium', name:'Premium',      price:'£14.99', period:'/ month', feats:['Everything in Pro','Online payments','Advanced analytics','Revenue tracker','Up to 10 staff members'],    popular:false, promo:'First Month FREE!', originalPrice:'£14.99', freePrice:'FREE' },
   ];
 
   const name = bData.businessName ? bData.businessName.split(' ')[0] : 'your business';
@@ -1415,9 +1417,12 @@ function buildPlan() {
     ${plans.map(p=>`
       <div class="plan-card${bData.plan===p.id?' sel':''}" id="bplan-${p.id}" onclick="selectPlan('${p.id}')">
         ${p.popular?'<div class="plan-badge">POPULAR</div>':''}
+        ${p.promo?'<div class="plan-badge" style="background:#ff6b6b;">'+p.promo+'</div>':''}
         <div class="plan-name">${p.name}</div>
-        <div class="plan-price">${p.price}</div>
-        <div class="plan-period">${p.period}</div>
+        <div class="plan-price">
+          ${p.promo?'<span style="text-decoration:line-through;opacity:0.6;font-size:0.8rem;">'+p.originalPrice+'</span><br><span style="color:#10b981;font-size:1.2rem;">'+p.freePrice+'</span>':p.price}
+        </div>
+        <div class="plan-period">${p.promo?'First month, then '+p.period:p.period}</div>
         <div class="plan-feats">
           ${p.feats.map(f=>`<div class="plan-feat">${f}</div>`).join('')}
         </div>
