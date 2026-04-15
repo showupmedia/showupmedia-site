@@ -729,28 +729,352 @@
         }
         
         async function loadAnalytics(businessId) {
-            const content = document.getElementById('content');
-            
-            content.innerHTML = `
-                <div class="header">
-                    <h1>Analytics</h1>
-                </div>
+            try {
+                const content = document.getElementById('content');
                 
-                <div class="upgrade-prompt">
-                    <h3>📊 Advanced Analytics</h3>
-                    <p>Detailed analytics and reporting features are available for Pro and Premium plans.</p>
-                    <p>Upgrade to access:</p>
-                    <ul>
-                        <li>📈 Revenue tracking and trends</li>
-                        <li>👥 Customer analytics and demographics</li>
-                        <li>💰 Payment processing reports</li>
-                        <li>📊 Custom reporting dashboards</li>
-                        <li>📱 Mobile app analytics</li>
-                    </ul>
-                    <br>
-                    <a href="#" class="upgrade-button">Upgrade to Pro</a>
-                </div>
-            `;
+                // Check if business has Pro or Premium plan
+                const plan = businessData.plan || 'basic';
+                
+                if (plan === 'basic') {
+                    content.innerHTML = `
+                        <div class="header">
+                            <h1>Analytics</h1>
+                        </div>
+                        
+                        <div class="upgrade-prompt">
+                            <h3>Advanced Analytics</h3>
+                            <p>Detailed analytics and reporting features are available for Pro and Premium plans.</p>
+                            <p>Upgrade to access:</p>
+                            <ul>
+                                <li>Revenue tracking and trends</li>
+                                <li>Customer analytics and demographics</li>
+                                <li>Payment processing reports</li>
+                                <li>Custom reporting dashboards</li>
+                                <li>Mobile app analytics</li>
+                            </ul>
+                            <br>
+                            <a href="#" class="upgrade-button">Upgrade to Pro</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Load revenue overview
+                const response = await fetch('/.netlify/functions/revenue-analytics', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: 'revenue-overview',
+                        businessId: businessId,
+                        userId: 'admin_user'
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    const { overview } = result;
+                    
+                    content.innerHTML = `
+                        <div class="header">
+                            <h1>Revenue Analytics</h1>
+                            <div style="display: flex; gap: 10px;">
+                                <button onclick="loadRevenueTrends('${businessId}')" class="upgrade-button">Trends</button>
+                                <button onclick="loadServicePerformance('${businessId}')" class="upgrade-button">Services</button>
+                                <button onclick="loadStaffAnalytics('${businessId}')" class="upgrade-button">Staff</button>
+                                <button onclick="loadCustomerAnalytics('${businessId}')" class="upgrade-button">Customers</button>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value">£${overview.totalRevenue.toFixed(2)}</div>
+                                <div class="stat-label">Total Revenue</div>
+                                <div class="stat-change">${overview.revenueGrowth > 0 ? '+' : ''}${overview.revenueGrowth}% vs previous period</div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-value">${overview.totalBookings}</div>
+                                <div class="stat-label">Total Bookings</div>
+                                <div class="stat-change">${overview.completedBookings} completed</div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-value">${overview.completionRate}%</div>
+                                <div class="stat-label">Completion Rate</div>
+                                <div class="stat-change">${overview.cancelledBookings} cancelled</div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-value">£${overview.averageBookingValue}</div>
+                                <div class="stat-label">Average Booking Value</div>
+                                <div class="stat-change">Per completed booking</div>
+                            </div>
+                        </div>
+                        
+                        <div class="recent-bookings">
+                            <div class="booking-header">
+                                <div>Revenue Summary</div>
+                                <div>Period: ${overview.period.start} to ${overview.period.end}</div>
+                            </div>
+                            <div style="padding: 20px;">
+                                <h3>Performance Metrics</h3>
+                                <div class="stats-grid">
+                                    <div class="stat-card">
+                                        <div class="stat-value">£${(overview.totalRevenue / 30).toFixed(2)}</div>
+                                        <div class="stat-label">Daily Average</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value">£${(overview.totalRevenue / overview.completedBookings).toFixed(2)}</div>
+                                        <div class="stat-label">Revenue per Booking</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value">${(overview.completedBookings / 30).toFixed(1)}</div>
+                                        <div class="stat-label">Daily Bookings</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value">${overview.revenueGrowth > 0 ? 'Growing' : 'Declining'}</div>
+                                        <div class="stat-label">Revenue Trend</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    showNotification(result.error || 'Failed to load analytics', 'error');
+                }
+            } catch (error) {
+                console.error('Analytics load error:', error);
+                showError('Failed to load analytics.');
+            }
+        }
+
+        async function loadRevenueTrends(businessId) {
+            try {
+                const response = await fetch('/.netlify/functions/revenue-analytics', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: 'revenue-trends',
+                        businessId: businessId,
+                        userId: 'admin_user',
+                        period: '30days'
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    const { trends } = result;
+                    
+                    const content = document.getElementById('content');
+                    content.innerHTML = `
+                        <div class="header">
+                            <h1>Revenue Trends</h1>
+                            <button onclick="loadAnalytics('${businessId}')" class="upgrade-button">Back to Overview</button>
+                        </div>
+                        
+                        <div class="recent-bookings">
+                            <div class="booking-header">
+                                <div>Daily Revenue Trends</div>
+                                <div>Last 30 days</div>
+                            </div>
+                            <div style="padding: 20px;">
+                                <div style="max-height: 400px; overflow-y: auto;">
+                                    ${trends.slice(-10).map(trend => `
+                                        <div class="booking-item">
+                                            <div class="booking-info">
+                                                <div class="booking-customer">${new Date(trend.date).toLocaleDateString()}</div>
+                                                <div class="booking-service">${trend.bookings} bookings</div>
+                                            </div>
+                                            <div class="booking-price">£${trend.revenue.toFixed(2)}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    showNotification(result.error || 'Failed to load trends', 'error');
+                }
+            } catch (error) {
+                console.error('Revenue trends load error:', error);
+                showNotification('Failed to load revenue trends', 'error');
+            }
+        }
+
+        async function loadServicePerformance(businessId) {
+            try {
+                const response = await fetch('/.netlify/functions/revenue-analytics', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: 'service-performance',
+                        businessId: businessId,
+                        userId: 'admin_user'
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    const { services } = result;
+                    
+                    const content = document.getElementById('content');
+                    content.innerHTML = `
+                        <div class="header">
+                            <h1>Service Performance</h1>
+                            <button onclick="loadAnalytics('${businessId}')" class="upgrade-button">Back to Overview</button>
+                        </div>
+                        
+                        <div class="recent-bookings">
+                            <div class="booking-header">
+                                <div>Service Revenue Ranking</div>
+                                <div>Total: ${services.length} services</div>
+                            </div>
+                            ${services.map(service => `
+                                <div class="booking-item">
+                                    <div class="booking-info">
+                                        <div class="booking-customer">${service.name}</div>
+                                        <div class="booking-service">${service.totalBookings} bookings | ${service.completionRate}% completion</div>
+                                        <div class="booking-time">£${service.price} per service</div>
+                                    </div>
+                                    <div class="booking-price">£${service.totalRevenue.toFixed(2)}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    showNotification(result.error || 'Failed to load service performance', 'error');
+                }
+            } catch (error) {
+                console.error('Service performance load error:', error);
+                showNotification('Failed to load service performance', 'error');
+            }
+        }
+
+        async function loadStaffAnalytics(businessId) {
+            try {
+                const response = await fetch('/.netlify/functions/revenue-analytics', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: 'staff-performance',
+                        businessId: businessId,
+                        userId: 'admin_user'
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    const { staff } = result;
+                    
+                    const content = document.getElementById('content');
+                    content.innerHTML = `
+                        <div class="header">
+                            <h1>Staff Performance</h1>
+                            <button onclick="loadAnalytics('${businessId}')" class="upgrade-button">Back to Overview</button>
+                        </div>
+                        
+                        <div class="recent-bookings">
+                            <div class="booking-header">
+                                <div>Staff Revenue Ranking</div>
+                                <div>Total: ${staff.length} staff members</div>
+                            </div>
+                            ${staff.map(member => `
+                                <div class="booking-item">
+                                    <div class="booking-info">
+                                        <div class="booking-customer">${member.name}</div>
+                                        <div class="booking-service">${member.role} | ${member.totalBookings} bookings</div>
+                                        <div class="booking-time">${member.completionRate}% completion rate</div>
+                                    </div>
+                                    <div class="booking-price">£${member.totalRevenue.toFixed(2)}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    showNotification(result.error || 'Failed to load staff analytics', 'error');
+                }
+            } catch (error) {
+                console.error('Staff analytics load error:', error);
+                showNotification('Failed to load staff analytics', 'error');
+            }
+        }
+
+        async function loadCustomerAnalytics(businessId) {
+            try {
+                const response = await fetch('/.netlify/functions/revenue-analytics', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: 'customer-analytics',
+                        businessId: businessId,
+                        userId: 'admin_user'
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    const { customers, summary } = result;
+                    
+                    const content = document.getElementById('content');
+                    content.innerHTML = `
+                        <div class="header">
+                            <h1>Customer Analytics</h1>
+                            <button onclick="loadAnalytics('${businessId}')" class="upgrade-button">Back to Overview</button>
+                        </div>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value">${summary.totalCustomers}</div>
+                                <div class="stat-label">Total Customers</div>
+                                <div class="stat-change">${summary.repeatCustomers} repeat customers</div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-value">${summary.customerRetentionRate}%</div>
+                                <div class="stat-label">Retention Rate</div>
+                                <div class="stat-change">Customer loyalty metric</div>
+                            </div>
+                        </div>
+                        
+                        <div class="recent-bookings">
+                            <div class="booking-header">
+                                <div>Top Customers by Spending</div>
+                                <div>Showing top 10</div>
+                            </div>
+                            ${customers.slice(0, 10).map(customer => `
+                                <div class="booking-item">
+                                    <div class="booking-info">
+                                        <div class="booking-customer">${customer.name}</div>
+                                        <div class="booking-service">${customer.totalBookings} bookings | ${customer.services.length} services</div>
+                                        <div class="booking-time">${customer.completionRate}% completion</div>
+                                    </div>
+                                    <div class="booking-price">£${customer.totalSpent.toFixed(2)}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    showNotification(result.error || 'Failed to load customer analytics', 'error');
+                }
+            } catch (error) {
+                console.error('Customer analytics load error:', error);
+                showNotification('Failed to load customer analytics', 'error');
+            }
         }
         
         function loadSettings(businessId) {
