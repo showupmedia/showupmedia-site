@@ -106,7 +106,7 @@ async function handleCheckoutSession(session) {
     console.log('Business created successfully:', business.id);
 
     // Send welcome email
-    await sendWelcomeEmail(business, customerEmail, plan);
+    await sendWelcomeEmail(business, plan);
 
     // Store Stripe subscription ID if available
     if (session.subscription) {

@@ -1469,8 +1469,20 @@ function initiatePayment() {
     return;
   }
 
-  // Redirect to Stripe
-  window.location.href = planLink;
+  // Add business metadata to Stripe payment URL
+  const paymentUrl = new URL(planLink);
+  paymentUrl.searchParams.set('client_reference_id', bData.businessName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase());
+  paymentUrl.searchParams.set('business_name', bData.businessName);
+  paymentUrl.searchParams.set('business_email', bData.businessEmail);
+  paymentUrl.searchParams.set('business_phone', bData.businessPhone);
+  paymentUrl.searchParams.set('plan', bData.plan);
+  paymentUrl.searchParams.set('template', bData.template);
+  paymentUrl.searchParams.set('primary_color', bData.primaryColor);
+  paymentUrl.searchParams.set('accent_color', bData.accentColor);
+  paymentUrl.searchParams.set('subdomain', bData.subdomain);
+
+  // Redirect to Stripe with metadata
+  window.location.href = paymentUrl.toString();
 }
 
 // ══════════════════════════════════════
