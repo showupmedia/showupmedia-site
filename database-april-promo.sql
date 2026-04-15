@@ -233,7 +233,7 @@ INSERT INTO business_promotions (
     end_date,
     status
 ) VALUES 
-    ('APRILFREE', 'april_launch', 100, '2024-04-01T00:00:00Z', '2024-05-01T00:00:00Z', 'active'),
-    ('APRIL24', 'april_launch', 100, '2024-04-01T00:00:00Z', '2024-05-01T00:00:00Z', 'active'),
-    ('LAUNCH24', 'april_launch', 100, '2024-04-01T00:00:00Z', '2024-05-01T00:00:00Z', 'active')
+    ('SHOWUPFREE', 'show_up_launch', 100, '2026-04-01T00:00:00Z', '2026-05-01T00:00:00Z', 'active'),
+    ('SHOWUP24', 'show_up_launch', 100, '2026-04-01T00:00:00Z', '2026-05-01T00:00:00Z', 'active'),
+    ('LAUNCH26', 'show_up_launch', 100, '2026-04-01T00:00:00Z', '2026-05-01T00:00:00Z', 'active')
 ON CONFLICT DO NOTHING;

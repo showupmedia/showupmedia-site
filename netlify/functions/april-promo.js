@@ -71,17 +71,17 @@ async function validateAprilPromo(promoCode, email) {
     const currentMonth = new Date().getMonth(); // 3 for April
     const currentYear = new Date().getFullYear();
     
-    // Check if it's April 2024
-    if (currentMonth !== 3 || currentYear !== 2024) {
+    // Check if it's April 2026
+    if (currentMonth !== 3 || currentYear !== 2026) {
       return {
         valid: false,
-        message: 'This promotion is only valid in April 2024',
+        message: 'This promotion is only valid in April 2026',
         discount: 0
       };
     }
 
     // Check promo code
-    const validCodes = ['APRILFREE', 'APRIL24', 'LAUNCH24'];
+    const validCodes = ['SHOWUPFREE', 'SHOWUP24', 'LAUNCH26'];
     if (!validCodes.includes(promoCode?.toUpperCase())) {
       return {
         valid: false,
