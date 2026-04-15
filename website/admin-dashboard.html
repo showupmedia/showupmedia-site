@@ -661,7 +661,15 @@
                 
                 const { data: staff, error } = await supabase
                     .from('staff')
-                    .select('*')
+                    .select(`
+                        *,
+                        availability!inner(
+                          day_of_week,
+                          start_time,
+                          end_time,
+                          is_available
+                        )
+                    `)
                     .eq('business_id', businessId)
                     .order('created_at', { ascending: false });
                 
@@ -672,21 +680,40 @@
                 
                 let html = `
                     <div class="header">
-                        <h1>Staff</h1>
+                        <h1>Staff Management</h1>
                         <button class="upgrade-button" onclick="addStaffMember()">+ Add Staff Member</button>
+                        <button class="upgrade-button" onclick="showBulkActions()">Bulk Actions</button>
                     </div>
                     
                     <div class="recent-bookings">
+                        <div class="booking-header">
+                            <div>Team Members</div>
+                            <div>Total: ${staff.length}</div>
+                        </div>
                 `;
                 
                 staff.forEach(member => {
+                    const statusClass = member.status === 'active' ? 'status-confirmed' : 'status-pending';
+                    const statusText = member.status === 'active' ? 'Active' : 'Inactive';
+                    
                     html += `
                         <div class="booking-item">
                             <div class="booking-info">
-                                <div class="booking-customer">${member.name}</div>
-                                <div class="booking-service">${member.email || 'No email'}</div>
-                                <div class="booking-time">${member.phone || 'No phone'}</div>
-                                <div class="booking-price">Role: ${member.role || 'Staff'}</div>
+                                <div style="display: flex; align-items: center; gap: 15px;">
+                                    <div style="flex: 1;">
+                                        <div class="booking-customer">${member.name}</div>
+                                        <div class="booking-service">${member.email || 'No email'}</div>
+                                        <div class="booking-time">${member.phone || 'No phone'}</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <span class="booking-status ${statusClass}">${statusText}</span>
+                                        <div style="margin-top: 10px;">
+                                            <button onclick="viewStaffPerformance('${member.id}')" style="background: #2563eb; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;">📊 Performance</button>
+                                            <button onclick="editStaffMember('${member.id}')" style="background: #10b981; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; margin-left: 5px;">✏️ Edit</button>
+                                            <button onclick="deleteStaffMember('${member.id}', '${member.name}')" style="background: #ef4444; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; margin-left: 5px;">🗑️ Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -834,8 +861,197 @@
             showNotification('Service management requires Pro plan', 'info');
         }
         
-        function addStaffMember() {
-            showNotification('Staff management requires Pro plan', 'info');
+        async function addStaffMember() {
+            try {
+                const staffData = {
+                    name: prompt('Enter staff member name:'),
+                    email: prompt('Enter staff member email:'),
+                    phone: prompt('Enter staff member phone (optional):'),
+                    role: prompt('Enter staff role (e.g., Hairdresser, Therapist):') || 'Staff Member',
+                    bio: prompt('Enter staff bio (optional):')
+                };
+
+                if (!staffData.name || !staffData.email) {
+                    showNotification('Name and email are required', 'error');
+                    return;
+                }
+
+                const response = await fetch('/.netlify/functions/staff-management', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: 'add-staff',
+                        businessId: businessData.id,
+                        userId: 'admin_user',
+                        staffData
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showNotification('Staff member added successfully!', 'success');
+                    loadStaff(businessData.id);
+                } else {
+                    showNotification(result.error || 'Failed to add staff member', 'error');
+                }
+            } catch (error) {
+                console.error('Add staff member error:', error);
+                showNotification('Failed to add staff member', 'error');
+            }
+        }
+
+        async function editStaffMember(staffId) {
+            try {
+                const response = await fetch('/.netlify/functions/staff-management', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: 'get-staff',
+                        businessId: businessData.id,
+                        userId: 'admin_user',
+                        staffId
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok && result.staff) {
+                    const staff = result.staff.find(s => s.id === staffId);
+                    if (staff) {
+                        const updatedData = {
+                            name: prompt('Enter staff member name:', staff.name),
+                            email: prompt('Enter staff member email:', staff.email),
+                            phone: prompt('Enter staff member phone:', staff.phone),
+                            role: prompt('Enter staff role:', staff.role),
+                            bio: prompt('Enter staff bio:', staff.bio),
+                            status: prompt('Enter status (active/inactive):', staff.status)
+                        };
+
+                        const updateResponse = await fetch('/.netlify/functions/staff-management', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                type: 'update-staff',
+                                businessId: businessData.id,
+                                userId: 'admin_user',
+                                staffId,
+                                staffData: updatedData
+                            })
+                        });
+
+                        const updateResult = await updateResponse.json();
+                        
+                        if (updateResponse.ok) {
+                            showNotification('Staff member updated successfully!', 'success');
+                            loadStaff(businessData.id);
+                        } else {
+                            showNotification(updateResult.error || 'Failed to update staff member', 'error');
+                        }
+                    }
+                } else {
+                    showNotification('Failed to load staff member details', 'error');
+                }
+            } catch (error) {
+                console.error('Edit staff member error:', error);
+                showNotification('Failed to edit staff member', 'error');
+            }
+        }
+
+        async function deleteStaffMember(staffId, staffName) {
+            if (!confirm(`Are you sure you want to delete ${staffName}? This action cannot be undone.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/.netlify/functions/staff-management', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: 'delete-staff',
+                        businessId: businessData.id,
+                        userId: 'admin_user',
+                        staffId
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showNotification('Staff member deleted successfully!', 'success');
+                    loadStaff(businessData.id);
+                } else {
+                    showNotification(result.error || 'Failed to delete staff member', 'error');
+                }
+            } catch (error) {
+                console.error('Delete staff member error:', error);
+                showNotification('Failed to delete staff member', 'error');
+            }
+        }
+
+        async function viewStaffPerformance(staffId) {
+            try {
+                const response = await fetch('/.netlify/functions/staff-management', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: 'get-staff-performance',
+                        businessId: businessData.id,
+                        userId: 'admin_user',
+                        staffId
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    const { performance } = result;
+                    const performanceHtml = `
+                        <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                            <h3>Staff Performance - Last 30 Days</h3>
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-value">${performance.total_bookings}</div>
+                                    <div class="stat-label">Total Bookings</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">${performance.completed_bookings}</div>
+                                    <div class="stat-label">Completed</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">${performance.completion_rate}%</div>
+                                    <div class="stat-label">Completion Rate</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">£${performance.total_revenue.toFixed(2)}</div>
+                                    <div class="stat-label">Revenue Generated</div>
+                                </div>
+                            </div>
+                            <button onclick="loadStaff('${businessData.id}')" class="upgrade-button">Back to Staff List</button>
+                        </div>
+                    `;
+                    document.getElementById('content').innerHTML = performanceHtml;
+                } else {
+                    showNotification(result.error || 'Failed to load staff performance', 'error');
+                }
+            } catch (error) {
+                console.error('View staff performance error:', error);
+                showNotification('Failed to load staff performance', 'error');
+            }
+        }
+
+        function showBulkActions() {
+            showNotification('Bulk actions feature coming soon!', 'info');
         }
     </script>
 </body>
