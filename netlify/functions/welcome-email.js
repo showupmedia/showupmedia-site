@@ -61,15 +61,26 @@ exports.handler = async (event, context) => {
 
 async function sendWelcomeEmail(business, plan) {
   try {
-    // This would use your Resend setup
-    console.log(`Sending welcome email to ${business.email}`);
-    
-    const welcomeContent = generateWelcomeEmail(business, plan);
-    
-    // In a real implementation, you'd call your Resend function here
-    // For now, we'll just log the content
-    console.log('Welcome email content:', welcomeContent);
-    
+    // Call the real email service
+    const response = await fetch(`${process.env.URL}/.netlify/functions/email-service`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.NETLIFY_DEV_TOKEN || ''}`
+      },
+      body: JSON.stringify({
+        to: business.email,
+        subject: `Welcome to Show Up Media - Your ${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan is Active!`,
+        html: generateWelcomeEmail(business, plan)
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Email service failed');
+    }
+
+    const result = await response.json();
+    console.log(`Welcome email sent successfully to ${business.email}`);
     return true;
   } catch (error) {
     console.error('Error sending welcome email:', error);

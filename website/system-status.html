@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Status - Show Up Media</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .status-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #e5e7eb;
+        }
+        
+        .status-card.success {
+            border-left-color: #10b981;
+        }
+        
+        .status-card.error {
+            border-left-color: #ef4444;
+        }
+        
+        .status-card.warning {
+            border-left-color: #f59e0b;
+        }
+        
+        .status-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .status-icon.success {
+            background: #10b981;
+        }
+        
+        .status-icon.error {
+            background: #ef4444;
+        }
+        
+        .status-icon.warning {
+            background: #f59e0b;
+        }
+        
+        .status-details {
+            margin-top: 10px;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .status-item:last-child {
+            border-bottom: none;
+        }
+        
+        .status-label {
+            font-weight: 500;
+        }
+        
+        .status-value {
+            font-weight: 600;
+        }
+        
+        .status-value.success {
+            color: #10b981;
+        }
+        
+        .status-value.error {
+            color: #ef4444;
+        }
+        
+        .status-value.warning {
+            color: #f59e0b;
+        }
+        
+        .refresh-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin: 20px auto;
+            display: block;
+        }
+        
+        .refresh-btn:hover {
+            background: #1d4ed8;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.1rem;
+            color: #666;
+        }
+        
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .success-message {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Show Up Media System Status</h1>
+            <p>Real-time system health check and monitoring</p>
+        </div>
+        
+        <div id="statusContainer" class="status-grid">
+            <div class="loading">
+                <div>🔄 Loading system status...</div>
+            </div>
+        </div>
+        
+        <button class="refresh-btn" onclick="checkSystem()">🔄 Refresh Status</button>
+    </div>
+
+    <script>
+        async function checkSystem() {
+            const container = document.getElementById('statusContainer');
+            container.innerHTML = '<div class="loading"><div>🔄 Checking system status...</div></div>';
+            
+            try {
+                const response = await fetch('/.netlify/functions/system-check');
+                const data = await response.json();
+                
+                displayStatus(data);
+                
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="error-message">
+                        <strong>❌ System Check Failed</strong>
+                        <p>Unable to connect to system monitoring service.</p>
+                        <p>Error: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function displayStatus(data) {
+            const container = document.getElementById('statusContainer');
+            
+            let html = '';
+            
+            // Environment Variables Status
+            const envStatus = Object.values(data.checks.environment).every(v => v === true) ? 'success' : 'error';
+            html += `
+                <div class="status-card ${envStatus}">
+                    <div class="status-title">
+                        <div class="status-icon ${envStatus}">${envStatus === 'success' ? '✓' : '✗'}</div>
+                        Environment Variables
+                    </div>
+                    <div class="status-details">
+                        <div class="status-item">
+                            <span class="status-label">Supabase URL</span>
+                            <span class="status-value ${data.checks.environment.supabase_url ? 'success' : 'error'}">
+                                ${data.checks.environment.supabase_url ? '✓ Configured' : '✗ Missing'}
+                            </span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Supabase Key</span>
+                            <span class="status-value ${data.checks.environment.supabase_anon_key ? 'success' : 'error'}">
+                                ${data.checks.environment.supabase_anon_key ? '✓ Configured' : '✗ Missing'}
+                            </span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Resend API Key</span>
+                            <span class="status-value ${data.checks.environment.resend_api_key ? 'success' : 'error'}">
+                                ${data.checks.environment.resend_api_key ? '✓ Configured' : '✗ Missing'}
+                            </span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Stripe Keys</span>
+                            <span class="status-value ${data.checks.environment.stripe_secret_key && data.checks.environment.stripe_webhook_secret ? 'success' : 'error'}">
+                                ${data.checks.environment.stripe_secret_key && data.checks.environment.stripe_webhook_secret ? '✓ Configured' : '✗ Missing'}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Database Status
+            const dbStatus = data.checks.database.connected ? 'success' : 'error';
+            html += `
+                <div class="status-card ${dbStatus}">
+                    <div class="status-title">
+                        <div class="status-icon ${dbStatus}">${dbStatus === 'success' ? '✓' : '✗'}</div>
+                        Database Connection
+                    </div>
+                    <div class="status-details">
+                        <div class="status-item">
+                            <span class="status-label">Supabase Connection</span>
+                            <span class="status-value ${dbStatus}">
+                                ${data.checks.database.connected ? '✓ Connected' : '✗ Failed'}
+                            </span>
+                        </div>
+                        ${data.checks.database.error ? `<div class="error-message">${data.checks.database.error}</div>` : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Email Status
+            const emailStatus = data.checks.email.working ? 'success' : 'error';
+            html += `
+                <div class="status-card ${emailStatus}">
+                    <div class="status-title">
+                        <div class="status-icon ${emailStatus}">${emailStatus === 'success' ? '✓' : '✗'}</div>
+                        Email Service
+                    </div>
+                    <div class="status-details">
+                        <div class="status-item">
+                            <span class="status-label">Email Sending</span>
+                            <span class="status-value ${emailStatus}">
+                                ${data.checks.email.working ? '✓ Working' : '✗ Failed'}
+                            </span>
+                        </div>
+                        ${data.checks.email.error ? `<div class="error-message">${data.checks.email.error}</div>` : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Stripe Links Status
+            const stripeStatus = Object.values(data.checks.stripe_links).every(link => link.accessible === true) ? 'success' : 'warning';
+            html += `
+                <div class="status-card ${stripeStatus}">
+                    <div class="status-title">
+                        <div class="status-icon ${stripeStatus}">${stripeStatus === 'success' ? '✓' : '!'}</div>
+                        Stripe Payment Links
+                    </div>
+                    <div class="status-details">
+                        <div class="status-item">
+                            <span class="status-label">Basic Plan (£6.99)</span>
+                            <span class="status-value ${data.checks.stripe_links.basic.accessible ? 'success' : 'error'}">
+                                ${data.checks.stripe_links.basic.accessible ? '✓ Accessible' : '✗ Failed'}
+                            </span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Pro Plan (£9.99)</span>
+                            <span class="status-value ${data.checks.stripe_links.pro.accessible ? 'success' : 'error'}">
+                                ${data.checks.stripe_links.pro.accessible ? '✓ Accessible' : '✗ Failed'}
+                            </span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Premium Plan (£14.99)</span>
+                            <span class="status-value ${data.checks.stripe_links.premium.accessible ? 'success' : 'error'}">
+                                ${data.checks.stripe_links.premium.accessible ? '✓ Accessible' : '✗ Failed'}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Overall Status
+            const overallStatus = data.status;
+            const statusClass = overallStatus === 'ready' ? 'success' : overallStatus === 'needs_attention' ? 'warning' : 'error';
+            const statusMessage = overallStatus === 'ready' ? '🚀 Ready for Launch!' : 
+                              overallStatus === 'needs_attention' ? '⚠️ Needs Attention' : '❌ System Error';
+            
+            html += `
+                <div class="status-card ${statusClass}">
+                    <div class="status-title">
+                        <div class="status-icon ${statusClass}">${overallStatus === 'ready' ? '🚀' : overallStatus === 'needs_attention' ? '⚠️' : '❌'}</div>
+                        Overall System Status
+                    </div>
+                    <div class="status-details">
+                        <div class="${overallStatus === 'ready' ? 'success-message' : 'error-message'}">
+                            <strong>${statusMessage}</strong>
+                            <p>Last checked: ${new Date(data.timestamp).toLocaleString()}</p>
+                            ${data.ready_for_launch ? '<p>✅ All systems are operational and ready for production launch!</p>' : '<p>❌ Some systems need attention before launch.</p>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        // Auto-refresh every 30 seconds
+        setInterval(checkSystem, 30000);
+        
+        // Initial check
+        checkSystem();
+    </script>
+</body>
+</html>

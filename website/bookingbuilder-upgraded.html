@@ -43,9 +43,65 @@ body{font-family:'DM Sans',sans-serif;background:#ffffff;color:#1a1a1a;line-heig
   height:100vh;
   overflow:hidden;
 }
+/* Mobile/Tablet Layout - Show both panels stacked */
 @media(max-width:1000px){
-  .builder-layout{grid-template-columns:1fr}
-  .preview-panel{display:none}
+  .builder-layout{
+    grid-template-columns:1fr;
+    grid-template-rows:1fr auto;
+    height:100vh;
+    overflow-y:auto;
+  }
+  .wizard-panel{
+    border-right:none;
+    border-bottom:1px solid var(--card-border);
+    min-height:60vh;
+  }
+  .preview-panel{
+    display:block;
+    position:sticky;
+    bottom:0;
+    height:40vh;
+    border-top:1px solid var(--card-border);
+    background:var(--card);
+    z-index:100;
+  }
+  .preview-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 20px;
+    border-bottom:1px solid var(--card-border);
+    background:var(--card);
+    position:sticky;
+    top:0;
+    z-index:101;
+  }
+  .preview-content{
+    height:calc(100% - 50px);
+    overflow-y:auto;
+  }
+}
+
+/* Mobile-specific adjustments */
+@media(max-width:768px){
+  .builder-layout{
+    grid-template-rows:1fr auto;
+  }
+  .wizard-panel{
+    min-height:70vh;
+  }
+  .preview-panel{
+    height:30vh;
+  }
+  .wizard-header{
+    padding:16px 20px 16px;
+  }
+  .wizard-body{
+    padding:20px;
+  }
+  .preview-header{
+    padding:8px 16px;
+  }
 }
 
 /* ── LEFT: WIZARD PANEL ── */
@@ -942,20 +998,22 @@ textarea.field-input{resize:vertical;min-height:80px}
           <span>showupmedia.org/booking</span>
         </div>
       </div>
-      <div class="preview-frame-wrap" style="position:relative;">
-        <div style="position:absolute;top:50%;right:0px;z-index:10;transform:translateY(-50%)">
-          <button onclick="switchPreview(previewMode === 'booking' ? 'admin' : 'booking')" style="background:var(--blue);color:white;border:none;padding:12px;border-radius:50%;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;width:48px;height:48px;box-shadow:0 4px 12px rgba(45,142,255,0.4)">
-            <span id="arrowIcon">→</span>
-          </button>
-        </div>
-        <div class="preview-frame-outer">
-          <div class="preview-frame-bar">
-            <div class="preview-frame-btn"></div>
-            <div class="preview-frame-btn"></div>
-            <div class="preview-frame-btn"></div>
+      <div class="preview-content">
+        <div class="preview-frame-wrap" style="position:relative;">
+          <div style="position:absolute;top:50%;right:0px;z-index:10;transform:translateY(-50%)">
+            <button onclick="switchPreview(previewMode === 'booking' ? 'admin' : 'booking')" style="background:var(--blue);color:white;border:none;padding:12px;border-radius:50%;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;width:48px;height:48px;box-shadow:0 4px 12px rgba(45,142,255,0.4)">
+              <span id="arrowIcon">→</span>
+            </button>
           </div>
-          <div class="preview-content" id="previewContent">
-            <!-- Rendered live here -->
+          <div class="preview-frame-outer">
+            <div class="preview-frame-bar">
+              <div class="preview-frame-btn"></div>
+              <div class="preview-frame-btn"></div>
+              <div class="preview-frame-btn"></div>
+            </div>
+            <div class="preview-frame" id="previewFrame">
+              <div id="previewContent"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -980,31 +1038,7 @@ textarea.field-input{resize:vertical;min-height:80px}
       </div>
     </div>
 
-    <!-- WALKTHROUGH VIDEO -->
-    <div class="video-section">
-      <div class="video-section-label">Your walkthrough</div>
-      <div class="video-title">How your booking system works</div>
-      <div class="video-desc">A 5-minute video explaining everything — your admin dashboard, how customers book, how to manage appointments, and how to update your services.</div>
-      <div class="video-embed">
-        <!-- 
-          REPLACE THE SRC BELOW with your actual Loom/YouTube/Vimeo walkthrough video URL.
-          Example Loom: https://www.loom.com/embed/YOUR_LOOM_ID
-          Example YouTube: https://www.youtube.com/embed/YOUR_VIDEO_ID
-          Example Vimeo: https://player.vimeo.com/video/YOUR_VIDEO_ID
-        -->
-        <div class="video-placeholder" id="videoPlaceholder">
-          <div class="video-play-btn">▶</div>
-          <div class="video-placeholder-text">
-            <strong style="color:var(--white);font-size:0.85rem">Walkthrough video</strong><br>
-            <span style="font-size:0.75rem">Add your Loom/YouTube URL in the code</span>
-          </div>
-        </div>
-        <!-- Uncomment and replace with your embed URL:
-        <iframe src="YOUR_VIDEO_EMBED_URL" allowfullscreen allow="autoplay; fullscreen"></iframe>
-        -->
-      </div>
-    </div>
-
+    
     <!-- WHAT HAPPENS NEXT -->
     <div style="margin-bottom:20px">
       <div class="video-section-label">What happens next</div>
@@ -1014,21 +1048,21 @@ textarea.field-input{resize:vertical;min-height:80px}
     <div class="next-steps-grid">
       <div class="next-card">
         <div class="next-num">01</div>
-        <div class="next-title">We build your page</div>
-        <div class="next-desc">Your booking page is generated from everything you just filled in. We'll QA it and make sure it looks perfect.</div>
-        <div class="next-time">⏱ Within 2 hours</div>
+        <div class="next-title">Account setup</div>
+        <div class="next-desc">Check your email for your account login details and verify your email address to activate your booking system.</div>
+        <div class="next-time">⏱ Immediately</div>
       </div>
       <div class="next-card">
         <div class="next-num">02</div>
-        <div class="next-title">You get the link</div>
-        <div class="next-desc">We'll email you your live booking URL and your admin dashboard login so you can manage everything.</div>
-        <div class="next-time">⏱ Same day</div>
+        <div class="next-title">Configure services</div>
+        <div class="next-desc">Log into your admin dashboard to review your services, set your availability, and customize your booking settings.</div>
+        <div class="next-time">⏱ 15 minutes</div>
       </div>
       <div class="next-card">
         <div class="next-num">03</div>
-        <div class="next-title">Customers start booking</div>
-        <div class="next-desc">Share your link on social, add it to your Google profile, or paste it in your Instagram bio. Done.</div>
-        <div class="next-time">⏱ Day one</div>
+        <div class="next-title">Start accepting bookings</div>
+        <div class="next-desc">Your booking page is now live! Share your link with customers and start managing appointments online.</div>
+        <div class="next-time">⏱ Right away</div>
       </div>
     </div>
 
@@ -1038,7 +1072,7 @@ textarea.field-input{resize:vertical;min-height:80px}
         <div class="admin-card-title">Access your admin dashboard</div>
         <div class="admin-card-sub">Manage bookings, block time off, update services, and see your earnings. Your login details will be emailed to you shortly.</div>
       </div>
-      <button class="admin-btn" onclick="alert('Your admin link will be emailed once your system is live!')">Open Dashboard →</button>
+      <button class="admin-btn" onclick="window.open('https://admin.showupmedia.org', '_blank')">Open Dashboard →</button>
     </div>
 
     <!-- CONTACT -->
@@ -1055,13 +1089,13 @@ textarea.field-input{resize:vertical;min-height:80px}
 // STRIPE LINKS — update these with your real Stripe URLs
 // ════════════════════════════════════════════════════════
 const STRIPE_LINKS = {
-  basic:   'https://buy.stripe.com/6oU3cwcgfcX40uaeEL5Ne0m',
-  pro:     'https://buy.stripe.com/4gM00k1BB0aidgW0NV5Ne0n',
-  premium: 'https://buy.stripe.com/fZubJ25RRcX490G68f5Ne0o',
+  basic:   'https://buy.stripe.com/6oU3cwcgfcX40uaeEL5Ne0m',  // £6.99 Basic Plan
+  pro:     'https://buy.stripe.com/4gM00k1BB0aidgW0NV5Ne0n',    // £9.99 Pro Plan
+  premium: 'https://buy.stripe.com/fZubJ25RRcX490G68f5Ne0o', // £14.99 Premium Plan
 };
 
 // Detect success redirect (Stripe appends ?success=true to your return URL)
-// Set your Stripe success URL to: https://yoursite.com/booking?success=true
+// Set your Stripe success URL to: https://showupmedia.org/booking?success=true
 (function checkPaymentReturn(){
   const params = new URLSearchParams(window.location.search);
   if(params.get('success') === 'true') {
@@ -1082,6 +1116,8 @@ let bData = {
   color: '#C9A84C',
   businessName: '',
   businessType: '',
+  email: '',
+  logo: '',
   tagline: '',
   phone: '',
   address: '',
@@ -1265,26 +1301,45 @@ function buildBusiness() {
         <input class="field-input" type="text" id="f-bname" placeholder="e.g. Lumière Hair Studio" value="${bData.businessName}" oninput="bData.businessName=this.value;renderPreview();updateSlug()">
       </div>
       <div>
+        <label class="field-label">Email *</label>
+        <input class="field-input" type="email" id="f-email" placeholder="hello@lumiere.co.uk" value="${bData.email||''}" oninput="bData.email=this.value;renderPreview()" required>
+      </div>
+    </div>
+    <div class="field-row">
+      <div>
         <label class="field-label">Industry</label>
         <select class="field-input" onchange="bData.businessType=this.value">
           <option value="">Select...</option>
           ${['Hair Salon / Barber','Spa / Wellness','Clinic / Medical','Fitness / PT','Beauty / Nails','Consultant / Coach','Other'].map(v=>`<option${bData.businessType===v?' selected':''}>${v}</option>`).join('')}
         </select>
       </div>
+      <div>
+        <label class="field-label">Phone</label>
+        <input class="field-input" type="tel" placeholder="07700 900 123" value="${bData.phone}" oninput="bData.phone=this.value;renderPreview()">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Business Logo <span style="text-transform:none;letter-spacing:0;font-weight:400;font-size:0.72rem;color:var(--muted)">optional</span></label>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div id="logoPreview" style="width:60px;height:60px;border:2px dashed var(--card-border);border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.02);color:var(--muted);font-size:0.7rem;text-align:center;overflow:hidden">
+          ${bData.logo ? `<img src="${bData.logo}" style="width:100%;height:100%;object-fit:cover">` : 'No logo'}
+        </div>
+        <div style="flex:1">
+          <input type="file" id="logoUpload" accept="image/*" style="display:none" onchange="handleLogoUpload(event)">
+          <button type="button" onclick="document.getElementById('logoUpload').click()" style="background:var(--blue);color:#fff;border:none;padding:8px 16px;border-radius:6px;font-size:0.75rem;cursor:pointer;transition:all 0.2s">
+            Upload Logo
+          </button>
+          <div style="font-size:0.7rem;color:var(--muted);margin-top:4px">PNG, JPG up to 5MB</div>
+        </div>
+      </div>
     </div>
     <div class="field-group">
       <label class="field-label">Tagline <span style="text-transform:none;letter-spacing:0;font-weight:400;font-size:0.72rem;color:var(--muted)">optional</span></label>
       <input class="field-input" type="text" placeholder="Where beauty meets precision" value="${bData.tagline}" oninput="bData.tagline=this.value;renderPreview()">
     </div>
-    <div class="field-row">
-      <div>
-        <label class="field-label">Phone</label>
-        <input class="field-input" type="tel" placeholder="07700 900 123" value="${bData.phone}" oninput="bData.phone=this.value;renderPreview()">
-      </div>
-      <div>
-        <label class="field-label">Address</label>
-        <input class="field-input" type="text" placeholder="14 King's Road, Leeds" value="${bData.address}" oninput="bData.address=this.value;renderPreview()">
-      </div>
+    <div class="field-group">
+      <label class="field-label">Business Address *</label>
+      <input class="field-input" type="text" placeholder="14 King's Road, Leeds, LS1 2EG" value="${bData.address}" oninput="bData.address=this.value;renderPreview()" required>
     </div>
     <div class="field-group">
       <label class="field-label">About <span style="text-transform:none;letter-spacing:0;font-weight:400;font-size:0.72rem;color:var(--muted)">optional</span></label>
@@ -1457,6 +1512,36 @@ function bindStep(id) {
 }
 
 // ══════════════════════════════════════
+// LOGO UPLOAD HANDLER
+// ══════════════════════════════════════
+function handleLogoUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  // Check file size (5MB limit)
+  if (file.size > 5 * 1024 * 1024) {
+    alert('Logo file size must be less than 5MB');
+    return;
+  }
+  
+  // Check file type
+  if (!file.type.startsWith('image/')) {
+    alert('Please upload an image file (PNG, JPG, etc.)');
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    bData.logo = e.target.result;
+    // Update logo preview
+    const preview = document.getElementById('logoPreview');
+    preview.innerHTML = `<img src="${bData.logo}" style="width:100%;height:100%;object-fit:cover">`;
+    renderPreview();
+  };
+  reader.readAsDataURL(file);
+}
+
+// ══════════════════════════════════════
 // PAYMENT — saves data, redirects Stripe
 // ══════════════════════════════════════
 function initiatePayment() {
@@ -1479,13 +1564,33 @@ function initiatePayment() {
   const paymentUrl = new URL(planLink);
   paymentUrl.searchParams.set('client_reference_id', bData.businessName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase());
   paymentUrl.searchParams.set('business_name', bData.businessName);
-  paymentUrl.searchParams.set('business_email', bData.businessEmail);
-  paymentUrl.searchParams.set('business_phone', bData.businessPhone);
+  paymentUrl.searchParams.set('business_email', bData.email);
+  paymentUrl.searchParams.set('business_phone', bData.phone);
+  paymentUrl.searchParams.set('business_address', bData.address);
+  paymentUrl.searchParams.set('business_tagline', bData.tagline);
+  paymentUrl.searchParams.set('business_about', bData.about);
+  paymentUrl.searchParams.set('business_logo', bData.logo || '');
   paymentUrl.searchParams.set('plan', bData.plan);
   paymentUrl.searchParams.set('template', bData.template);
-  paymentUrl.searchParams.set('primary_color', bData.primaryColor);
-  paymentUrl.searchParams.set('accent_color', bData.accentColor);
+  paymentUrl.searchParams.set('primary_color', bData.color);
+  paymentUrl.searchParams.set('accent_color', bData.color);
   paymentUrl.searchParams.set('subdomain', bData.subdomain);
+  
+  // Add services and hours data
+  const validServices = bData.services.filter(s => s.name && s.price);
+  paymentUrl.searchParams.set('services_data', JSON.stringify(validServices));
+  
+  const hoursData = {};
+  ['mon','tue','wed','thu','fri','sat','sun'].forEach(day => {
+    if (bData.days[day]) {
+      hoursData[day] = {
+        isOpen: bData.days[day],
+        open: bData.hours[day + '_open'] || '09:00',
+        close: bData.hours[day + '_close'] || '17:00'
+      };
+    }
+  });
+  paymentUrl.searchParams.set('hours_data', JSON.stringify(hoursData));
 
   // Redirect to Stripe with metadata
   window.location.href = paymentUrl.toString();
@@ -1609,15 +1714,18 @@ function buildPreviewHTML() {
     const navBg = '#111';
     const border = `rgba(${hexToRgb(c)},0.15)`;
     return `
-      <div style="background:${bg};min-height:100%;font-family:Georgia,serif;color:${textColor}">
-        <div style="background:${navBg};padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid ${border}">
-          <div style="font-size:0.75rem;font-weight:400;letter-spacing:0.22em;text-transform:uppercase">${name}</div>
-          <div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:${c}">Services · Gallery</div>
+      <div style="background:${bg};font-family:Georgia,serif;height:100%;padding:0">
+        <div style="background:${navBg};padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(201,168,76,0.2)">
+          <div style="display:flex;align-items:center;gap:10px">
+            ${bData.logo ? `<img src="${bData.logo}" style="width:32px;height:32px;border-radius:4px;object-fit:cover">` : ''}
+            <div style="font-size:0.8rem;font-weight:400;letter-spacing:0.2em;text-transform:uppercase">${name}</div>
+          </div>
+          <div style="font-size:0.6rem;background:${c};border:1px solid;padding:4px 10px;border-radius:2px;letter-spacing:0.12em;text-transform:uppercase">Book</div>
         </div>
-        <div style="padding:24px 20px 16px;border-bottom:1px solid ${border}">
-          <div style="font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:${c};margin-bottom:8px">Premium Booking</div>
-          <div style="font-size:1.3rem;font-weight:400;line-height:1.25;margin-bottom:8px">${tagline}</div>
-          <div style="display:inline-block;padding:8px 18px;border:1px solid ${c};font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:${c};cursor:pointer;margin-top:4px">Book an Appointment</div>
+        <div style="padding:20px 16px 16px;border-bottom:1px solid rgba(201,168,76,0.1)">
+          <div style="font-size:0.55rem;letter-spacing:0.22em;text-transform:uppercase;margin-bottom:6px">${tagline}</div>
+          <div style="font-size:1.05rem;line-height:1.25;font-weight:400;margin-bottom:8px">${name}</div>
+          ${bData.address ? `<div style="font-size:0.7rem;color:rgba(240,238,232,0.6);margin-bottom:4px">📍 ${bData.address}</div>` : ''}
         </div>
         <div style="padding:16px 20px;border-bottom:1px solid ${border}">
           <div style="font-size:0.55rem;letter-spacing:0.16em;text-transform:uppercase;color:${c};opacity:0.7;margin-bottom:10px">Opening Hours</div>
@@ -1641,7 +1749,10 @@ function buildPreviewHTML() {
     return `
       <div style="background:${bg};min-height:100%;font-family:'DM Sans',sans-serif;color:${text}">
         <div style="background:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #E8F0EE;box-shadow:0 1px 4px rgba(0,0,0,0.04)">
-          <div style="font-size:0.8rem;font-weight:700">${name}</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            ${bData.logo ? `<img src="${bData.logo}" style="width:32px;height:32px;border-radius:6px;object-fit:cover">` : ''}
+            <div style="font-size:0.8rem;font-weight:700">${name}</div>
+          </div>
           <div style="font-size:0.62rem;background:${c};color:#fff;padding:5px 12px;border-radius:100px;font-weight:600">Book Now</div>
         </div>
         <div style="padding:20px 20px 16px;background:#fff;border-bottom:1px solid #E8F0EE;margin-bottom:12px">
@@ -1675,7 +1786,10 @@ function buildPreviewHTML() {
     return `
       <div style="background:${bg};min-height:100%;font-family:Georgia,serif;color:${text}">
         <div style="background:${text};padding:12px 20px;display:flex;align-items:center;justify-content:space-between">
-          <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:${bg}">${name}</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            ${bData.logo ? `<img src="${bData.logo}" style="width:32px;height:32px;border-radius:4px;object-fit:cover">` : ''}
+            <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:${bg}">${name}</div>
+          </div>
           <div style="font-size:0.58rem;color:rgba(245,237,208,0.5)">Gallery · Team</div>
         </div>
         <div style="padding:20px;border-bottom:2px solid ${text}">
@@ -1700,7 +1814,10 @@ function buildPreviewHTML() {
     return `
       <div style="background:${bg};min-height:100%;font-family:'DM Sans',sans-serif;color:#1A2A2E">
         <div style="background:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #D8ECEF">
-          <div style="font-size:0.78rem;font-weight:700;letter-spacing:0.04em">${name}</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            ${bData.logo ? `<img src="${bData.logo}" style="width:32px;height:32px;border-radius:6px;object-fit:cover">` : ''}
+            <div style="font-size:0.78rem;font-weight:700;letter-spacing:0.04em">${name}</div>
+          </div>
           <div style="font-size:0.6rem;background:${c};color:#fff;padding:5px 12px;border-radius:4px;font-weight:600">Book</div>
         </div>
         <div style="background:#fff;padding:16px 20px;margin-bottom:12px;border-bottom:1px solid #D8ECEF">
@@ -1724,7 +1841,10 @@ function buildPreviewHTML() {
   return `
     <div style="background:#F9F4EE;min-height:100%;font-family:'DM Sans',sans-serif;color:#1A1208">
       <div style="background:#F9F4EE;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #1A1208">
-        <div style="font-size:0.78rem;font-weight:900;letter-spacing:0.02em">${name}</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          ${bData.logo ? `<img src="${bData.logo}" style="width:32px;height:32px;border-radius:6px;object-fit:cover">` : ''}
+          <div style="font-size:0.78rem;font-weight:900;letter-spacing:0.02em">${name}</div>
+        </div>
         <div style="font-size:0.58rem;color:rgba(26,18,8,0.5)">Menu · Book</div>
       </div>
       <div style="padding:16px 20px;border-bottom:1.5px solid rgba(26,18,8,0.1)">

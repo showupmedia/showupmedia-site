@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Book Appointment - Show Up Media</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased}
+body{font-family:'DM Sans',sans-serif;background:#f8f9fa;color:#1a1a1a;line-height:1.6;min-height:100vh}
+
+:root{
+  --blue:#2D8EFF;
+  --blue-dim:rgba(45,142,255,0.12);
+  --blue-mid:rgba(45,142,255,0.25);
+  --white:#1a1a1a;
+  --muted:#6c757d;
+  --muted-mid:#495057;
+  --dark:#ffffff;
+  --card:#ffffff;
+  --card-border:#e9ecef;
+  --card-hover:#f8f9fa;
+}
+
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+
+/* ── NAV ── */
+header{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 48px;height:72px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--card-border)}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--white);display:flex;align-items:center;gap:10px}
+.nav-logo img{width:32px;height:32px;border-radius:6px;object-fit:cover}
+.nav-cta{background:var(--blue);color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;padding:10px 24px;border-radius:3px;border:none;cursor:pointer;transition:all 0.3s}
+.nav-cta:hover{background:#1A7AEE;transform:translateY(-2px);box-shadow:0 8px 25px rgba(45,142,255,0.3)}
+
+/* ── MAIN ── */
+main{padding:120px 48px 48px;max-width:1200px;margin:0 auto}
+.booking-container{background:var(--card);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.08);overflow:hidden}
+.booking-header{padding:40px 48px;border-bottom:1px solid var(--card-border);text-align:center}
+.business-info{margin-bottom:20px}
+.business-name{font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--white);margin-bottom:8px}
+.business-tagline{font-size:1rem;color:var(--muted);margin-bottom:16px}
+.business-address{font-size:0.9rem;color:var(--muted-mid);margin-bottom:12px}
+.booking-form{padding:48px}
+.form-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.5rem;color:var(--white);margin-bottom:24px;text-align:center}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+.form-group{margin-bottom:20px}
+.form-label{display:block;font-size:0.8rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted-mid);margin-bottom:8px}
+.form-input{width:100%;padding:14px 16px;border:2px solid var(--card-border);border-radius:8px;background:var(--card);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.95rem;outline:none;transition:border-color 0.2s}
+.form-input:focus{border-color:var(--blue);background:var(--blue-dim)}
+.form-select{width:100%;padding:14px 16px;border:2px solid var(--card-border);border-radius:8px;background:var(--card);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.95rem;outline:none;cursor:pointer;transition:border-color 0.2s}
+.form-select:focus{border-color:var(--blue);background:var(--blue-dim)}
+.submit-btn{width:100%;background:var(--blue);color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.1em;text-transform:uppercase;padding:16px;border-radius:8px;border:none;cursor:pointer;transition:all 0.25s;margin-top:8px}
+.submit-btn:hover{background:#1A7AEE;transform:translateY(-2px);box-shadow:0 12px 40px rgba(45,142,255,0.25)}
+.submit-btn:disabled{background:var(--muted);cursor:not-allowed;transform:none}
+
+/* ── SERVICES ── */
+.services-section{padding:48px;border-top:1px solid var(--card-border)}
+.services-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.3rem;color:var(--white);margin-bottom:24px}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.service-card{background:var(--card-hover);border:2px solid var(--card-border);border-radius:8px;padding:24px;transition:all 0.2s;cursor:pointer}
+.service-card:hover{border-color:var(--blue);transform:translateY(-2px)}
+.service-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;color:var(--white);margin-bottom:8px}
+.service-meta{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.service-duration{font-size:0.85rem;color:var(--muted)}
+.service-price{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--blue)}
+.service-description{font-size:0.9rem;color:var(--muted-mid);line-height:1.5}
+.select-service-btn{width:100%;background:transparent;color:var(--blue);border:2px solid var(--blue);padding:12px;border-radius:6px;font-family:'Syne',sans-serif;font-weight:600;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;margin-top:16px}
+.select-service-btn:hover{background:var(--blue);color:#fff}
+
+/* ── FOOTER ── */
+footer{background:var(--card);border-top:1px solid var(--card-border);padding:32px 48px;text-align:center}
+.footer-text{font-size:0.8rem;color:var(--muted);margin-bottom:8px}
+.footer-link{color:var(--blue);text-decoration:none}
+.footer-link:hover{text-decoration:underline}
+
+/* ── LOADING ── */
+.loading{display:none;position:fixed;inset:0;background:rgba(255,255,255,0.9);z-index:9999;align-items:center;justify-content:center}
+.loading-spinner{width:48px;height:48px;border:4px solid var(--card-border);border-top:4px solid var(--blue);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  header{padding:0 24px}
+  main{padding:80px 24px}
+  .booking-header{padding:32px 24px}
+  .form-grid{grid-template-columns:1fr}
+  .services-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="nav-logo">
+    <img id="businessLogo" src="" alt="Business Logo" style="display:none;">
+    <span id="businessName">Loading...</span>
+  </div>
+  <button class="nav-cta" onclick="window.open('https://showupmedia.org/crm', '_blank')">Business Login</button>
+</header>
+
+<main>
+  <div class="booking-container">
+    <div class="booking-header">
+      <div class="business-info">
+        <div class="business-name" id="headerBusinessName">Loading...</div>
+        <div class="business-tagline" id="businessTagline"></div>
+        <div class="business-address" id="businessAddress">📍 Loading address...</div>
+      </div>
+    </div>
+
+    <div class="booking-form">
+      <h2 class="form-title">Book Your Appointment</h2>
+      <form id="bookingForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Your Name</label>
+            <input type="text" class="form-input" id="customerName" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-input" id="customerEmail" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Select Service</label>
+          <select class="form-select" id="serviceSelect" required>
+            <option value="">Choose a service...</option>
+          </select>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Preferred Date</label>
+            <input type="date" class="form-input" id="bookingDate" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Preferred Time</label>
+            <input type="time" class="form-input" id="bookingTime" required>
+          </div>
+        </div>
+        
+        <button type="submit" class="submit-btn">Book Appointment</button>
+      </form>
+    </div>
+
+    <div class="services-section" id="servicesSection" style="display:none;">
+      <h2 class="services-title">Our Services</h2>
+      <div class="services-grid" id="servicesGrid">
+        <!-- Services will be loaded here -->
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-text">Powered by <a href="https://showupmedia.org" class="footer-link">Show Up Media</a></div>
+</footer>
+
+<!-- Loading overlay -->
+<div class="loading" id="loading">
+  <div class="loading-spinner"></div>
+</div>
+
+<script>
+// Get business subdomain from URL
+const pathParts = window.location.pathname.split('/');
+const businessSubdomain = pathParts[pathParts.length - 1];
+
+// Load business data
+async function loadBusinessData() {
+  try {
+    const response = await fetch(`/api/business/${businessSubdomain}`);
+    if (!response.ok) {
+      window.location.href = 'https://showupmedia.org';
+      return;
+    }
+    
+    const business = await response.json();
+    
+    if (!business || business.status !== 'active') {
+      document.body.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'DM Sans',sans-serif">
+          <div style="text-align:center;max-width:400px;padding:40px">
+            <h1 style="color:#e74c3c;margin-bottom:16px">Business Not Found</h1>
+            <p style="color:#6c757d;line-height:1.6">This booking page is not available or has been deactivated.</p>
+            <a href="https://showupmedia.org" style="color:#2D8EFF;text-decoration:none;font-weight:600;">Return to Show Up Media</a>
+          </div>
+        </div>
+      `;
+      return;
+    }
+    
+    // Update UI with business data
+    document.getElementById('headerBusinessName').textContent = business.name;
+    document.getElementById('businessName').textContent = business.name;
+    document.getElementById('businessTagline').textContent = business.tagline || '';
+    document.getElementById('businessAddress').textContent = `📍 ${business.address || 'Address not available'}`;
+    
+    if (business.logo) {
+      const logo = document.getElementById('businessLogo');
+      logo.src = business.logo;
+      logo.style.display = 'block';
+    }
+    
+    // Load services
+    await loadServices(business.id);
+    
+  } catch (error) {
+    console.error('Error loading business data:', error);
+    showError('Failed to load booking page. Please try again.');
+  }
+}
+
+// Load services for this business
+async function loadServices(businessId) {
+  try {
+    const response = await fetch(`/api/services/${businessId}`);
+    if (!response.ok) return;
+    
+    const services = await response.json();
+    
+    if (services && services.length > 0) {
+      // Populate service dropdown
+      const serviceSelect = document.getElementById('serviceSelect');
+      services.forEach(service => {
+        const option = document.createElement('option');
+        option.value = service.id;
+        option.textContent = `${service.name} - £${service.price}`;
+        serviceSelect.appendChild(option);
+      });
+      
+      // Show services section
+      const servicesGrid = document.getElementById('servicesGrid');
+      servicesGrid.innerHTML = services.map(service => `
+        <div class="service-card" onclick="selectService(${service.id})">
+          <div class="service-name">${service.name}</div>
+          <div class="service-meta">
+            <span class="service-duration">${service.duration}</span>
+            <span class="service-price">£${service.price}</span>
+          </div>
+          ${service.description ? `<div class="service-description">${service.description}</div>` : ''}
+          <button class="select-service-btn">Select This Service</button>
+        </div>
+      `).join('');
+      
+      document.getElementById('servicesSection').style.display = 'block';
+    }
+    
+  } catch (error) {
+    console.error('Error loading services:', error);
+  }
+}
+
+// Handle form submission
+document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const formData = {
+    customer_name: document.getElementById('customerName').value,
+    customer_email: document.getElementById('customerEmail').value,
+    service_id: document.getElementById('serviceSelect').value,
+    booking_date: document.getElementById('bookingDate').value,
+    booking_time: document.getElementById('bookingTime').value,
+    business_subdomain: businessSubdomain
+  };
+  
+  // Validate form
+  if (!formData.customer_name || !formData.customer_email || !formData.service_id || !formData.booking_date || !formData.booking_time) {
+    showError('Please fill in all required fields.');
+    return;
+  }
+  
+  try {
+    document.getElementById('loading').style.display = 'flex';
+    
+    const response = await fetch('/api/booking', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData)
+    });
+    
+    if (!response.ok) {
+      throw new Error('Booking failed');
+    }
+    
+    const result = await response.json();
+    
+    // Show success message
+    document.body.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'DM Sans',sans-serif">
+        <div style="text-align:center;max-width:400px;padding:40px">
+          <div style="font-size:48px;color:#10b981;margin-bottom:16px">✓</div>
+          <h1 style="color:#1a1a1a;margin-bottom:16px">Booking Confirmed!</h1>
+          <p style="color:#6c757d;line-height:1.6;margin-bottom:24px">Thank you for your booking. We'll send a confirmation email shortly.</p>
+          <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin-bottom:24px">
+            <h3 style="color:#1a1a1a;margin-bottom:12px">Booking Details:</h3>
+            <p><strong>Service:</strong> ${document.getElementById('serviceSelect').options[document.getElementById('serviceSelect').selectedIndex].text}</p>
+            <p><strong>Date:</strong> ${formData.booking_date}</p>
+            <p><strong>Time:</strong> ${formData.booking_time}</p>
+            <p><strong>Name:</strong> ${formData.customer_name}</p>
+          </div>
+          <a href="https://showupmedia.org/booking/${businessSubdomain}" style="color:#2D8EFF;text-decoration:none;font-weight:600;">← Back to Booking Page</a>
+        </div>
+      </div>
+    `;
+    
+  } catch (error) {
+    document.getElementById('loading').style.display = 'none';
+    showError('Failed to submit booking. Please try again.');
+  }
+});
+
+// Select service from card
+function selectService(serviceId) {
+  document.getElementById('serviceSelect').value = serviceId;
+  document.getElementById('bookingForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Show error message
+function showError(message) {
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #e74c3c;
+    color: white;
+    padding: 16px 20px;
+    border-radius: 8px;
+    z-index: 10000;
+    font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  `;
+  errorDiv.textContent = message;
+  document.body.appendChild(errorDiv);
+  
+  setTimeout(() => {
+    errorDiv.remove();
+  }, 5000);
+}
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', loadBusinessData);
+</script>
+</body>
+</html>

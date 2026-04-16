@@ -134,13 +134,26 @@ exports.handler = async (event, context) => {
 
 async function sendEmail(to, subject, html) {
   try {
-    // This would use your Resend setup
-    console.log(`Sending email to ${to}: ${subject}`);
-    
-    // In real implementation, you'd call your Resend function here
-    // For now, we'll just log the content
-    console.log('Email content:', html);
-    
+    // Call the real email service
+    const response = await fetch(`${process.env.URL}/.netlify/functions/email-service`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.NETLIFY_DEV_TOKEN || ''}`
+      },
+      body: JSON.stringify({
+        to: to,
+        subject: subject,
+        html: html
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Email service failed');
+    }
+
+    const result = await response.json();
+    console.log(`Email sent successfully to ${to}: ${subject}`);
     return true;
   } catch (error) {
     console.error('Error sending email:', error);

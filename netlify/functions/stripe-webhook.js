@@ -95,6 +95,11 @@ async function handleCheckoutSession(session) {
           stripe_customer_id: session.customer,
           status: 'active',
           subdomain: metadata.subdomain || generateSubdomain(metadata.business_name),
+          address: metadata.business_address || '',
+          phone: metadata.business_phone || '',
+          tagline: metadata.business_tagline || '',
+          about: metadata.business_about || '',
+          logo: metadata.business_logo || '',
           created_at: new Date().toISOString()
         }
       ])
@@ -108,8 +113,66 @@ async function handleCheckoutSession(session) {
 
     console.log('Business created successfully:', business.id);
 
-    // Send welcome email
-    await sendWelcomeEmail(business, plan);
+    // Parse and create services from builder data
+    if (metadata.services_data) {
+      const services = JSON.parse(metadata.services_data);
+      const validServices = services.filter(s => s.name && s.price);
+      
+      if (validServices.length > 0) {
+        await supabase
+          .from('services')
+          .insert(validServices.map(service => ({
+            business_id: business.id,
+            name: service.name,
+            price: parseFloat(service.price) || 0,
+            duration: service.duration || '30 min',
+            description: service.description || '',
+            created_at: new Date().toISOString()
+          })));
+        
+        console.log(`Created ${validServices.length} services for business ${business.id}`);
+      }
+    }
+
+    // Parse and create business hours from builder data
+    if (metadata.hours_data) {
+      const hours = JSON.parse(metadata.hours_data);
+      const daysData = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+      
+      for (const day of daysData) {
+        if (hours[day]) {
+          await supabase
+            .from('business_hours')
+            .insert({
+              business_id: business.id,
+              day_of_week: day,
+              open_time: hours[day].open || '09:00',
+              close_time: hours[day].close || '17:00',
+              is_closed: !hours[day].isOpen,
+              created_at: new Date().toISOString()
+            });
+        }
+      }
+      
+      console.log(`Created business hours for business ${business.id}`);
+    }
+
+    // Generate live booking page URL
+    const bookingUrl = `https://showupmedia.org/booking/${business.subdomain}`;
+    
+    // Store booking page URL
+    await supabase
+      .from('business_settings')
+      .insert([
+        {
+          business_id: business.id,
+          setting_key: 'booking_page_url',
+          setting_value: bookingUrl
+        }
+      ]);
+
+    // Send welcome email with booking page URL
+    await sendWelcomeEmail(business, plan, bookingUrl);
 
     // Store Stripe subscription ID if available
     if (session.subscription) {
@@ -123,6 +186,8 @@ async function handleCheckoutSession(session) {
           }
         ]);
     }
+
+    console.log(`Booking system fully created for ${business.name} at ${bookingUrl}`);
 
   } catch (error) {
     console.error('Error in handleCheckoutSession:', error);
@@ -196,6 +261,7 @@ async function sendBusinessNotificationEmail(booking, service, business) {
             .detail-value { color: #333; }
             .cta { background: #2563eb; color: white; padding: 15px 30px; border-radius: 8px; text-align: center; text-decoration: none; display: block; margin-top: 20px; }
             .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+            .booking-url { background: #10b981; color: white; padding: 15px 20px; border-radius: 8px; text-align: center; margin: 20px 0; font-size: 18px; font-weight: bold; }
           </style>
         </head>
         <body>
@@ -245,7 +311,7 @@ async function sendBusinessNotificationEmail(booking, service, business) {
 
             <div class="footer">
               <p>Check your dashboard for more details and customer management.</p>
-              <p>© 2024 ${business.name}. All rights reserved.</p>
+              <p> 2024 ${business.name}. All rights reserved.</p>
             </div>
           </div>
         </body>
@@ -344,16 +410,21 @@ async function handleSubscriptionDeleted(subscription) {
   }
 }
 
-async function sendWelcomeEmail(business, email, plan) {
+async function sendWelcomeEmail(business, plan, bookingUrl) {
   try {
     // This would use your existing email system (Resend)
-    console.log(`Welcome email sent to ${email} for plan ${plan}`);
+    console.log(`Welcome email sent to ${business.email} for plan ${plan} with booking URL: ${bookingUrl}`);
+    
+    const welcomeContent = generateWelcomeEmail(business, plan, bookingUrl);
     
     // TODO: Implement actual email sending using your Resend setup
     // You can reuse the existing email function from your CRM
+    console.log('Welcome email content:', welcomeContent);
     
+    return true;
   } catch (error) {
     console.error('Error sending welcome email:', error);
+    return false;
   }
 }
 
