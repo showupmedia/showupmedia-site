@@ -29,7 +29,7 @@
 # CRM
 [[redirects]]
   from = "/crm"
-  to = "/crm/crm.html"
+  to = "/crm.html"
   status = 200
 
 # Admin Financial Dashboard

@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="cache-buster" content="20250416-1830">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>Show Up Media — Short-Form Content Specialists</title>
@@ -1422,19 +1426,19 @@ textarea.q-input{resize:vertical;min-height:80px;line-height:1.6}
 .tp-noir-hdr{background:#0D0B07;border-bottom:1px solid rgba(201,168,76,0.2);padding:8px 14px;display:flex;align-items:center;justify-content:space-between}
 .tp-noir-logo{font-family:'Syne',sans-serif;font-size:0.55rem;font-weight:800;color:#C9A84C;letter-spacing:0.12em}
 .tp-noir-nav{display:flex;gap:8px}
-.tp-noir-nav span{font-size:0.42rem;color:rgba(255,255,255,0.3);letter-spacing:0.06em}
+.tp-noir-nav span{font-size:0.42rem;color:rgba(255,255,255,0.8);letter-spacing:0.06em}
 .tp-noir-body{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:0}
 .tp-noir-left{padding:12px;border-right:1px solid rgba(201,168,76,0.1)}
 .tp-noir-title{font-family:'Syne',sans-serif;font-size:0.62rem;font-weight:800;color:#F5F0E8;line-height:1.2;margin-bottom:6px}
 .tp-noir-hours{background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:4px;padding:6px 8px;margin-bottom:8px}
 .tp-noir-hours-lbl{font-size:0.38rem;letter-spacing:0.1em;text-transform:uppercase;color:#C9A84C;margin-bottom:4px}
-.tp-noir-h-row{display:flex;justify-content:space-between;font-size:0.4rem;color:rgba(245,240,232,0.5);margin-bottom:2px}
+.tp-noir-h-row{display:flex;justify-content:space-between;font-size:0.4rem;color:rgba(245,240,232,0.9);margin-bottom:2px}
 .tp-noir-h-row.today{color:#C9A84C}
 .tp-noir-btn{background:linear-gradient(135deg,#C9A84C,#F0DFA0);color:#0A0906;font-size:0.42rem;font-weight:700;padding:5px;border-radius:3px;text-align:center;letter-spacing:0.06em}
 .tp-noir-right{padding:10px;display:flex;flex-direction:column;gap:5px}
 .tp-noir-slot{background:rgba(255,255,255,0.03);border:1px solid rgba(201,168,76,0.1);border-radius:4px;padding:5px 7px}
 .tp-noir-slot-time{font-size:0.42rem;color:#C9A84C;margin-bottom:1px}
-.tp-noir-slot-name{font-size:0.4rem;color:rgba(245,240,232,0.6)}
+.tp-noir-slot-name{font-size:0.4rem;color:rgba(245,240,232,0.9)}
 .tp-noir-slot-price{font-size:0.38rem;color:rgba(201,168,76,0.6);margin-top:2px}
 /* 2. FRESH MINT */
 .tp-mint{background:#F5FBF9;display:flex;flex-direction:column;height:100%}
@@ -2084,44 +2088,44 @@ function renderQuestionnaireStep() {
       if (questionnaireData[conditionField] !== conditionValue) return;
     }
     
-    let fieldHTML = `<div style="margin-bottom:24px">`;
-    fieldHTML += `<label style="display:block;font-size:0.9rem;font-weight:500;color:var(--white);margin-bottom:8px">${field.label}${field.required ? ' *' : ''}</label>`;
+    let fieldHTML = '<div style="margin-bottom:24px">';
+    fieldHTML += '<label style="display:block;font-size:0.9rem;font-weight:500;color:var(--white);margin-bottom:8px">' + field.label + (field.required ? ' *' : '') + '</label>';
     
     switch(field.type) {
       case 'text':
       case 'url':
       case 'number':
-        fieldHTML += `<input type="${field.type}" name="${field.name}" ${field.required ? 'required' : ''} placeholder="${field.placeholder || ''}" style="width:100%;padding:12px;border:1px solid var(--card-border);border-radius:6px;background:rgba(255,255,255,0.05);color:var(--white);font-size:0.9rem">`;
+        fieldHTML += '<input type="' + field.type + '" name="' + field.name + '" ' + (field.required ? 'required' : '') + ' placeholder="' + (field.placeholder || '') + '" style="width:100%;padding:12px;border:1px solid var(--card-border);border-radius:6px;background:rgba(255,255,255,0.05);color:var(--white);font-size:0.9rem">';
         break;
       case 'textarea':
-        fieldHTML += `<textarea name="${field.name}" ${field.required ? 'required' : ''} placeholder="${field.placeholder || ''}" rows="4" style="width:100%;padding:12px;border:1px solid var(--card-border);border-radius:6px;background:rgba(255,255,255,0.05);color:var(--white);font-size:0.9rem;resize:vertical"></textarea>`;
+        fieldHTML += '<textarea name="' + field.name + '" ' + (field.required ? 'required' : '') + ' placeholder="' + (field.placeholder || '') + '" rows="4" style="width:100%;padding:12px;border:1px solid var(--card-border);border-radius:6px;background:rgba(255,255,255,0.05);color:var(--white);font-size:0.9rem;resize:vertical"></textarea>';
         break;
       case 'select':
-        fieldHTML += `<select name="${field.name}" ${field.required ? 'required' : ''} style="width:100%;padding:12px;border:1px solid var(--card-border);border-radius:6px;background:rgba(255,255,255,0.05);color:var(--white);font-size:0.9rem">`;
-        fieldHTML += `<option value="">Select an option</option>`;
+        fieldHTML += '<select name="' + field.name + '" ' + (field.required ? 'required' : '') + ' style="width:100%;padding:12px;border:1px solid var(--card-border);border-radius:6px;background:rgba(255,255,255,0.05);color:var(--white);font-size:0.9rem">';
+        fieldHTML += '<option value="">Select an option</option>';
         field.options.forEach(option => {
-          fieldHTML += `<option value="${option}">${option}</option>`;
+          fieldHTML += '<option value="' + option + '">' + option + '</option>';
         });
-        fieldHTML += `</select>`;
+        fieldHTML += '</select>';
         break;
       case 'radio':
         field.options.forEach(option => {
-          fieldHTML += `<label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer">
-            <input type="radio" name="${field.name}" value="${option}" ${field.required ? 'required' : ''} onchange="handleRadioChange('${field.name}', '${option}')" style="margin:0">
-            <span>${option}</span>
-          </label>`;
+          fieldHTML += '<label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer">';
+          fieldHTML += '<input type="radio" name="' + field.name + '" value="' + option + '" ' + (field.required ? 'required' : '') + ' onchange="handleRadioChange(\'' + field.name + '\', \'' + option + '\')" style="margin:0">';
+          fieldHTML += '<span>' + option + '</span>';
+          fieldHTML += '</label>';
         });
         break;
       case 'checkbox':
         field.options.forEach(option => {
-          fieldHTML += `<label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer">
-            <input type="checkbox" name="${field.name}" value="${option}" style="margin:0">
-            <span>${option}</span>
-          </label>`;
+          fieldHTML += '<label style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer">';
+          fieldHTML += '<input type="checkbox" name="' + field.name + '" value="' + option + '" style="margin:0">';
+          fieldHTML += '<span>' + option + '</span>';
+          fieldHTML += '</label>';
         });
         break;
       case 'file':
-        fieldHTML += `<input type="file" name="${field.name}" accept="image/*" style="width:100%;padding:8px;border:1px solid var(--card-border);border-radius:6px;background:rgba(255,255,255,0.05);color:var(--white);font-size:0.9rem">`;
+        fieldHTML += '<input type="file" name="' + field.name + '" accept="image/*" style="width:100%;padding:8px;border:1px solid var(--card-border);border-radius:6px;background:rgba(255,255,255,0.05);color:var(--white);font-size:0.9rem">';
         break;
       case 'template-selector':
         fieldHTML += `

@@ -54,3 +54,7 @@ ACCESS_TOKEN
 tmp/
 temp/
 *.tmp
+
+# SQL files (keep only database-setup-final-working.sql)
+*.sql
+!database-setup-final-working.sql
