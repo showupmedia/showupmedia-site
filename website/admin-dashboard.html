@@ -197,7 +197,7 @@
         
         .status-cancelled {
             background: #fee2e2;
-            color: #dc2626;
+            color: white;
         }
         
         .realtime-indicator {
@@ -538,7 +538,88 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- EARNINGS DASHBOARD -->
+                    <div class="earnings-section">
+                        <div class="header">
+                            <h2>?? My Earnings</h2>
+                            <div class="header-actions">
+                                <select id="earnings-period" onchange="loadEarnings()" style="padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 14px;">
+                                    <option value="month">This Month</option>
+                                    <option value="week">This Week</option>
+                                    <option value="year">This Year</option>
+                                </select>
+                                <button onclick="loadEarnings()" style="background: #2563eb; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 14px; cursor: pointer;">?? Refresh</button>
+                            </div>
+                        </div>
+                        
+                        <div class="earnings-stats">
+                            <div class="earnings-card">
+                                <div class="earnings-value" id="earnings-total-revenue">£0.00</div>
+                                <div class="earnings-label">Total Revenue</div>
+                                <div class="earnings-subtitle">Gross customer payments</div>
+                            </div>
+                            
+                            <div class="earnings-card">
+                                <div class="earnings-value" id="earnings-net-earnings" style="color: #10b981;">£0.00</div>
+                                <div class="earnings-label">Net Earnings</div>
+                                <div class="earnings-subtitle">After all fees</div>
+                            </div>
+                            
+                            <div class="earnings-card">
+                                <div class="earnings-value" id="earnings-pending-payout" style="color: #f59e0b;">£0.00</div>
+                                <div class="earnings-label">Pending Payout</div>
+                                <div class="earnings-subtitle">Ready to process</div>
+                            </div>
+                            
+                            <div class="earnings-card">
+                                <div class="earnings-value" id="earnings-total-bookings">0</div>
+                                <div class="earnings-label">Total Bookings</div>
+                                <div class="earnings-subtitle">Completed bookings</div>
+                            </div>
+                        </div>
+                        
+                        <div class="fee-breakdown">
+                            <div class="fee-header">
+                                <h3>Transparent Fee Structure</h3>
+                                <p>Complete breakdown of all fees for every transaction</p>
+                            </div>
+                            
+                            <div class="fee-details">
+                                <div class="fee-item">
+                                    <div class="fee-name">Platform Fee</div>
+                                    <div class="fee-amount">£0.50 per booking</div>
+                                </div>
+                                <div class="fee-item">
+                                    <div class="fee-name">Stripe Processing Fee</div>
+                                    <div class="fee-amount">1.5% + £0.20 per transaction</div>
+                                </div>
+                                <div class="fee-item total">
+                                    <div class="fee-name">Total Fees</div>
+                                    <div class="fee-amount" id="total-fees-display">£0.00</div>
+                                </div>
+                                <div class="fee-item net">
+                                    <div class="fee-name">Your Net Earnings</div>
+                                    <div class="fee-amount" id="net-earnings-display" style="color: #10b981;">£0.00</div>
+                                </div>
+                            </div>
+                            
+                            <div class="example-box">
+                                <strong>Example:</strong> £30 service = £28.85 earnings (after £1.15 total fees)
+                            </div>
+                        </div>
+                        
+                        <div class="transactions-section">
+                            <h3>Recent Transactions</h3>
+                            <div id="transactions-list">
+                                <div class="loading">Loading transactions...</div>
+                            </div>
+                        </div>
+                    </div>
                 `;
+                
+                // Load earnings data after dashboard loads
+                loadEarnings();
                 
             } catch (error) {
                 console.error('Dashboard load error:', error);
@@ -1376,6 +1457,115 @@
 
         function showBulkActions() {
             showNotification('Bulk actions feature coming soon!', 'info');
+        }
+
+        // Helper functions for settlement calculation
+        function calculateSettlementDate(startDate) {
+            const date = new Date(startDate);
+            let businessDaysToAdd = 3; // Average settlement time
+            
+            while (businessDaysToAdd > 0) {
+                date.setDate(date.getDate() + 1);
+                const day = date.getDay();
+                if (day >= 1 && day <= 5) { // Monday-Friday
+                    businessDaysToAdd--;
+                }
+            }
+            
+            return date;
+        }
+        
+        function getNextBusinessDay(date) {
+            const nextDay = new Date(date);
+            nextDay.setDate(nextDay.getDate() + 1);
+            
+            const day = nextDay.getDay();
+            if (day === 0) { // Sunday
+                nextDay.setDate(nextDay.getDate() + 1); // Move to Monday
+            } else if (day === 6) { // Saturday
+                nextDay.setDate(nextDay.getDate() + 2); // Move to Monday
+            }
+            
+            return nextDay;
+        }
+
+        // Load earnings data
+        async function loadEarnings() {
+            if (!businessData) return;
+            
+            try {
+                const period = document.getElementById('earnings-period')?.value || 'month';
+                const response = await fetch(`/.netlify/functions/payout-tracking?business_id=${businessData.id}&period=${period}`);
+                const data = await response.json();
+                
+                if (data.summary) {
+                    // Update earnings overview
+                    document.getElementById('earnings-total-revenue').textContent = '£' + data.summary.gross_revenue.toFixed(2);
+                    document.getElementById('earnings-net-earnings').textContent = '£' + data.summary.net_payout.toFixed(2);
+                    document.getElementById('earnings-pending-payout').textContent = '£' + data.summary.accumulated_earnings.toFixed(2);
+                    document.getElementById('earnings-total-bookings').textContent = data.summary.total_bookings;
+                    
+                    // Update fee breakdown
+                    document.getElementById('total-fees-display').textContent = '£' + data.summary.total_fees.toFixed(2);
+                    document.getElementById('net-earnings-display').textContent = '£' + data.summary.net_payout.toFixed(2);
+                    
+                    // Update transactions list
+                    const transactionsList = document.getElementById('transactions-list');
+                    if (data.transactions && data.transactions.length > 0) {
+                        transactionsList.innerHTML = data.transactions.map(function(transaction) {
+                            // Calculate settlement dates
+                            const today = new Date();
+                            const settlementDate = calculateSettlementDate(today);
+                            const payoutDate = getNextBusinessDay(settlementDate);
+                            
+                            let html = `
+                            <div class="transaction-item">
+                                <div class="transaction-header">
+                                    <div class="transaction-service">${transaction.service_name}</div>
+                                    <div class="transaction-date">${new Date(transaction.created_at).toLocaleDateString()}</div>
+                                </div>
+                                <div class="transaction-details">
+                                    <div class="transaction-detail">
+                                        <span class="transaction-label">Customer</span>
+                                        <span class="transaction-value">${transaction.customer_name}</span>
+                                    </div>
+                                    <div class="transaction-detail">
+                                        <span class="transaction-label">Gross</span>
+                                        <span class="transaction-value">£${transaction.gross_amount.toFixed(2)}</span>
+                                    </div>
+                                    <div class="transaction-detail">
+                                        <span class="transaction-label">Platform Fee</span>
+                                        <span class="transaction-value negative">-£${transaction.platform_fee.toFixed(2)}</span>
+                                    </div>
+                                    <div class="transaction-detail">
+                                        <span class="transaction-label">Stripe Fee</span>
+                                        <span class="transaction-value negative">-£${transaction.stripe_fee.toFixed(2)}</span>
+                                    </div>
+                                    <div class="transaction-detail">
+                                        <span class="transaction-label">Net</span>
+                                        <span class="transaction-value positive">£${transaction.net_amount.toFixed(2)}</span>
+                                    </div>
+                                    <div class="transaction-detail">
+                                        <span class="transaction-label">Settlement</span>
+                                        <span class="transaction-value" style="color: #f59e0b;">${settlementDate.toLocaleDateString()}</span>
+                                    </div>
+                                    <div class="transaction-detail">
+                                        <span class="transaction-label">Payout</span>
+                                        <span class="transaction-value" style="color: #10b981;">${payoutDate.toLocaleDateString()}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                            return html;
+                        }).join('');
+                    } else {
+                        transactionsList.innerHTML = '<div style="text-align: center; padding: 20px; color: #6b7280; font-size: 14px;">No transactions found for this period</div>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading earnings:', error);
+                showNotification('Failed to load earnings data', 'error');
+            }
         }
     </script>
 </body>

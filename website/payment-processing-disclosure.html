@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Processing Disclosure - Show Up Media</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #f8f9fa;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 2.5rem;
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+        
+        .disclaimer-box {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .disclaimer-box h3 {
+            color: #d97706;
+            margin-bottom: 10px;
+        }
+        
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .section h2 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 10px;
+        }
+        
+        .section h3 {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 20px 0 10px 0;
+        }
+        
+        .highlight {
+            background: #e3f2fd;
+            border-left: 4px solid #2563eb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .highlight h3 {
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+        
+        .fee-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .fee-table th {
+            background: #2563eb;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .fee-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .fee-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .fee-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+            margin: 30px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #2563eb;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #2563eb;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #e3f2fd;
+        }
+        
+        .timeline-time {
+            font-weight: 600;
+            color: #2563eb;
+            margin-bottom: 5px;
+        }
+        
+        .agreement-box {
+            background: #f0f9ff;
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .agreement-box h3 {
+            color: #1e40af;
+            margin-bottom: 20px;
+        }
+        
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 10px;
+        }
+        
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .checkbox-wrapper label {
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .btn:hover {
+            background: #1d4ed8;
+        }
+        
+        .btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        
+        .example-box {
+            background: #f8f9fa;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .example-box h4 {
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+        
+        .calculation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .calculation-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+        
+        .calculation-item.total {
+            border-top: 2px solid #e5e7eb;
+            padding-top: 12px;
+            font-weight: 700;
+            font-size: 18px;
+            color: #10b981;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .fee-table {
+                font-size: 14px;
+            }
+            
+            .fee-table th,
+            .fee-table td {
+                padding: 10px;
+            }
+            
+            .calculation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>?? Payment Processing Disclosure</h1>
+            <p>Complete transparency about how payments work on Show Up Media</p>
+        </div>
+        
+        <div class="disclaimer-box">
+            <h3>?? Important Legal Notice</h3>
+            <p>This document contains legally binding information about payment processing. Please read carefully before proceeding with online payments.</p>
+        </div>
+        
+        <div class="section">
+            <h2>1. Subscription Plans & Payment Processing</h2>
+            
+            <h3>Subscription Tiers</h3>
+            <table class="fee-table">
+                <thead>
+                    <tr>
+                        <th>Plan</th>
+                        <th>Monthly Cost</th>
+                        <th>Payment Processing</th>
+                        <th>Features</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Basic</strong></td>
+                        <td>£6.99/month</td>
+                        <td>Not included</td>
+                        <td>Booking system, customer management</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pro</strong></td>
+                        <td>£9.99/month</td>
+                        <td>Not included</td>
+                        <td>Basic + staff management, analytics</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Premium</strong></td>
+                        <td>£14.99/month</td>
+                        <td><strong>INCLUDED</strong></td>
+                        <td>Pro + online payments, instant payouts</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="highlight">
+                <h3>?? Premium Plan Required for Online Payments</h3>
+                <p>Only businesses on the Premium plan (£14.99/month) can accept online payments from customers. Basic and Pro plans do not include payment processing capabilities.</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>2. Payment Processing Flow</h2>
+            
+            <div class="highlight">
+                <h3>?? Settlement-Based Payout Guarantee</h3>
+                <p>We guarantee that businesses receive their earnings after Stripe settlement clears, ensuring all funds are available before transfers are made.</p>
+            </div>
+            
+            <h3>How It Works:</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-time">Step 1: Customer Books Service</div>
+                    <p>Customer selects service and pays online via Stripe</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">Step 2: Payment Processed</div>
+                    <p>Payment goes to Show Up Media's Stripe account for security and compliance</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">Step 3: Stripe Settlement (2-7 Business Days)</div>
+                    <p>Stripe transfers funds to Show Up Media's bank account (standard UK processing time)</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">Step 4: Business Payout (Next Business Day)</div>
+                    <p>Show Up Media manually transfers settled earnings to business bank account</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>3. Fee Structure - Complete Transparency</h2>
+            
+            <h3>Transaction Fees (Per Booking)</h3>
+            <table class="fee-table">
+                <thead>
+                    <tr>
+                        <th>Fee Type</th>
+                        <th>Amount</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Platform Fee</strong></td>
+                        <td>£0.50</td>
+                        <td>Fixed fee per transaction for using the platform</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stripe Processing Fee</strong></td>
+                        <td>1.5% + £0.20</td>
+                        <td>Stripe's standard processing fee for European cards</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Fees</strong></td>
+                        <td>£0.50 + (1.5% + £0.20)</td>
+                        <td>Combined fees per transaction</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="example-box">
+                <h4>?? Example Calculation</h4>
+                <div class="calculation">
+                    <div class="calculation-item">
+                        <span>Service Price:</span>
+                        <span>£30.00</span>
+                    </div>
+                    <div class="calculation-item">
+                        <span>Platform Fee:</span>
+                        <span>-£0.50</span>
+                    </div>
+                    <div class="calculation-item">
+                        <span>Stripe Fee (1.5% + £0.20):</span>
+                        <span>-£0.65</span>
+                    </div>
+                    <div class="calculation-item total">
+                        <span>Business Earnings:</span>
+                        <span>£28.85</span>
+                    </div>
+                </div>
+                
+                <p><strong>More Examples:</strong></p>
+                <ul>
+                    <li>£10 service = £9.15 earnings (after £0.85 fees)</li>
+                    <li>£50 service = £48.75 earnings (after £1.25 fees)</li>
+                    <li>£100 service = £97.80 earnings (after £2.20 fees)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>4. Payout Methods & Timing</h2>
+            
+            <h3>Available Payout Methods</h3>
+            <table class="fee-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Processing Time</th>
+                        <th>Requirements</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Manual Bank Transfer</strong></td>
+                        <td><strong>SETTLEMENT + 1 DAY</strong></td>
+                        <td>UK bank account details</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="highlight">
+                <h3>?? Our Settlement-Based Payout Guarantee</h3>
+                <p>We guarantee that payouts are processed the next business day after Stripe settlement clears (2-7 business days after customer payment).</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>5. Legal & Compliance</h2>
+            
+            <h3>Financial Regulations Compliance</h3>
+            <ul>
+                <li><strong>PCI-DSS Compliance:</strong> All payment processing is PCI-DSS Level 1 compliant via Stripe</li>
+                <li><strong>Anti-Money Laundering (AML):</strong> We comply with UK AML regulations</li>
+                <li><strong>Know Your Customer (KYC):</strong> Business verification required for payouts</li>
+                <li><strong>Financial Conduct Authority (FCA):</strong> We operate as a payment facilitator under FCA guidelines</li>
+                <li><strong>GDPR Compliance:</strong> All financial data processed in compliance with GDPR</li>
+            </ul>
+            
+            <h3>Business Responsibilities</h3>
+            <ul>
+                <li>Provide accurate business information for verification</li>
+                <li>Maintain valid bank account or payment processor details</li>
+                <li>Comply with UK tax obligations on earnings</li>
+                <li>Report any suspicious payment activity immediately</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>6. Dispute Resolution & Refunds</h2>
+            
+            <h3>Payment Disputes</h3>
+            <ul>
+                <li><strong>Customer Chargebacks:</strong> Handled according to Stripe's dispute process</li>
+                <li><strong>Business Protection:</strong> We provide evidence of completed services</li>
+                <li><strong>Dispute Resolution:</strong> Show Up Media mediates between customer and business</li>
+                <li><strong>Fee Responsibility:</strong> Chargeback fees may apply to businesses in case of disputes</li>
+            </ul>
+            
+            <h3>Refund Policy</h3>
+            <ul>
+                <li>Refunds are processed according to individual business policies</li>
+                <li>Show Up Media facilitates refund processing</li>
+                <li>Refund processing fees may apply</li>
+                <li>Refunds do not affect platform fees (already deducted)</li>
+            </ul>
+        </div>
+        
+        <div class="agreement-box">
+            <h3>?? Agreement & Acceptance</h3>
+            <p>By proceeding with online payments, you agree to the following terms:</p>
+            
+            <div class="checkbox-wrapper">
+                <input type="checkbox" id="agree-fees">
+                <label for="agree-fees">I understand and agree to the fee structure (£0.50 + 1.5% + £0.20 per transaction)</label>
+            </div>
+            
+            <div class="checkbox-wrapper">
+                <input type="checkbox" id="agree-payouts">
+                <label for="agree-payouts">I understand that payouts are processed after Stripe settlement (2-7 business days) + 1 business day for manual transfer</label>
+            </div>
+            
+            <div class="checkbox-wrapper">
+                <input type="checkbox" id="agree-responsibility">
+                <label for="agree-responsibility">I understand my responsibilities for tax compliance and business verification</label>
+            </div>
+            
+            <div class="checkbox-wrapper">
+                <input type="checkbox" id="agree-disputes">
+                <label for="agree-disputes">I understand the dispute resolution process and chargeback policies</label>
+            </div>
+            
+            <div class="checkbox-wrapper">
+                <input type="checkbox" id="agree-legal">
+                <label for="agree-legal">I have read and agree to all terms in this Payment Processing Disclosure</label>
+            </div>
+            
+            <button class="btn" id="proceed-btn" disabled onclick="proceedToPayments()">
+                Proceed to Enable Online Payments
+            </button>
+        </div>
+        
+        <div class="section">
+            <h2>7. Contact & Support</h2>
+            
+            <h3>Payment Processing Support</h3>
+            <ul>
+                <li><strong>Email:</strong> payments@showupmedia.org</li>
+                <li><strong>Phone:</strong> Available for Premium plan businesses</li>
+                <li><strong>Response Time:</strong> Within 24 hours for payment-related inquiries</li>
+                <li><strong>Emergency:</strong> Immediate support for payout issues</li>
+            </ul>
+            
+            <h3>Documentation</h3>
+            <ul>
+                <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
+                <li><a href="/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/admin-financials">Financial Dashboard</a></li>
+                <li><a href="/admin-dashboard">Business Dashboard</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Enable proceed button when all checkboxes are checked
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const allChecked = Array.from(document.querySelectorAll('input[type="checkbox"]')).every(cb => cb.checked);
+                document.getElementById('proceed-btn').disabled = !allChecked;
+            });
+        });
+
+        function proceedToPayments() {
+            // Store agreement in localStorage
+            localStorage.setItem('payment-disclosure-agreed', 'true');
+            localStorage.setItem('payment-disclosure-date', new Date().toISOString());
+            
+            // Redirect to payment setup
+            window.location.href = '/admin-dashboard?setup-payments=true';
+        }
+
+        // Check if already agreed
+        if (localStorage.getItem('payment-disclosure-agreed') === 'true') {
+            document.getElementById('proceed-btn').disabled = false;
+            document.getElementById('proceed-btn').textContent = 'Continue to Payment Setup';
+        }
+    </script>
+</body>
+</html>

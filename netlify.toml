@@ -32,12 +32,69 @@
   to = "/crm/crm.html"
   status = 200
 
-# API redirects for future functionality
+# Admin Financial Dashboard
 [[redirects]]
-  from = "/api/booking"
-  to = "/.netlify/functions/booking"
+  from = "/admin/financials"
+  to = "/admin-financials.html"
   status = 200
 
+[[redirects]]
+  from = "/financials"
+  to = "/admin-financials.html"
+  status = 200
+
+
+# Enhanced Payment System
+[[redirects]]
+  from = "/api/create-payment"
+  to = "/.netlify/functions/create-payment-enhanced"
+  status = 200
+
+[[redirects]]
+  from = "/api/payment-success"
+  to = "/.netlify/functions/payment-success-enhanced"
+  status = 200
+
+[[redirects]]
+  from = "/api/stripe-webhook"
+  to = "/.netlify/functions/stripe-webhook-enhanced"
+  status = 200
+
+# API Routes for Booking System
+[[redirects]]
+  from = "/api/business/*"
+  to = "/.netlify/functions/api-business"
+  status = 200
+
+[[redirects]]
+  from = "/api/services/*"
+  to = "/.netlify/functions/api-services"
+  status = 200
+
+# Booking Page Routes
+[[redirects]]
+  from = "/booking/*"
+  to = "/booking.html"
+  status = 200
+
+
+[[redirects]]
+  from = "/api/booking"
+  to = "/.netlify/functions/api-booking"
+  status = 200
+
+# Booking pages
+[[redirects]]
+  from = "/booking/*"
+  to = "/booking.html"
+  status = 200
+
+[[redirects]]
+  from = "/booking/success"
+  to = "/booking-success.html"
+  status = 200
+
+# Additional API endpoints
 [[redirects]]
   from = "/api/admin"
   to = "/.netlify/functions/admin"
@@ -46,6 +103,39 @@
 [[redirects]]
   from = "/api/auth"
   to = "/.netlify/functions/auth"
+  status = 200
+
+[[redirects]]
+  from = "/create-payment"
+  to = "/.netlify/functions/create-payment"
+  status = 200
+
+[[redirects]]
+  from = "/payment-success"
+  to = "/.netlify/functions/payment-success"
+  status = 200
+
+# Payout Management
+[[redirects]]
+  from = "/payout-tracking"
+  to = "/.netlify/functions/payout-tracking"
+  status = 200
+
+[[redirects]]
+  from = "/manage-payouts"
+  to = "/.netlify/functions/manage-payouts"
+  status = 200
+
+# Daily Payout System
+[[redirects]]
+  from = "/daily-payout"
+  to = "/.netlify/functions/daily-payout"
+  status = 200
+
+# Payment Processing Disclosure
+[[redirects]]
+  from = "/payment-disclosure"
+  to = "/payment-processing-disclosure.html"
   status = 200
 
 # Environment variables (to be set in Netlify dashboard)

@@ -37,6 +37,9 @@ exports.handler = async (event, context) => {
       case 'checkout.session.completed':
         await handleCheckoutSession(event.data.object);
         break;
+      case 'payment_intent.succeeded':
+        await handlePaymentIntentSucceeded(event.data.object);
+        break;
       case 'invoice.payment_succeeded':
         await handlePaymentSucceeded(event.data.object);
         break;
@@ -382,6 +385,75 @@ async function handleSubscriptionCreated(subscription) {
   }
 }
 
+async function handlePaymentIntentSucceeded(paymentIntent) {
+  console.log('Payment intent succeeded:', paymentIntent.id);
+  
+  try {
+    const metadata = paymentIntent.metadata;
+    
+    if (!metadata.business_id || !metadata.service_id) {
+      console.error('Missing metadata for payment intent');
+      return;
+    }
+
+    // Update booking status to confirmed
+    const { error: updateError } = await supabase
+      .from('bookings')
+      .update({ 
+        status: 'confirmed',
+        stripe_payment_intent_id: paymentIntent.id,
+        updated_at: new Date().toISOString()
+      })
+      .eq('business_id', metadata.business_id)
+      .eq('service_id', metadata.service_id)
+      .eq('customer_email', metadata.customer_email)
+      .eq('booking_date', metadata.booking_date)
+      .eq('booking_time', metadata.booking_time);
+
+    if (updateError) {
+      console.error('Error updating booking:', updateError);
+      return;
+    }
+
+    // Get booking details for emails
+    const { data: booking, error: bookingError } = await supabase
+      .from('bookings')
+      .select(`
+        *,
+        services!inner(
+          name,
+          price,
+          duration
+        ),
+        businesses!inner(
+          name,
+          email,
+          subdomain,
+          address
+        )
+      `)
+      .eq('business_id', metadata.business_id)
+      .eq('service_id', metadata.service_id)
+      .eq('customer_email', metadata.customer_email)
+      .eq('booking_date', metadata.booking_date)
+      .eq('booking_time', metadata.booking_time)
+      .single();
+
+    if (bookingError || !booking) {
+      console.error('Error fetching booking details:', bookingError);
+      return;
+    }
+
+    // Send confirmation emails
+    await sendBookingConfirmationEmails(booking);
+
+    console.log(`Payment processed and booking confirmed for ${booking.customer_email}`);
+
+  } catch (error) {
+    console.error('Error in handlePaymentIntentSucceeded:', error);
+  }
+}
+
 async function handleSubscriptionDeleted(subscription) {
   console.log('Subscription deleted:', subscription.id);
   
@@ -425,6 +497,38 @@ async function sendWelcomeEmail(business, plan, bookingUrl) {
   } catch (error) {
     console.error('Error sending welcome email:', error);
     return false;
+  }
+}
+
+async function sendBookingConfirmationEmails(booking) {
+  try {
+    // Send confirmation email to customer
+    await fetch(`${process.env.URL}/.netlify/functions/email-confirmations`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'booking_confirmation',
+        booking: booking,
+        service: booking.services,
+        business: booking.businesses
+      })
+    });
+
+    // Send notification email to business
+    await fetch(`${process.env.URL}/.netlify/functions/email-confirmations`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'business_notification',
+        booking: booking,
+        service: booking.services,
+        business: booking.businesses
+      })
+    });
+
+    console.log(`Booking confirmation emails sent for booking ${booking.id}`);
+  } catch (error) {
+    console.error('Error sending booking confirmation emails:', error);
   }
 }
 

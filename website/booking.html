@@ -275,42 +275,34 @@ document.getElementById('bookingForm').addEventListener('submit', async (e) => {
   try {
     document.getElementById('loading').style.display = 'flex';
     
-    const response = await fetch('/api/booking', {
+    // Create payment session
+    const paymentResponse = await fetch('/.netlify/functions/create-payment', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(formData)
+      body: JSON.stringify({
+        serviceId: formData.service_id,
+        businessId: businessId,
+        customerName: formData.customer_name,
+        customerEmail: formData.customer_email,
+        bookingDate: formData.booking_date,
+        bookingTime: formData.booking_time
+      })
     });
     
-    if (!response.ok) {
-      throw new Error('Booking failed');
+    if (!paymentResponse.ok) {
+      throw new Error('Payment session creation failed');
     }
     
-    const result = await response.json();
+    const paymentResult = await paymentResponse.json();
     
-    // Show success message
-    document.body.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'DM Sans',sans-serif">
-        <div style="text-align:center;max-width:400px;padding:40px">
-          <div style="font-size:48px;color:#10b981;margin-bottom:16px">✓</div>
-          <h1 style="color:#1a1a1a;margin-bottom:16px">Booking Confirmed!</h1>
-          <p style="color:#6c757d;line-height:1.6;margin-bottom:24px">Thank you for your booking. We'll send a confirmation email shortly.</p>
-          <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin-bottom:24px">
-            <h3 style="color:#1a1a1a;margin-bottom:12px">Booking Details:</h3>
-            <p><strong>Service:</strong> ${document.getElementById('serviceSelect').options[document.getElementById('serviceSelect').selectedIndex].text}</p>
-            <p><strong>Date:</strong> ${formData.booking_date}</p>
-            <p><strong>Time:</strong> ${formData.booking_time}</p>
-            <p><strong>Name:</strong> ${formData.customer_name}</p>
-          </div>
-          <a href="https://showupmedia.org/booking/${businessSubdomain}" style="color:#2D8EFF;text-decoration:none;font-weight:600;">← Back to Booking Page</a>
-        </div>
-      </div>
-    `;
+    // Redirect to Stripe Checkout
+    window.location.href = paymentResult.checkoutUrl;
     
   } catch (error) {
     document.getElementById('loading').style.display = 'none';
-    showError('Failed to submit booking. Please try again.');
+    showError('Failed to process payment. Please try again.');
   }
 });
 
