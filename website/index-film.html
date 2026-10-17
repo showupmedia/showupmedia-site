@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Show Up Media — Clipping Studio for Creators &amp; Podcasts</title>
+<meta name="description" content="We turn podcasts, streams, vlogs and long-form video into daily TikToks, YouTube Shorts and Reels. 70M+ views delivered. Free 3-clip trial.">
+<meta property="og:title" content="Show Up Media — Your best moments, clipped daily">
+<meta property="og:description" content="70M+ views delivered for our creators. Free 3-clip trial, delivered in 5–7 days.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#05070d; --bg2:#0a0f1c; --card:#0e1526; --line:rgba(255,255,255,.08);
+  --ink:#eef2fb; --mute:#8d97ad; --blue:#2d8eff; --blue2:#1e63b4; --cyan:#53e2ff; --violet:#8b5cff;
+  --glow:0 0 0 1px rgba(83,226,255,.18),0 20px 80px -20px rgba(45,142,255,.45);
+  --r:22px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{width:min(1180px,100% - 32px);margin-inline:auto}
+h1,h2,h3{font-family:Archivo,Inter,sans-serif;font-weight:900;letter-spacing:-.02em;line-height:1.02}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;font:600 13px/1 Inter;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
+.eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+.grad{background:linear-gradient(100deg,#fff 0%,#9fd8ff 40%,var(--cyan) 60%,var(--violet) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;font:700 15px Inter;cursor:pointer;border:0;transition:transform .25s,box-shadow .25s,background .25s}
+.btn-primary{background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;box-shadow:0 10px 40px -8px rgba(45,142,255,.7)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 18px 50px -8px rgba(139,92,255,.8)}
+.btn-ghost{background:rgba(255,255,255,.05);color:var(--ink);border:1px solid var(--line);backdrop-filter:blur(10px)}
+.btn-ghost:hover{background:rgba(255,255,255,.1)}
+
+/* nav */
+nav{position:fixed;inset:16px 0 auto;z-index:50}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:10px 12px 10px 18px;border-radius:999px;background:rgba(10,15,28,.55);border:1px solid var(--line);backdrop-filter:blur(18px)}
+.logo{display:flex;gap:10px;align-items:center;font:800 17px Archivo;white-space:nowrap}
+.sticky{position:fixed;left:16px;right:16px;bottom:16px;z-index:60;display:none}
+.sticky .btn{width:100%;justify-content:center}
+@media(max-width:720px){.sticky{display:block}.nav .btn{display:none}}
+.logo img{width:34px;height:34px;border-radius:50%;background:#fff;object-fit:cover}
+.nav ul{display:flex;gap:26px;list-style:none;font:500 14px Inter;color:var(--mute)}
+.nav ul a:hover{color:var(--ink)}
+.nav .btn{padding:11px 18px;font-size:14px}
+@media(max-width:820px){.nav ul{display:none}}
+
+/* hero */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;padding:150px 0 90px}
+.hero .wrap{position:relative;z-index:2}
+#scene{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero::after{content:"";position:absolute;inset:auto 0 0;height:40%;background:linear-gradient(transparent,var(--bg));pointer-events:none}
+.hero-copy{position:relative;z-index:2;max-width:640px}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(60% 80% at 22% 50%,rgba(5,7,13,.92),rgba(5,7,13,.55) 55%,transparent 80%)}
+@media(max-width:900px){.hero{align-items:flex-start;padding-top:130px}.hero::before{background:linear-gradient(rgba(5,7,13,.86),rgba(5,7,13,.6) 60%,rgba(5,7,13,.2))}.hero-copy{text-align:center;margin:auto}}
+.hero h1{font-size:clamp(44px,6.4vw,88px);margin:22px 0 22px}
+.hero p{font-size:clamp(17px,1.6vw,20px);color:#b9c3d8;max-width:560px;margin:0 0 34px;line-height:1.6}
+@media(max-width:900px){.hero p{margin:0 auto 30px}}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+@media(max-width:900px){.hero .ctas,.hero .proof{justify-content:center}}
+.hero .proof{margin-top:38px;display:flex;gap:22px;flex-wrap:wrap;color:var(--mute);font-size:14px}
+.mil{display:inline-flex;align-items:center;gap:10px;margin-top:26px;padding:10px 16px 10px 10px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid var(--line);font-size:14px;color:#cfd7e8}
+.mil b{padding:6px 10px;border-radius:999px;background:linear-gradient(135deg,#ffcc4a,#ff7a59);color:#1a0d00;font:800 13px Inter}
+.hero .proof b{color:var(--ink)}
+
+/* marquee */
+.marquee{border-block:1px solid var(--line);overflow:hidden;background:rgba(255,255,255,.015)}
+.marquee .track{display:flex;gap:56px;padding:22px 0;width:max-content;animation:mq 30s linear infinite;font:700 22px Archivo;color:#5d6880}
+.marquee span{display:flex;align-items:center;gap:56px;white-space:nowrap}
+.marquee span::after{content:"✦";color:var(--blue)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+section{padding:120px 0;position:relative}
+.sec-head{max-width:760px;margin-bottom:60px}
+.sec-head h2{font-size:clamp(38px,5.4vw,68px);margin-top:16px}
+.sec-head p{color:var(--mute);font-size:18px;line-height:1.6;margin-top:18px}
+
+/* how */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:900px){.steps{grid-template-columns:1fr}}
+.step{position:relative;padding:34px;border-radius:var(--r);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1px solid var(--line);overflow:hidden;min-height:340px}
+.step .n{font:800 84px Archivo;color:transparent;-webkit-text-stroke:1px rgba(83,226,255,.35);position:absolute;right:22px;top:6px}
+.step h3{font-size:28px;margin:120px 0 12px}
+.step p{color:var(--mute);line-height:1.6}
+.viz{position:absolute;left:30px;right:30px;top:34px;height:80px}
+.bars{display:flex;align-items:flex-end;gap:5px;height:80px}
+.bars i{flex:1;border-radius:4px 4px 0 0;background:linear-gradient(var(--cyan),var(--blue2));opacity:.35;animation:eq 1.6s ease-in-out infinite}
+.bars i.hot{opacity:1;box-shadow:0 0 18px var(--cyan)}
+@keyframes eq{50%{transform:scaleY(.55)}}
+.bars i{transform-origin:bottom}
+.live{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:10px;background:#ff2f5b;font:800 13px Inter;letter-spacing:.08em}
+.live::before{content:"";width:8px;height:8px;border-radius:50%;background:#fff;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.2}}
+.phone-mini{display:flex;gap:10px}
+.phone-mini div{width:46px;height:80px;border-radius:10px;background:linear-gradient(160deg,#1b2b4f,#0c1428);border:1px solid rgba(83,226,255,.35);position:relative;overflow:hidden}
+.phone-mini div::after{content:"";position:absolute;left:6px;right:6px;bottom:10px;height:6px;border-radius:3px;background:var(--cyan)}
+
+/* captions demo */
+.style{display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center}
+@media(max-width:900px){.style{grid-template-columns:1fr}}
+.device{width:min(360px,100%);aspect-ratio:9/16;margin:auto;border-radius:44px;padding:12px;background:linear-gradient(145deg,#1d2537,#06080e);box-shadow:var(--glow);position:relative;transform:perspective(1200px) rotateY(-14deg) rotateX(6deg);transition:transform .6s}
+.device:hover{transform:perspective(1200px) rotateY(0) rotateX(0)}
+.screen{height:100%;border-radius:34px;overflow:hidden;position:relative;background:radial-gradient(120% 70% at 50% 0%,#24355e,#0b1020 60%)}
+.screen .blurbg{position:absolute;inset:0;background:conic-gradient(from 200deg at 50% 60%,#ff7ab6,#7a5cff,#2d8eff,#53e2ff,#ff7ab6);filter:blur(40px) saturate(1.2);opacity:.45;animation:spin 14s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.screen .band{position:absolute;left:0;right:0;top:30%;height:40%;background:linear-gradient(135deg,#1c2744,#2b3f6e);border-block:1px solid rgba(255,255,255,.12);display:grid;place-items:center}
+.screen .band .silh{width:46%;aspect-ratio:1;border-radius:50% 50% 40% 40%;background:radial-gradient(circle at 50% 35%,#f1c7a8 0 22%,transparent 23%),radial-gradient(ellipse at 50% 100%,#3e5ea8 0 55%,transparent 56%)}
+.hook{position:absolute;top:13%;left:50%;transform:translateX(-50%);width:84%;text-align:center}
+.hook span{display:inline-block;background:#fff;color:#0d0f14;font:700 16px Inter;padding:6px 12px;border-radius:9px;margin:3px 2px;box-shadow:0 6px 20px rgba(0,0,0,.35);white-space:nowrap}
+.cap{position:absolute;top:73%;left:0;right:0;text-align:center;font:900 24px Inter;letter-spacing:.01em;text-transform:uppercase}
+.cap b{padding:2px 8px;border-radius:7px;transition:background .15s}
+.cap b.on{background:var(--blue);box-shadow:0 0 22px rgba(45,142,255,.8)}
+.handle{position:absolute;bottom:9%;left:0;right:0;text-align:center;font:800 16px Inter;color:#fff;opacity:.85}
+.feat{display:grid;gap:16px}
+.feat div{display:flex;gap:16px;padding:20px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.02)}
+.feat svg{flex:none;width:28px;height:28px;color:var(--cyan)}
+.feat h4{font:700 18px Inter;margin-bottom:4px}
+.feat p{color:var(--mute);line-height:1.5;font-size:15px}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{padding:30px;border-radius:var(--r);border:1px solid var(--line);background:radial-gradient(120% 120% at 0% 0%,rgba(45,142,255,.12),transparent 60%)}
+.stat .v{font:800 clamp(38px,5vw,60px) Archivo}
+.stat .l{color:var(--mute);margin-top:6px;line-height:1.45;font-size:15px}
+
+/* results */
+.big{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+@media(max-width:1000px){.big{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.big{grid-template-columns:1fr}}
+.bigstat{padding:30px;border-radius:var(--r);border:1px solid var(--line);background:radial-gradient(120% 120% at 0% 0%,rgba(45,142,255,.16),transparent 60%)}
+.bigstat .v{font:800 clamp(42px,5vw,64px) Archivo;background:linear-gradient(100deg,#fff,#9fd8ff 60%,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.bigstat .l{color:var(--mute);margin-top:8px;line-height:1.5;font-size:15px}.bigstat .l b{color:#fff}
+.wall{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:22px}
+@media(max-width:1000px){.wall{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){.wall{grid-template-columns:repeat(2,1fr)}}
+.tile{aspect-ratio:9/13;border-radius:18px;padding:16px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;position:relative;overflow:hidden;border:1px solid var(--line);background:linear-gradient(180deg,rgba(5,7,13,0) 30%,rgba(5,7,13,.92)),conic-gradient(from 210deg at 60% 30%,#2d8eff,#8b5cff,#ff5ac8,#53e2ff,#2d8eff);transition:transform .3s}
+.tile:hover{transform:translateY(-6px) rotate(-1deg)}
+.tile:nth-child(2){filter:hue-rotate(60deg)}.tile:nth-child(3){filter:hue-rotate(140deg)}.tile:nth-child(4){filter:hue-rotate(200deg)}.tile:nth-child(5){filter:hue-rotate(260deg)}.tile:nth-child(6){filter:hue-rotate(310deg)}
+.tile .pl{position:absolute;top:12px;left:12px;font:700 11px Inter;letter-spacing:.06em;padding:5px 9px;border-radius:999px;background:rgba(5,7,13,.6)}
+.tile b{font:800 34px Archivo}.tile small{color:#d6def0;font-size:12.5px}.tile em{font-style:normal;color:var(--cyan);font:600 12px Inter}
+/* compare */
+.compare{display:grid;grid-template-columns:1.6fr repeat(3,1fr);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.compare>div{padding:18px 20px;border-bottom:1px solid var(--line);text-align:center;color:var(--mute);font-size:15px}
+.compare .rh{text-align:left;color:#d8dfee}
+.compare .ch{font:700 15px Inter;color:#fff;background:rgba(255,255,255,.03)}
+.compare .us{background:rgba(45,142,255,.10);color:var(--cyan);font-weight:800}
+.compare .ch.us{background:linear-gradient(135deg,rgba(45,142,255,.35),rgba(139,92,255,.3));color:#fff}
+@media(max-width:720px){.compare{grid-template-columns:1.4fr repeat(3,.8fr)}.compare>div{padding:12px 8px;font-size:12.5px}}
+.uses{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.uses span{padding:10px 18px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:#cfd7e8;font:600 14px Inter}
+/* pricing */
+.toggle{display:inline-flex;padding:5px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.03);margin-bottom:36px}
+.toggle button{border:0;background:none;color:var(--mute);padding:10px 18px;border-radius:999px;font:600 14px Inter;cursor:pointer}
+.toggle button.on{background:#fff;color:#0b0f19}
+.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;align-items:stretch}
+@media(max-width:1100px){.plans{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.plans{grid-template-columns:1fr}.plan.pop{order:-1}}
+.plan{position:relative;padding:30px 26px;border-radius:var(--r);border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.01));display:flex;flex-direction:column;transform-style:preserve-3d;transition:transform .15s,border-color .3s}
+.plan:hover{border-color:rgba(83,226,255,.4)}
+.plan.pop{background:linear-gradient(180deg,rgba(45,142,255,.18),rgba(139,92,255,.08));border-color:rgba(83,226,255,.5);box-shadow:var(--glow)}
+.badge{position:absolute;top:-13px;left:26px;padding:6px 12px;border-radius:999px;font:800 11px Inter;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(135deg,var(--cyan),var(--violet));color:#05070d}
+.plan h3{font-size:24px}
+.plan .who{color:var(--mute);font-size:14px;margin:6px 0 20px;min-height:40px}
+.price{font:800 48px Archivo}
+.price small{font:500 15px Inter;color:var(--mute)}
+.per{color:var(--cyan);font-size:13px;font-weight:600;margin:4px 0 20px}
+.plan ul{list-style:none;display:grid;gap:11px;margin-bottom:26px;flex:1}
+.plan li{display:flex;gap:10px;font-size:14.5px;line-height:1.4;color:#cfd7e8}
+.plan li::before{content:"";flex:none;width:18px;height:18px;margin-top:1px;border-radius:50%;background:radial-gradient(circle,var(--cyan) 0 3px,transparent 4px),rgba(83,226,255,.14)}
+.plan .btn{justify-content:center;width:100%}
+.founding{margin-top:26px;padding:18px 22px;border-radius:16px;border:1px dashed rgba(83,226,255,.45);display:flex;gap:14px;align-items:center;flex-wrap:wrap;color:#cfe6ff}
+.founding b{color:#fff}
+.packs{display:none}
+
+/* faq */
+.faq{display:grid;gap:12px;max-width:860px}
+.q{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.02)}
+.q button{all:unset;cursor:pointer;display:flex;justify-content:space-between;width:100%;padding:22px 24px;font:600 17px Inter;box-sizing:border-box}
+.q button::after{content:"+";font-size:24px;color:var(--cyan);transition:transform .3s}
+.q.open button::after{transform:rotate(45deg)}
+.q .a{max-height:0;overflow:hidden;transition:max-height .4s;color:var(--mute);line-height:1.65;padding:0 24px}
+.q.open .a{max-height:260px;padding-bottom:22px}
+
+/* cta */
+.cta{border-radius:34px;padding:clamp(40px,7vw,90px);text-align:center;position:relative;overflow:hidden;background:radial-gradient(100% 140% at 50% 0%,rgba(45,142,255,.35),rgba(139,92,255,.15) 50%,transparent 75%),var(--bg2);border:1px solid rgba(83,226,255,.25)}
+.cta h2{font-size:clamp(36px,5.5vw,72px)}
+.cta p{color:#b9c3d8;margin:18px auto 32px;max-width:560px;font-size:18px;line-height:1.6}
+form.trial{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;max-width:760px;margin:0 auto}
+@media(max-width:720px){form.trial{grid-template-columns:1fr}}
+form.trial input{padding:16px 18px;border-radius:14px;border:1px solid var(--line);background:rgba(5,7,13,.6);color:var(--ink);font:500 15px Inter}
+form.trial input:focus{outline:2px solid var(--blue)}
+.small{color:var(--mute);font-size:13px;margin-top:14px}
+footer{padding:50px 0 70px;color:var(--mute);font-size:14px}
+footer .row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:30px}
+footer a:hover{color:var(--ink)}
+
+.reveal{opacity:0;transform:translateY(40px)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+
+/* ===== film ===== */
+:root{--serif:"Archivo","Inter",system-ui,sans-serif;--mono:"Inter",system-ui,sans-serif}
+html{scroll-behavior:auto}
+body{background:#030409}
+#gl{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;display:block}
+main,nav,footer,.sticky{position:relative;z-index:4}
+.solid{background:var(--bg);position:relative;z-index:6}
+/* cinema chrome */
+.bars{position:fixed;inset:0;pointer-events:none;z-index:3}
+.bars i{position:absolute;left:0;right:0;height:calc(var(--bar,11vh) * .6);background:#000;transition:none}
+.bars i:first-child{top:0}.bars i:last-child{bottom:0}
+.grain{position:fixed;inset:-50%;z-index:3;pointer-events:none;opacity:.09;background-size:256px 256px;animation:grain 1s steps(6) infinite;mix-blend-mode:overlay}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-8%,4%)}40%{transform:translate(6%,-6%)}60%{transform:translate(-4%,8%)}80%{transform:translate(8%,2%)}100%{transform:translate(0,0)}}
+.vig{position:fixed;inset:0;z-index:3;pointer-events:none;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.65) 100%)}
+.hud{position:fixed;left:max(20px,4vw);right:max(20px,4vw);z-index:5;display:flex;justify-content:space-between;align-items:center;font:500 11px var(--mono);letter-spacing:.14em;color:rgba(255,255,255,.62);text-transform:uppercase;pointer-events:none}
+.hud.top{top:calc(var(--bar,11vh) + 14px)}.hud.bot{bottom:calc(var(--bar,11vh) + 14px)}
+.rec{display:inline-flex;align-items:center;gap:8px}.rec::before{content:"";width:8px;height:8px;border-radius:50%;background:#ff3b4a;box-shadow:0 0 10px #ff3b4a;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.25}}
+.progress-line{position:fixed;left:0;bottom:var(--bar,11vh);height:2px;width:100%;transform-origin:0 50%;transform:scaleX(var(--p,0));background:linear-gradient(90deg,var(--cyan),#8b5cff);z-index:5;opacity:.8}
+/* hero (title sequence) */
+.opening{height:100vh;display:grid;place-items:center;text-align:center;position:relative}
+.opening::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 55% at 50% 50%,rgba(3,4,9,.88),rgba(3,4,9,.55) 60%,rgba(3,4,9,.15) 100%);pointer-events:none}.opening>div{position:relative;padding:0 16px;max-width:100%}
+.opening .kicker{font:500 12px var(--mono);letter-spacing:.32em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.opening h1{font-family:var(--serif);font-weight:900;font-size:clamp(44px,7.4vw,112px);line-height:.98;letter-spacing:-.035em;margin:18px auto 22px;max-width:13ch;text-wrap:balance;text-transform:none}
+.opening h1 em{font-style:normal;background:linear-gradient(90deg,var(--cyan),#8b5cff);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.06em}
+.opening p{color:#c3cbe0;max-width:560px;margin:0 auto 30px;font-size:clamp(16px,1.5vw,19px);line-height:1.6}
+.opening .ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.opening{align-content:center}.opening .cue{position:relative;margin-top:30px;font:500 11px var(--mono);letter-spacing:.3em;color:rgba(255,255,255,.55)}
+/* acts */
+#film{position:relative;height:760vh}
+.card{position:fixed;left:max(24px,7vw);bottom:calc(var(--bar,11vh) + 64px);max-width:min(560px,86vw);z-index:5;pointer-events:none;opacity:0}
+.card .act{font:700 12px var(--mono);letter-spacing:.22em;color:var(--cyan);text-transform:uppercase}
+.card h2{font-family:var(--serif);font-weight:900;font-size:clamp(34px,4.6vw,66px);line-height:1.02;letter-spacing:-.03em;margin:12px 0 14px;text-shadow:0 4px 40px rgba(0,0,0,.6)}
+.card p{color:#cfd6e6;font-size:clamp(15px,1.3vw,18px);line-height:1.6;max-width:46ch;text-shadow:0 2px 20px rgba(0,0,0,.8)}
+.card::before{content:"";position:absolute;inset:-60px -80px -50px -80px;background:radial-gradient(closest-side,rgba(3,4,9,.78),rgba(3,4,9,.45) 60%,transparent);z-index:-1;pointer-events:none}
+.card.right{left:auto;right:max(24px,7vw);text-align:right}.card.right p{margin-left:auto}
+.stat{font-family:var(--serif);font-weight:800;font-size:clamp(60px,9vw,132px);line-height:.9;letter-spacing:-.04em;display:block;margin-top:6px;background:linear-gradient(90deg,#fff,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.skip{position:fixed;right:max(20px,4vw);bottom:max(10px,calc(var(--bar,11vh) / 2 - 18px));z-index:7;font:500 11px var(--mono);letter-spacing:.2em;text-transform:uppercase;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);padding:10px 14px;border-radius:999px;backdrop-filter:blur(8px);transition:opacity .4s}
+.skip:hover{background:rgba(255,255,255,.16)}
+.finale{height:100vh;display:grid;place-items:center;text-align:center;position:relative;z-index:5}
+.finale h2{font-family:var(--serif);font-weight:900;letter-spacing:-.035em;font-size:clamp(44px,7vw,110px);line-height:1;margin-bottom:28px}
+@media(max-width:760px){.card{left:20px;right:20px;bottom:calc(var(--bar,11vh) + 28px)}.card.right{text-align:left;right:20px;left:20px}.card.right p{margin-left:0}.hud.bot .hide-m{display:none}.skip{bottom:max(10px,calc(var(--bar,11vh) / 2 - 18px));top:auto;right:16px}}
+@media (prefers-reduced-motion:reduce){.grain,.rec::before{animation:none}}
+/* creators */
+.creators{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.cr{background:#0b1020;border:1px solid var(--line);border-radius:22px;overflow:hidden;display:flex;flex-direction:column}
+.cr video{width:100%;aspect-ratio:9/12;object-fit:cover;display:block;background:#000}
+.cr>div{padding:18px 20px 22px}.cr h3{font:800 22px Archivo;margin:0 0 4px}.cr span{color:var(--cyan);font:600 13px Inter}.cr p{color:#c3cbe0;margin:10px 0 0;font-size:15px;line-height:1.55}.cr b{color:#fff}
+@media(max-width:900px){.creators{grid-template-columns:1fr;max-width:420px;margin:0 auto}}
+/* receipts */
+.receipts{columns:4 260px;column-gap:18px}
+.rc{break-inside:avoid;margin-bottom:18px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#0b1020;cursor:zoom-in;transition:transform .25s,box-shadow .25s;position:relative}
+.rc img{display:block;width:100%;height:auto}
+.rc figcaption{padding:12px 14px;font:600 13.5px Inter;color:#cfd7e8;display:flex;justify-content:space-between;gap:8px;border-top:1px solid var(--line)}
+.rc figcaption b{color:var(--cyan);white-space:nowrap}
+.rc:hover{box-shadow:0 30px 60px -20px rgba(45,142,255,.55)}
+.lightbox{position:fixed;inset:0;z-index:200;background:rgba(3,5,10,.92);backdrop-filter:blur(8px);display:none;place-items:center;padding:24px;cursor:zoom-out}
+.lightbox.on{display:grid}.lightbox img{max-width:min(92vw,900px);max-height:88vh;border-radius:16px}
+.note{color:var(--mute);font-size:13px;text-align:center;margin-top:16px}
+</style>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="vig" aria-hidden="true"></div>
+<div class="bars" aria-hidden="true"><i></i><i></i></div>
+<div class="progress-line" aria-hidden="true"></div>
+<div class="hud top" aria-hidden="true"><span>Show Up Media</span><span id="tc">01 / 05</span></div>
+<div class="hud bot" aria-hidden="true"><span id="scn">Opening titles</span><span class="hide-m">Show Up Media · Clipping studio</span></div>
+<a class="skip" id="skip" href="#receipts">Skip the film ↓</a>
+
+<nav><div class="wrap nav">
+  <a class="logo" href="#"><img src="logo.jpg" alt="Show Up Media logo">Show Up Media</a>
+  <ul><li><a href="#film">The film</a></li><li><a href="#receipts">Results</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#faq">FAQ</a></li></ul>
+  <a class="btn btn-primary" href="#trial">Get 3 free clips</a>
+</div></nav>
+
+<main>
+<header class="opening"><div>
+  <div class="kicker">Clipping studio · Podcasts · Streams · Vlogs</div>
+  <h1>Your best moments, <em>clipped daily.</em></h1>
+  <p>Podcasts, streams and long videos, cut into tight, captioned clips that pull new people onto TikTok, YouTube Shorts and Reels every single day.</p>
+  <div class="ctas"><a class="btn btn-primary" href="#trial">Claim 3 free clips →</a><a class="btn btn-ghost" href="#film">Watch how it works</a></div>
+</div><div class="cue">Scroll to play ▾</div></header>
+
+<section id="film" aria-label="How it works, told as a short film">
+  <div class="card" data-a="0.02" data-b="0.17"><span class="act">Act I · The long video</span><h2>Every episode is hours long.</h2><p>Podcasts, streams, vlogs: hours of stories, tangents and dead air. Nobody new is ever going to sit through all of it.</p></div>
+  <div class="card right" data-a="0.19" data-b="0.36"><span class="act">Act II · The moment</span><h2>Somewhere in there is <span class="grad">the</span> moment.</h2><p>We go through every minute: the chat spikes, the laughs, the story that lands. Then a human editor picks the one a stranger can't scroll past.</p></div>
+  <div class="card" data-a="0.39" data-b="0.56"><span class="act">Act III · The cut</span><h2>We cut it.</h2><p>Starts on the action, ends on the punchline. A hook in the first second, word-perfect captions, your face always in frame.</p></div>
+  <div class="card right" data-a="0.59" data-b="0.76"><span class="act">Act IV · The release</span><h2>Then it goes everywhere.</h2><p>TikTok, YouTube Shorts, Reels, Facebook and X, every day, on a schedule. New people find you while you sleep.</p></div>
+  <div class="card" data-a="0.79" data-b="0.97"><span class="act">Act V · The receipts</span><h2>And it works.</h2><p>Real dashboards from real creators. No ads, no bought views.</p><span class="stat" data-count="70" data-suffix="M+">70M+</span><p>views delivered</p></div>
+</section>
+<section class="finale"><div><h2>Your content is next.</h2><a class="btn btn-primary" href="#trial">Claim 3 free clips →</a></div></section>
+
+<div class="solid">
+<section id="creators"><div class="wrap">
+  <div class="sec-head reveal"><span class="eyebrow">Creators we clip for</span><h2>Different creators. <span class="grad">One standard.</span></h2><p>Every creator gets their own style, their own rules and their own posting plan.</p></div>
+  <div class="creators">
+    <article class="cr reveal"><video src="film/clip2.mp4" muted loop playsinline autoplay></video><div><h3>Mac TV Travel</h3><span>IRL vlogger · living in Thailand</span></div></article>
+    <article class="cr reveal"><video src="film/ana1.mp4" muted loop playsinline autoplay></video><div><h3>Anxstasia</h3><span>Twitch IRL streamer · Australia</span></div></article>
+    <article class="cr reveal"><video src="film/kailey1.mp4" muted loop playsinline autoplay></video><div><h3>Kailey Mae</h3><span>Twitch IRL &amp; co-working streamer · USA</span></div></article>
+  </div>
+</div></section>
+<section id="receipts"><div class="wrap">
+  <div class="sec-head reveal"><span class="eyebrow">The receipts</span><h2>Real screenshots. <span class="grad">Real creators.</span></h2><p>Straight from our clients' TikTok Studio, Meta Business Suite, YouTube Studio and X analytics. Most are from Mac TV Travel, an IRL creator living in Thailand who we clip for. Other creators are kept anonymous. Click any card to zoom.</p></div>
+  <div class="receipts">
+    <figure class="rc reveal"><img src="proof/fb-30m.jpg" alt="Facebook content overview: 30.6M views, 100% organic" loading="lazy"><figcaption>Mac TV Travel · Facebook, 5 months <b>30.6M views</b></figcaption></figure>
+    <figure class="rc reveal"><img src="proof/tt-1-17m.jpg" alt="TikTok clip analytics: 1.17M views" loading="lazy"><figcaption>Mac TV Travel · TikTok clip <b>1.17M views</b></figcaption></figure>
+    <figure class="rc reveal"><img src="proof/tt-19m.jpg" alt="TikTok Studio: 19.1M video views" loading="lazy"><figcaption>Mac TV Travel · TikTok <b>19.1M views</b></figcaption></figure>
+    <figure class="rc reveal"><img src="proof/fb-earnings.jpg" alt="Facebook earnings: $2.1K in 28 days" loading="lazy"><figcaption>Mac TV Travel · FB payouts, 28 days <b>$2.1K</b></figcaption></figure>
+    <figure class="rc reveal"><img src="proof/tt-768k.jpg" alt="TikTok clip analytics: 768K views, 26K shares" loading="lazy"><figcaption>Twitch streamer clip <b>768K views</b></figcaption></figure>
+    <figure class="rc reveal"><img src="proof/yt-28d.jpg" alt="YouTube: 1.55M views in 28 days, +136%" loading="lazy"><figcaption>Mac TV Travel · YouTube, 28 days <b>+136%</b></figcaption></figure>
+    <figure class="rc reveal"><img src="proof/tt-1-2m.jpg" alt="TikTok clip analytics: 1.17M views" loading="lazy"><figcaption>TikTok clip <b>1.2M views</b></figcaption></figure>
+    <figure class="rc reveal"><img src="proof/yt-22m.jpg" alt="YouTube lifetime views: 22.1M" loading="lazy"><figcaption>Mac TV Travel · YouTube <b>22.1M views</b></figcaption></figure>
+    <figure class="rc reveal"><img src="proof/tt-588k.jpg" alt="TikTok clip: 588K views, 65s average watch time" loading="lazy"><figcaption>2m50s clip · 65s avg watch <b>588K</b></figcaption></figure>
+    <figure class="rc reveal"><img src="proof/tt-2m-week.jpg" alt="TikTok: 2M post views in 7 days" loading="lazy"><figcaption>Mac TV Travel · TikTok, 7 days <b>2M views</b></figcaption></figure>
+    <figure class="rc reveal"><img src="proof/x-impressions.jpg" alt="X analytics: 1.07M impressions" loading="lazy"><figcaption>Mac TV Travel · X <b>1.07M impressions</b></figcaption></figure>
+    <figure class="rc reveal"><img src="proof/tt-453k.jpg" alt="TikTok clip: 453K views" loading="lazy"><figcaption>TikTok clip <b>453K views</b></figcaption></figure>
+    <figure class="rc reveal"><img src="proof/tt-401k.jpg" alt="TikTok clip: 401K views" loading="lazy"><figcaption>TikTok clip <b>401K views</b></figcaption></figure>
+  </div>
+  <p class="note">Results shown are from Show Up Media clients, 2025–26. Results vary by creator and niche.</p>
+</div></section>
+<section><div class="wrap">
+  <div class="sec-head reveal"><span class="eyebrow">Why Show Up Media</span><h2>Not an AI auto-clipper. <span class="grad">Not a random freelancer.</span></h2><p>Auto-clippers churn out random 60s chunks. Freelancers disappear. We run a proper pipeline with a human editor who knows your channel.</p></div>
+  <div class="compare reveal">
+    <div class="ch"></div><div class="ch">AI auto-clippers</div><div class="ch">Freelancers</div><div class="ch us">Show Up Media</div>
+    <div class="rh">Picks the moments a human would</div><div>✕</div><div>~</div><div class="us">✓</div>
+    <div class="rh">Uses chat reactions + full transcript</div><div>~</div><div>✕</div><div class="us">✓</div>
+    <div class="rh">Matches your exact brand style</div><div>✕</div><div>~</div><div class="us">✓</div>
+    <div class="rh">Hooks written to win the first 3 seconds</div><div>✕</div><div>~</div><div class="us">✓</div>
+    <div class="rh">Checks your stats and improves every batch</div><div>✕</div><div>✕</div><div class="us">✓</div>
+    <div class="rh">Reliable weekly delivery</div><div>✓</div><div>✕</div><div class="us">✓</div>
+    <div class="rh">Posts for you</div><div>✕</div><div>✕</div><div class="us">✓</div>
+  </div>
+  <div class="uses reveal"><span>IRL</span><span>Just Chatting</span><span>Travel</span><span>Cooking</span><span>Gaming</span><span>Podcasts</span><span>Vlogs</span><span>Events</span></div>
+</div></section>
+
+
+<section id="pricing"><div class="wrap">
+  <div class="sec-head reveal"><span class="eyebrow">Pricing</span><h2>Simple plans. <span class="grad">Cancel anytime.</span></h2><p>Start with 3 free clips. If you love them, pick a plan. Every clip includes a hook, captions, your handle and tight cuts.</p></div>
+  <div class="toggle reveal" role="tablist"><button class="on" data-t="monthly">Monthly plans</button><button data-t="packs">One-off packs</button></div>
+
+  <div class="plans" id="monthly">
+    <div class="plan reveal"><h3>Free Trial</h3><div class="who">See it before you pay</div><div class="price">$0</div><div class="per">3 clips, one time</div>
+      <ul><li>3 clips from your latest episode or stream</li><li>Made in your style, with your handle</li><li>Yours to keep and post either way</li><li>No card, no contract</li></ul>
+      <a class="btn btn-ghost" href="#trial">Claim free clips</a></div>
+    <div class="plan reveal"><h3>Starter</h3><div class="who">Daily presence on one main platform</div><div class="price">$149<small>/mo</small></div><div class="per">30 clips · ~$5 per clip</div>
+      <ul><li>30 clips a month (1 a day)</li><li>Hooks, captions and handle on every clip</li><li>Delivered weekly, ready to post</li><li>Posting calendar included</li></ul>
+      <a class="btn btn-ghost" href="#trial">Start with a trial</a></div>
+    <div class="plan pop reveal"><span class="badge">Most popular</span><h3>Growth</h3><div class="who">Two posts a day across every platform</div><div class="price">$249<small>/mo</small></div><div class="per">60 clips · ~$4 per clip</div>
+      <ul><li>60 clips a month (2 a day)</li><li>Captions and hashtags written for you</li><li>Hook A/B testing</li><li>Monthly stats review and new rules for the next batch</li><li>Priority turnaround</li></ul>
+      <a class="btn btn-primary" href="#trial">Start with a trial</a></div>
+    <div class="plan reveal"><h3>Full Service</h3><div class="who">Hands-off: we run your short-form for you</div><div class="price">$449<small>/mo</small></div><div class="per">60 clips + posting</div>
+      <ul><li>Everything in Growth</li><li>We schedule and post to TikTok, Shorts, Reels and X</li><li>Monthly analytics report</li><li>Long-form (60s+) cuts for monetisation</li><li>Dedicated editor</li></ul>
+      <a class="btn btn-ghost" href="#trial">Book a call</a></div>
+  </div>
+
+  <div class="plans packs" id="packs">
+    <div class="plan"><h3>30 Clips</h3><div class="who">One-off batch</div><div class="price">$199</div><div class="per">~$6.60 per clip</div><ul><li>30 polished clips</li><li>Hooks, captions, handle</li><li>Delivered in 5 days</li></ul><a class="btn btn-ghost" href="#trial">Order</a></div>
+    <div class="plan pop"><span class="badge">Best value</span><h3>60 Clips</h3><div class="who">One-off batch</div><div class="price">$349</div><div class="per">~$5.80 per clip</div><ul><li>60 polished clips</li><li>Hooks, captions, handle</li><li>Posting calendar</li><li>Delivered in 7 days</li></ul><a class="btn btn-primary" href="#trial">Order</a></div>
+    <div class="plan"><h3>90 Clips</h3><div class="who">One-off batch</div><div class="price">$479</div><div class="per">~$5.30 per clip</div><ul><li>90 polished clips</li><li>Hooks, captions, handle</li><li>Posting calendar</li><li>Delivered in 10 days</li></ul><a class="btn btn-ghost" href="#trial">Order</a></div>
+    <div class="plan"><h3>Monthly saves more</h3><div class="who">Plans start at ~$4 per clip</div><div class="price" style="font-size:34px">Up to 40%</div><div class="per">cheaper on a plan</div><ul><li>Fresh clips every week</li><li>Stats-driven improvements</li><li>Cancel anytime</li></ul><a class="btn btn-ghost" href="#pricing" data-t2="monthly">See plans</a></div>
+  </div>
+
+  <div class="founding reveal">⚡ <span><b>Founding offer:</b> the first 5 creators on the Growth plan pay <b>$149</b> for their first month.</span></div>
+</div></section>
+
+
+<section id="faq"><div class="wrap">
+  <div class="sec-head reveal"><span class="eyebrow">FAQ</span><h2>Questions, <span class="grad">answered.</span></h2></div>
+  <div class="faq">
+    <div class="q reveal"><button>What do I need to send you?</button><div class="a">Just a link to your podcast, YouTube, Twitch or Kick channel. We pull public episodes and VODs ourselves. For private files, share a download link (Google Drive, Dropbox, anything works).</div></div>
+    <div class="q reveal"><button>How do you pick the moments?</button><div class="a">We read the full transcript of every episode (and chat activity for streams), then a human editor picks and cuts the best moments. No random auto-clips.</div></div>
+    <div class="q reveal"><button>Can you match my existing style?</button><div class="a">Yes. Send us a few clips you like and we'll match the fonts, colours, caption style and layout exactly, or design a new look with you.</div></div>
+    <div class="q reveal"><button>Do you post the clips for me?</button><div class="a">On Full Service, yes: we schedule and post to TikTok, Shorts, Reels and X. On the other plans you get finished files plus a posting calendar with captions and hashtags.</div></div>
+    <div class="q reveal"><button>How long are the clips?</button><div class="a">Mostly ~30 seconds, which is best for reach and retention. For creators monetising on TikTok and Facebook, we also cut 60–90 second versions.</div></div>
+    <div class="q reveal"><button>Is there a contract?</button><div class="a">No. Plans are monthly and you can cancel anytime. Start with 3 free clips and decide after.</div></div>
+  </div>
+</div></section>
+
+
+<section id="trial"><div class="wrap">
+  <div class="cta reveal">
+    <span class="eyebrow">Free trial</span>
+    <h2>Get 3 free clips from <span class="grad">your latest episode.</span></h2>
+    <p>Drop your channel and an email. We'll send your clips within 5–7 days. No card, no contract.</p>
+    <form class="trial" name="trial" method="POST" data-netlify="true" netlify-honeypot="company" action="/thanks">
+      <input type="hidden" name="form-name" value="trial">
+      <p hidden><label>Leave empty <input name="company"></label></p>
+      <input name="channel" placeholder="Your podcast, YouTube or Twitch link" required aria-label="Your channel">
+      <input name="email" type="email" placeholder="you@email.com" required aria-label="Email">
+      <button class="btn btn-primary" type="submit">Send my clips →</button>
+    </form>
+    <div class="small">Or DM <a href="https://instagram.com/showupmedia_" style="color:var(--cyan)">@showupmedia_</a> on Instagram · <a href="mailto:Admin@showupmedia.org" style="color:var(--cyan)">Admin@showupmedia.org</a></div>
+  </div>
+</div></section>
+
+
+<footer><div class="wrap row">
+  <div class="logo"><img src="logo.jpg" alt="">Show Up Media</div>
+  <div>© 2026 Show Up Media · <a href="/privacy-policy.html">Privacy</a> · <a href="/terms-and-conditions.html">Terms</a></div>
+  <div><a href="https://instagram.com/showupmedia_">Instagram</a> · <a href="https://x.com/showupmedialtd">X</a> · <a href="mailto:Admin@showupmedia.org">Email</a></div>
+</div></footer>
+</div>
+</main>
+<div class="sticky"><a class="btn btn-primary" href="#trial">Claim 3 free clips →</a></div>
+<div class="lightbox" id="lb"><img alt=""></div>
+<video id="v1" src="film/clip2.mp4" muted loop playsinline preload="auto" crossorigin="anonymous" hidden></video>
+<video id="v2" src="film/ana1.mp4" muted loop playsinline preload="auto" crossorigin="anonymous" hidden></video>
+<video id="v3" src="film/kailey1.mp4" muted loop playsinline preload="auto" crossorigin="anonymous" hidden></video>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const mobile = matchMedia('(max-width: 760px)').matches;
+const canvas = document.getElementById('gl');
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true, powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(devicePixelRatio, mobile ? 1.25 : 1.5));
+renderer.setSize(innerWidth, innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x030409);
+scene.fog = new THREE.FogExp2(0x030409, mobile ? .028 : .022);
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), .04).texture;
+const camera = new THREE.PerspectiveCamera(mobile ? 58 : 38, innerWidth / innerHeight, .1, 300);
+
+scene.add(new THREE.AmbientLight(0x8fa6ff, .25));
+const key = new THREE.SpotLight(0xffe2c4, 260, 90, .55, .6, 1.4); key.position.set(10, 16, 18); scene.add(key, key.target);
+const cool = new THREE.PointLight(0x4fb8ff, 60, 60); cool.position.set(-14, 6, -6); scene.add(cool);
+const sweep = new THREE.PointLight(0x9a7bff, 0, 22); scene.add(sweep);
+
+const loader = new THREE.TextureLoader();
+const tex = url => { const t = loader.load(url); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; };
+
+// ---------- the film strip (real frames from a creator's stream) ----------
+const NF = mobile ? 26 : 44, FW = 4.8, FH = 2.7, GAP = 5.4, HERO = mobile ? 15 : 26;
+const stripLen = NF * GAP;
+const curvePt = u => new THREE.Vector3(-stripLen / 2 + u * stripLen, 1.6 + Math.sin(u * Math.PI * 2.2) * .9, -Math.sin(u * Math.PI) * 9);
+// one canvas texture for the strip border with sprocket holes
+const sc = document.createElement('canvas'); sc.width = 540; sc.height = 400; const sg = sc.getContext('2d');
+sg.fillStyle = '#0b0b0d'; sg.fillRect(0, 0, 540, 400);
+sg.fillStyle = '#d9d2c3';
+for (let k = 0; k < 9; k++){ const x = 14 + k * 60; [[10], [362]].forEach(([y]) => { sg.beginPath(); sg.roundRect(x, y, 32, 26, 6); sg.fill(); }); }
+const stripTex = new THREE.CanvasTexture(sc); stripTex.colorSpace = THREE.SRGBColorSpace;
+const stripMat = new THREE.MeshStandardMaterial({map:stripTex, roughness:.55, metalness:.1, side:THREE.DoubleSide});
+const frames = [];
+const strip = new THREE.Group(); scene.add(strip);
+for (let i = 0; i < NF; i++){
+  const n = 1 + Math.round(i * (43 / (NF - 1)));
+  const src = (i % 3 === 1 && i !== HERO) ? `film/a_${String(2 + (i * 7) % 16 + (((2 + (i * 7) % 16) >= 3) ? 1 : 0)).padStart(2, '0')}.jpg` : `film/f_${String(n).padStart(2, '0')}.jpg`;
+  const g = new THREE.Group();
+  const border = new THREE.Mesh(new THREE.PlaneGeometry(GAP, FH * 1.48), stripMat);
+  const img = new THREE.Mesh(new THREE.PlaneGeometry(FW, FH), new THREE.MeshBasicMaterial({map:tex(src), toneMapped:false, color:0x8a8a8a}));
+  img.position.z = .01; g.add(border, img);
+  const u = i / (NF - 1), p = curvePt(u), p2 = curvePt(Math.min(1, u + .002));
+  g.position.copy(p); g.lookAt(p.clone().add(new THREE.Vector3(-(p2.z - p.z), 0, p2.x - p.x).normalize()));
+  g.userData = {base: p.clone(), rot: g.quaternion.clone(), img};
+  strip.add(g); frames.push(g);
+}
+// floor: dark polished stage
+const floor = new THREE.Mesh(new THREE.CircleGeometry(160, 64), new THREE.MeshStandardMaterial({color:0x07080d, roughness:.38, metalness:.6}));
+floor.rotation.x = -Math.PI / 2; floor.position.y = -2.6; scene.add(floor);
+
+// ---------- a properly modelled phone ----------
+function screenMask(){ const c = document.createElement('canvas'); c.width = 270; c.height = 570; const g = c.getContext('2d'); g.fillStyle = '#000'; g.fillRect(0, 0, 270, 570); g.fillStyle = '#fff'; g.beginPath(); g.roundRect(0, 0, 270, 570, 40); g.fill(); return new THREE.CanvasTexture(c); }
+const MASK = screenMask();
+const titanium = new THREE.MeshPhysicalMaterial({color:0x3a3d44, metalness:1, roughness:.32, clearcoat:.6, clearcoatRoughness:.25});
+const glass = new THREE.MeshPhysicalMaterial({color:0x050507, metalness:0, roughness:.04, clearcoat:1, clearcoatRoughness:.02, reflectivity:.9});
+const lensGlass = new THREE.MeshPhysicalMaterial({color:0x0a0c14, metalness:.2, roughness:.05, clearcoat:1});
+function makePhone(video){
+  const g = new THREE.Group();
+  const W = 2.2, H = 4.6, D = .26;
+  g.add(new THREE.Mesh(new RoundedBoxGeometry(W, H, D, 8, .34), titanium));
+  const front = new THREE.Mesh(new RoundedBoxGeometry(W - .06, H - .06, .02, 6, .3), glass); front.position.z = D / 2 + .002; g.add(front);
+  const vt = new THREE.VideoTexture(video); vt.colorSpace = THREE.SRGBColorSpace;
+  const screen = new THREE.Mesh(new THREE.PlaneGeometry(W - .2, (W - .2) * 16 / 9), new THREE.MeshBasicMaterial({map:vt, alphaMap:MASK, transparent:true, toneMapped:false}));
+  screen.position.z = D / 2 + .015; g.add(screen);
+  const island = new THREE.Mesh(new RoundedBoxGeometry(.62, .17, .01, 4, .085), new THREE.MeshBasicMaterial({color:0x000000})); island.position.set(0, (W - .2) * 16 / 9 / 2 - .2, D / 2 + .02); g.add(island);
+  // side buttons
+  [[W / 2 + .01, .9, .55], [W / 2 + .01, .25, .45], [-W / 2 - .01, 1.1, .35]].forEach(([x, y, h]) => { const b = new THREE.Mesh(new RoundedBoxGeometry(.05, h, .1, 2, .02), titanium); b.position.set(x, y, 0); g.add(b); });
+  // camera plateau + lenses on the back
+  const bump = new THREE.Mesh(new RoundedBoxGeometry(.95, .95, .08, 4, .22), titanium); bump.position.set(-.48, 1.62, -D / 2 - .03); g.add(bump);
+  [[-.7, 1.84], [-.26, 1.84], [-.7, 1.4]].forEach(([x, y]) => {
+    const ring = new THREE.Mesh(new THREE.CylinderGeometry(.17, .17, .07, 32), titanium); ring.rotation.x = Math.PI / 2; ring.position.set(x, y, -D / 2 - .09);
+    const lens = new THREE.Mesh(new THREE.CircleGeometry(.12, 32), lensGlass); lens.rotation.y = Math.PI; lens.position.set(x, y, -D / 2 - .126);
+    g.add(ring, lens);
+  });
+  g.userData.screen = screen;
+  return g;
+}
+const vids = ['v1', 'v2', 'v3'].map(id => document.getElementById(id));
+const phones = vids.map(makePhone);
+const heroPos = frames[HERO].userData.base.clone();
+phones.forEach(p => { p.visible = false; scene.add(p); });
+
+// ---------- platforms (soft labels) ----------
+const labels = ['TikTok', 'YouTube Shorts', 'Reels', 'Facebook', 'X'].map((name, i) => {
+  const c = document.createElement('canvas'); c.width = 512; c.height = 120; const g = c.getContext('2d');
+  g.font = '800 70px Archivo, Inter, sans-serif'; g.fillStyle = '#fff'; g.textAlign = 'center'; g.fillText(name, 256, 88);
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c), transparent:true, opacity:0, depthWrite:false}));
+  s.scale.set(3.4, .8, 1); scene.add(s); return s;
+});
+
+// ---------- the receipts corridor ----------
+const proofs = ['fb-30m', 'tt-1-17m', 'tt-19m', 'fb-earnings', 'yt-28d', 'tt-768k', 'yt-22m', 'tt-588k'];
+const corridor = new THREE.Group(); scene.add(corridor);
+const panels = [];
+proofs.forEach((n, i) => loader.load(`proof/${n}.jpg`, t => {
+  t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+  const a = t.image.width / t.image.height, h = a > 1.2 ? 3.4 : 5.4, w = h * a;
+  const g = new THREE.Group();
+  const frame = new THREE.Mesh(new RoundedBoxGeometry(w + .24, h + .24, .1, 4, .1), new THREE.MeshStandardMaterial({color:0x10141f, metalness:.6, roughness:.35}));
+  const img = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({map:t, toneMapped:false, color:0xd2d2d2, transparent:true, opacity:0}));
+  img.position.z = .06; g.add(frame, img);
+  const side = i % 2 ? 1 : -1;
+  g.position.set(heroPos.x + (mobile ? side * 2.6 : (side > 0 ? 4.8 : 1.2 + i * .1)), heroPos.y + .6 + (i % 3 - 1) * .5, heroPos.z - 14 - i * 6.5);
+  g.rotation.y = -side * .5; g.userData = {img, side, base: g.position.clone()};
+  corridor.add(g); panels.push(g);
+}));
+
+// ---------- dust ----------
+const DN = mobile ? 500 : 1400, dp = new Float32Array(DN * 3);
+for (let i = 0; i < DN; i++){ dp[i * 3] = (Math.random() - .5) * stripLen * 1.2; dp[i * 3 + 1] = Math.random() * 14 - 2; dp[i * 3 + 2] = 14 - Math.random() * 90; }
+const dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.BufferAttribute(dp, 3));
+const dust = new THREE.Points(dg, new THREE.PointsMaterial({color:0xffe8cc, size:.05, transparent:true, opacity:.55, depthWrite:false}));
+scene.add(dust);
+
+// ---------- direction: camera shots keyed to the scroll ----------
+const H0 = heroPos;
+const SHOTS = [ // p, camera, target
+  [0.00, [-stripLen / 2 - 6, 3.2, 9], [-stripLen / 2 + 8, 1.6, 0]],
+  [0.17, [H0.x - 30, 2.6, H0.z + 8.5], [H0.x - 18, 1.6, H0.z]],
+  [0.30, [H0.x - 4, 2.2, H0.z + 7.5], [H0.x, 1.8, H0.z]],
+  [0.37, [H0.x - .8, 2.6, H0.z + 7.2], [H0.x, 2.6, H0.z]],
+  [0.48, [H0.x + 2.6, 3.7, H0.z + 8.8], [H0.x, 3.6, H0.z]],
+  [0.57, [H0.x - 2.4, 3.9, H0.z + 9.2], [H0.x, 3.6, H0.z]],
+  [0.70, [H0.x, 4.6, H0.z + 13], [H0.x, 3.6, H0.z]],
+  [0.80, [H0.x, 3.6, H0.z - 4], [H0.x, 3.6, H0.z - 20]],
+  [1.00, [H0.x, 3.2, H0.z - 52], [H0.x, 3.4, H0.z - 80]],
+];
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const V = a => new THREE.Vector3(...a);
+const camC = new THREE.CatmullRomCurve3(SHOTS.map(s => V(s[1])), false, 'centripetal');
+const tgtC = new THREE.CatmullRomCurve3(SHOTS.map(s => V(s[2])), false, 'centripetal');
+function shotU(p){ // map scroll progress to curve parameter, holding on each shot like cuts in an edit
+  for (let k = 0; k < SHOTS.length - 1; k++){ const a = SHOTS[k][0], b = SHOTS[k + 1][0];
+    if (p <= b) return (k + ease((p - a) / (b - a))) / (SHOTS.length - 1); }
+  return 1;
+}
+const R = (p, a, b) => Math.min(1, Math.max(0, (p - a) / (b - a)));
+const sm = t => t * t * (3 - 2 * t);
+
+let PT = 0, P = 0, mx = 0, my = 0, smx = 0, smy = 0, running = true;
+window.__film = v => PT = v;
+window.__state = () => ({P, PT});
+window.__filmRun = v => running = v;
+addEventListener('pointermove', e => { mx = e.clientX / innerWidth * 2 - 1; my = e.clientY / innerHeight * 2 - 1; });
+addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+
+const look = new THREE.Vector3(), tmpQ = new THREE.Quaternion(), upQ = new THREE.Quaternion();
+const clock = new THREE.Clock(); let playing = false;
+function setVideos(on){ if (on === playing) return; playing = on; vids.forEach(v => on ? v.play().catch(() => {}) : v.pause()); }
+
+function frame(){
+  requestAnimationFrame(frame);
+  if (!running) return;
+  const t = clock.getElapsedTime();
+  P += (PT - P) * .085; smx += (mx - smx) * .05; smy += (my - smy) * .05;
+  const u = shotU(P);
+  camera.position.copy(camC.getPoint(u)); look.copy(tgtC.getPoint(u));   // getPoint: hits each shot exactly at its scroll mark
+  camera.position.x += smx * .6; camera.position.y -= smy * .35; // handheld drift with the mouse
+  camera.position.y += Math.sin(t * .7) * .04;                   // breathing camera
+  camera.lookAt(look);
+
+  // Act I-II: strip glides; a projector light sweeps toward the hero frame; everything else dims
+  const scan = R(P, .17, .33), focus = sm(R(P, .28, .37));
+  const sweepX = frames[0].userData.base.x + (H0.x - frames[0].userData.base.x) * sm(scan);
+  sweep.position.set(sweepX, 3.5, H0.z + 3); sweep.intensity = 40 * Math.sin(Math.PI * Math.min(1, scan * 1.05)) + 30 * focus;
+  frames.forEach((f, i) => {
+    const d = f.userData, isHero = i === HERO;
+    const wave = Math.sin(t * .6 + i * .35) * .06;
+    f.position.set(d.base.x, d.base.y + wave, d.base.z);
+    const lit = 1 - Math.min(1, Math.abs(d.base.x - sweepX) / 9);
+    const dim = isHero ? 1 : 1 - focus * .75;
+    d.img.material.color.setScalar((.62 + .38 * Math.max(lit * (scan > 0 && scan < 1 ? 1 : 0), isHero ? focus : 0)) * dim);
+    if (isHero){ // Act III: the moment lifts out of the strip and turns vertical
+      const lift = sm(R(P, .37, .47));
+      f.position.y = d.base.y + lift * 2;
+      f.quaternion.copy(d.rot); f.rotateZ(lift * Math.PI / 2);
+      f.scale.setScalar(1 + lift * .08);
+      f.visible = lift < .6;
+    }
+  });
+  strip.visible = P < .8;
+
+  // phones: the hero frame becomes a phone; then two more join for the release
+  const born = sm(R(P, .41, .48)), fan = sm(R(P, .58, .7)), away = sm(R(P, .76, .84));
+  phones.forEach((ph, k) => {
+    const side = k === 0 ? 0 : (k === 1 ? -1 : 1);
+    const show = k === 0 ? born : fan;
+    ph.visible = show > .001 && away < .999;
+    ph.position.set(H0.x + side * 3.2 * fan, H0.y + 2 + side * 0 + Math.sin(t * .9 + k) * .08, H0.z + (k ? -1.2 : 0) * fan);
+    ph.scale.setScalar(Math.max(.001, show * (1 - away)));
+    tmpQ.setFromEuler(new THREE.Euler(0, side * -.35 * fan + Math.sin(t * .4 + k) * .12 + smx * .25, 0));
+    upQ.setFromEuler(new THREE.Euler(0, Math.PI * (1 - show), 0)); // spin in
+    ph.quaternion.copy(tmpQ).multiply(upQ);
+  });
+  setVideos(P > .4 && P < .82);
+  labels.forEach((s, i) => { const a = t * .25 + i * Math.PI * 2 / 5; const o = fan * (1 - away);
+    s.position.set(H0.x + Math.cos(a) * 6.5, H0.y + 2.4 + Math.sin(a * 1.4) * 1.6, H0.z + Math.sin(a) * 3.5 - 1); s.material.opacity = o * .9; });
+
+  // Act V: walk through the receipts
+  const rin = sm(R(P, .78, .86));
+  panels.forEach((g, i) => { const d = g.userData; d.img.material.opacity = rin;
+    g.position.y = d.base.y + Math.sin(t * .5 + i) * .12; g.rotation.y = -d.side * .5 + smx * .1; });
+  corridor.visible = rin > 0;
+
+  dust.position.y = Math.sin(t * .15) * .4; dust.rotation.y = t * .004;
+  key.position.set(camera.position.x + 8, 16, camera.position.z + 10); key.target.position.copy(look);
+  renderer.render(scene, camera);
+}
+frame();
+</script>
+<script>
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+scrollTo(0, 0);
+const lenis = null;   // native scrolling: the 3D eases itself, so no scroll-jacking library
+gsap.registerPlugin(ScrollTrigger);
+
+const root = document.documentElement, bar = () => innerHeight * (innerWidth < 760 ? .07 : .11);
+const cards = [...document.querySelectorAll('.card')];
+const scenes = ['Act I · The long video', 'Act II · The moment', 'Act III · The cut', 'Act IV · The release', 'Act V · The receipts'];
+const tc = document.getElementById('tc'), sceneEl = document.getElementById('scn'), skip = document.getElementById('skip');
+const fmt = s => { const h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, x = Math.floor(s) % 60, f = Math.floor((s % 1) * 24); return [h, m, x, f].map(n => String(n).padStart(2, '0')).join(':'); };
+
+ScrollTrigger.create({trigger:'#film', start:'top bottom', end:'bottom bottom', onUpdate:s => {
+  const p = s.progress; window.__film && window.__film(p);
+  root.style.setProperty('--p', p.toFixed(4));
+  let idx = -1;
+  cards.forEach((c, i) => { const a = +c.dataset.a, b = +c.dataset.b; const o = Math.min(1, (p - a) / .035, (b - p) / .035);
+    c.style.opacity = Math.max(0, o); c.style.transform = `translateY(${(1 - Math.max(0, Math.min(1, o))) * 24}px)`; if (p >= a && p <= b) idx = i; });
+  sceneEl.textContent = idx >= 0 ? scenes[idx] : (p < .02 ? 'Opening titles' : 'Cut');
+  tc.textContent = String(Math.min(5, Math.max(1, idx + 1))).padStart(2, '0') + ' / 05';
+
+}});
+// letterbox: present through the film, opens up for the finale
+ScrollTrigger.create({trigger:'.finale', start:'top bottom', end:'center center', onUpdate:s => root.style.setProperty('--bar', (bar() * (1 - s.progress)).toFixed(1) + 'px'), onLeaveBack:() => root.style.setProperty('--bar', bar() + 'px')});
+root.style.setProperty('--bar', bar() + 'px');
+// stop the 3D once the page content covers it (saves battery, no lag below)
+ScrollTrigger.create({trigger:'.solid', start:'top top', onEnter:() => { window.__filmRun && window.__filmRun(false); document.querySelectorAll('.hud,.skip,.progress-line').forEach(e => e.style.opacity = 0); },
+  onLeaveBack:() => { window.__filmRun && window.__filmRun(true); document.querySelectorAll('.hud,.skip,.progress-line').forEach(e => e.style.opacity = ''); }});
+// opening titles
+const intro = gsap.from('.opening > div > *', {opacity:0, y:30, duration:1.4, stagger:.14, ease:'power3.out', delay:.3});
+setTimeout(() => intro.progress(1), 3000);
+// counters + reveals
+document.querySelectorAll('[data-count]').forEach(el => { const o = {v:0}; ScrollTrigger.create({trigger:el, start:'top 95%', once:true, onEnter:() => gsap.to(o, {v:+el.dataset.count, duration:2, ease:'power2.out', onUpdate:() => el.textContent = Math.round(o.v) + el.dataset.suffix})}); });
+gsap.utils.toArray('.solid .reveal').forEach(el => gsap.fromTo(el, {opacity:0, y:40}, {opacity:1, y:0, duration:.9, ease:'power3.out', scrollTrigger:{trigger:el, start:'top 92%'}}));
+// lightbox, tilt
+const lb = document.getElementById('lb'); document.querySelectorAll('.rc').forEach(f => f.addEventListener('click', () => { lb.querySelector('img').src = f.querySelector('img').src; lb.classList.add('on'); })); lb.addEventListener('click', () => lb.classList.remove('on'));
+document.querySelectorAll('.rc,.plan').forEach(p => { p.addEventListener('pointermove', e => { const r = p.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; p.style.transform = `perspective(900px) rotateY(${x * 7}deg) rotateX(${-y * 7}deg)`; }); p.addEventListener('pointerleave', () => p.style.transform = ''); });
+// pricing toggle + faq
+document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { document.querySelectorAll('[data-t]').forEach(x => x.classList.toggle('on', x === b)); document.getElementById('monthly').style.display = b.dataset.t === 'monthly' ? 'grid' : 'none'; document.getElementById('packs').style.display = b.dataset.t === 'packs' ? 'grid' : 'none'; });
+const t2 = document.querySelector('[data-t2]'); if (t2) t2.onclick = e => { e.preventDefault(); document.querySelector('[data-t="monthly"]').click(); };
+document.querySelectorAll('.q button').forEach(b => b.onclick = () => b.parentElement.classList.toggle('open'));
+document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => { const el = document.querySelector(a.getAttribute('href')); if (el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth'}); } }));
+</script>
+</body>
+</html>

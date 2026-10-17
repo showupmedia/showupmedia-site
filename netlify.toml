@@ -9,10 +9,10 @@
 [functions.node_version]
   node_version = "18"
 
-# Main website - index-booking.html
+# Main website - clipping studio (film homepage)
 [[redirects]]
   from = "/"
-  to = "/index-booking.html"
+  to = "/index-film.html"
   status = 200
 
 # Booking Builder
