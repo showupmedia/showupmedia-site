@@ -246,6 +246,7 @@ main,nav,footer,.sticky{position:relative;z-index:4}
 .creators{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .cr{background:#0b1020;border:1px solid var(--line);border-radius:22px;overflow:hidden;display:flex;flex-direction:column}
 .cr video{width:100%;aspect-ratio:9/12;object-fit:cover;display:block;background:#000}
+.vw{position:relative}.snd{position:absolute;right:12px;bottom:12px;font:700 12px Inter;color:#fff;background:rgba(5,7,13,.72);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:8px 12px;cursor:pointer;backdrop-filter:blur(6px)}
 .cr>div{padding:18px 20px 22px}.cr h3{font:800 22px Archivo;margin:0 0 4px}.cr span{color:var(--cyan);font:600 13px Inter}.cr p{color:#c3cbe0;margin:10px 0 0;font-size:15px;line-height:1.55}.cr b{color:#fff}
 @media(max-width:900px){.creators{grid-template-columns:1fr;max-width:420px;margin:0 auto}}
 /* receipts */
@@ -296,13 +297,14 @@ main,nav,footer,.sticky{position:relative;z-index:4}
 <section id="creators"><div class="wrap">
   <div class="sec-head reveal"><span class="eyebrow">Creators we clip for</span><h2>Different creators. <span class="grad">One standard.</span></h2><p>Every creator gets their own style, their own rules and their own posting plan.</p></div>
   <div class="creators">
-    <article class="cr reveal"><video src="film/clip2.mp4" muted loop playsinline autoplay></video><div><h3>Mac TV Travel</h3><span>IRL vlogger · living in Thailand</span></div></article>
-    <article class="cr reveal"><video src="film/ana1.mp4" muted loop playsinline autoplay></video><div><h3>Anxstasia</h3><span>Twitch IRL streamer · Australia</span></div></article>
-    <article class="cr reveal"><video src="film/kailey1.mp4" muted loop playsinline autoplay></video><div><h3>Kailey Mae</h3><span>Twitch IRL &amp; co-working streamer · USA</span></div></article>
+    <article class="cr reveal"><div class="vw"><video src="film/mac_v2.mp4" muted loop playsinline autoplay preload="metadata"></video><button class="snd" aria-label="Turn sound on">🔇 Tap for sound</button></div><div><h3>Mac TV Travel</h3><span>IRL vlogger · living in Thailand</span><p><b>30.6M</b> Facebook views in 5 months, <b>19.1M</b> on TikTok and <b>$2.1K</b> in Facebook payouts in 28 days, from daily clips of his long-form vlogs.</p></div></article>
+    <article class="cr reveal"><div class="vw"><video src="film/ana_v2.mp4" muted loop playsinline autoplay preload="metadata"></video><button class="snd" aria-label="Turn sound on">🔇 Tap for sound</button></div><div><h3>Anxstasia</h3><span>Twitch IRL streamer · Australia</span><p>Her clips page hit <b>82.5K</b> Facebook views in 30 days. Now 2 clips a day across YouTube, Facebook and X.</p></div></article>
+    <article class="cr reveal"><div class="vw"><video src="film/kailey_v2.mp4" muted loop playsinline autoplay preload="metadata"></video><button class="snd" aria-label="Turn sound on">🔇 Tap for sound</button></div><div><h3>Kailey Mae</h3><span>Twitch co-working &amp; cooking streamer · USA</span><p>Her 6-hour streams turned into a <b>daily Short</b>, each one opening on the funniest line, in her own caption style.</p></div></article>
+  </div></article>
   </div>
 </div></section>
 <section id="receipts"><div class="wrap">
-  <div class="sec-head reveal"><span class="eyebrow">The receipts</span><h2>Real screenshots. <span class="grad">Real creators.</span></h2><p>Straight from our clients' TikTok Studio, Meta Business Suite, YouTube Studio and X analytics. Most are from Mac TV Travel, an IRL creator living in Thailand who we clip for. Other creators are kept anonymous. Click any card to zoom.</p></div>
+  <div class="sec-head reveal"><span class="eyebrow">The receipts</span><h2>Real screenshots. <span class="grad">Real creators.</span></h2><p>Straight from our clients' TikTok Studio, Meta Business Suite, YouTube Studio and X analytics. Most are from Mac TV Travel, an IRL creator living in Thailand who we clip for. Creators are shown with their permission. One past client's clip is kept anonymous. Click any card to zoom.</p></div>
   <div class="receipts">
     <figure class="rc reveal"><img src="proof/fb-30m.jpg" alt="Facebook content overview: 30.6M views, 100% organic" loading="lazy"><figcaption>Mac TV Travel · Facebook, 5 months <b>30.6M views</b></figcaption></figure>
     <figure class="rc reveal"><img src="proof/tt-1-17m.jpg" alt="TikTok clip analytics: 1.17M views" loading="lazy"><figcaption>Mac TV Travel · TikTok clip <b>1.17M views</b></figcaption></figure>
@@ -670,6 +672,14 @@ document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { document.
 const t2 = document.querySelector('[data-t2]'); if (t2) t2.onclick = e => { e.preventDefault(); document.querySelector('[data-t="monthly"]').click(); };
 document.querySelectorAll('.q button').forEach(b => b.onclick = () => b.parentElement.classList.toggle('open'));
 document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => { const el = document.querySelector(a.getAttribute('href')); if (el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth'}); } }));
+
+// creator cards: tap for sound (one at a time)
+document.querySelectorAll('.snd').forEach(b=>b.addEventListener('click',()=>{
+  const v=b.previousElementSibling, on=v.muted;
+  document.querySelectorAll('.cr video').forEach(x=>{x.muted=true});
+  document.querySelectorAll('.snd').forEach(x=>{x.textContent='🔇 Tap for sound'});
+  if(on){v.muted=false;v.currentTime=0;v.play();b.textContent='🔊 Sound on'}
+}));
 </script>
 </body>
 </html>
