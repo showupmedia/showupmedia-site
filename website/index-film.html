@@ -243,7 +243,7 @@ main,nav,footer,.sticky{position:relative;z-index:4}
 @media(max-width:760px){.card{left:20px;right:20px;bottom:calc(var(--bar,11vh) + 28px)}.card.right{text-align:left;right:20px;left:20px}.card.right p{margin-left:0}.hud.bot .hide-m{display:none}.skip{bottom:max(10px,calc(var(--bar,11vh) / 2 - 18px));top:auto;right:16px}}
 @media (prefers-reduced-motion:reduce){.grain,.rec::before{animation:none}}
 /* creators */
-.creators{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.creators{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:860px;margin:0 auto}
 .cr{background:#0b1020;border:1px solid var(--line);border-radius:22px;overflow:hidden;display:flex;flex-direction:column}
 .cr video{width:100%;aspect-ratio:9/12;object-fit:cover;display:block;background:#000}
 .vw{position:relative}.snd{position:absolute;right:12px;bottom:12px;font:700 12px Inter;color:#fff;background:rgba(5,7,13,.72);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:8px 12px;cursor:pointer;backdrop-filter:blur(6px)}
@@ -299,7 +299,6 @@ main,nav,footer,.sticky{position:relative;z-index:4}
   <div class="creators">
     <article class="cr reveal"><div class="vw"><video src="film/mac_v2.mp4" muted loop playsinline autoplay preload="metadata"></video><button class="snd" aria-label="Turn sound on">🔇 Tap for sound</button></div><div><h3>Mac TV Travel</h3><span>IRL vlogger · living in Thailand</span><p><b>30.6M</b> Facebook views in 5 months, <b>19.1M</b> on TikTok and <b>$2.1K</b> in Facebook payouts in 28 days, from daily clips of his long-form vlogs.</p></div></article>
     <article class="cr reveal"><div class="vw"><video src="film/ana_v2.mp4" muted loop playsinline autoplay preload="metadata"></video><button class="snd" aria-label="Turn sound on">🔇 Tap for sound</button></div><div><h3>Anxstasia</h3><span>Twitch IRL streamer · Australia</span><p>Her clips page hit <b>82.5K</b> Facebook views in 30 days. Now 2 clips a day across YouTube, Facebook and X.</p></div></article>
-    <article class="cr reveal"><div class="vw"><video src="film/kailey_v2.mp4" muted loop playsinline autoplay preload="metadata"></video><button class="snd" aria-label="Turn sound on">🔇 Tap for sound</button></div><div><h3>Kailey Mae</h3><span>Twitch co-working &amp; cooking streamer · USA</span><p>Her 6-hour streams turned into a <b>daily Short</b>, each one opening on the funniest line, in her own caption style.</p></div></article>
   </div>
   </div>
 </section>
@@ -409,7 +408,7 @@ main,nav,footer,.sticky{position:relative;z-index:4}
 <div class="lightbox" id="lb"><img alt=""></div>
 <video id="v1" src="film/clip2.mp4" muted loop playsinline preload="auto" crossorigin="anonymous" hidden></video>
 <video id="v2" src="film/ana1.mp4" muted loop playsinline preload="auto" crossorigin="anonymous" hidden></video>
-<video id="v3" src="film/kailey1.mp4" muted loop playsinline preload="auto" crossorigin="anonymous" hidden></video>
+<video id="v3" src="film/clip3.mp4" muted loop playsinline preload="auto" crossorigin="anonymous" hidden></video>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
