@@ -33,10 +33,13 @@
 <link rel="preload" as="image" imagesrcset="img/hero-m.webp 412w, img/hero-d.webp 1440w" imagesizes="100vw" fetchpriority="high">
 
 <script>
-/* Decide BEFORE first paint: phones, reduced-motion, data-saver and low-memory devices get the light version (static poster, no WebGL, no hidden videos). */
-(function(){var d=document.documentElement,m=function(q){return matchMedia(q).matches},c=navigator.connection||{};
-var lite=m('(max-width: 760px)')||m('(prefers-reduced-motion: reduce)')||c.saveData||(navigator.deviceMemory&&navigator.deviceMemory<4);
-d.className=(lite?'lite':'full')+' js';})();
+/* Decide BEFORE first paint. Reduced-motion, data-saver, 2G, <=2 GB devices, and phones that failed the 3D frame-rate test in the last 7 days get the light version (static poster, no WebGL).
+   Everyone else gets the 3D film ("full"); phones also get "mob", which loads the lighter phone scene. */
+(function(){var d=document.documentElement,m=function(q){return matchMedia(q).matches},c=navigator.connection||{},off=0;
+try{off=Date.now()-(+localStorage.getItem('sum3d-off')||0)<6048e5}catch(e){}
+var lite=off||m('(prefers-reduced-motion: reduce)')||c.saveData||/2g$/.test(c.effectiveType||'')||(navigator.deviceMemory&&navigator.deviceMemory<=2);
+var mob=m('(max-width: 760px)')||m('(hover: none) and (pointer: coarse)');
+d.className=(lite?'lite':'full')+(mob?' mob':'')+' js';})();
 </script>
 
 <script type="application/ld+json">
@@ -110,9 +113,10 @@ section{padding:120px 0;position:relative}
 .sec-head p a{color:var(--cyan)}
 @media(max-width:760px){section{padding:84px 0}.sec-head{margin-bottom:40px}}
 
-/* film chrome (desktop only) */
+/* film chrome (desktop + phones) */
 #gl{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;display:block;opacity:0;transition:opacity 1s}
-.gl-on #gl{opacity:1}
+.gl-on #gl,.gl-probe #gl{opacity:1}
+main{transition:opacity .2s}.swap main{opacity:0}
 main,nav,footer,.sticky{position:relative;z-index:4}
 nav{position:fixed;z-index:50}.sticky{position:fixed;z-index:60}
 .solid{background:var(--bg);position:relative;z-index:6}
@@ -127,13 +131,15 @@ nav{position:fixed;z-index:50}.sticky{position:fixed;z-index:60}
 .skip:hover{background:rgba(255,255,255,.16)}
 .below .hud,.below .skip,.below .progress-line{opacity:0;pointer-events:none}
 .lite #gl,.lite .lbars,.lite .vig,.lite .hud,.lite .progress-line,.lite .skip,.lite .cue{display:none}
+.fb .cue{display:block!important;visibility:hidden} /* fallback keeps the opening's layout identical */
+.mob .hud,.mob .skip{display:none} /* phones: the sticky CTA owns the bottom edge */
 
 /* opening titles */
 .opening{min-height:100vh;min-height:100svh;display:grid;place-items:center;align-content:center;text-align:center;position:relative;overflow:hidden;padding:110px 0 60px}
 .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:opacity 1s}
 .gl-on .poster{opacity:0}
 .opening::before{content:"";position:absolute;inset:0;z-index:1;background:radial-gradient(60% 55% at 50% 50%,rgba(3,4,9,.88),rgba(3,4,9,.55) 60%,rgba(3,4,9,.15) 100%);pointer-events:none}
-.lite .opening::before{background:linear-gradient(rgba(3,4,9,.5),rgba(3,4,9,.82) 40%,rgba(3,4,9,.82) 70%,#030409)}
+.lite:not(.fb) .opening::before{background:linear-gradient(rgba(3,4,9,.5),rgba(3,4,9,.82) 40%,rgba(3,4,9,.82) 70%,#030409)}
 .opening>div{position:relative;z-index:2;padding:0 16px;max-width:100%}
 .opening .kicker{font:500 12px var(--sans);letter-spacing:.32em;text-transform:uppercase;color:rgba(255,255,255,.7)}
 .opening h1{font-size:clamp(44px,7.4vw,112px);line-height:.98;letter-spacing:-.035em;margin:18px auto 22px;max-width:13ch;text-wrap:balance}
@@ -158,7 +164,8 @@ nav{position:fixed;z-index:50}.sticky{position:fixed;z-index:60}
 .stat{font-family:var(--serif);font-weight:800;font-size:clamp(60px,9vw,132px);line-height:.9;letter-spacing:-.04em;display:block;margin-top:6px;background:linear-gradient(90deg,#fff,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
 .finale{height:100vh;display:grid;place-items:center;text-align:center;position:relative;z-index:5}
 .finale h2{font-weight:900;letter-spacing:-.035em;font-size:clamp(44px,7vw,110px);line-height:1;margin-bottom:28px}
-@media(max-width:760px){.card{left:20px;right:20px}.card.right{text-align:left}}
+@media(max-width:760px){.card{left:20px;right:20px;bottom:calc(var(--bar,11vh) + 28px)}.card.right{text-align:left}.card.right p{margin-left:0}}
+.full.mob #film{height:600vh}
 /* light version: the film becomes a simple, readable story */
 .lite #film{height:auto;padding:30px 0 10px;display:grid;gap:14px;width:min(640px,100% - 32px);margin:0 auto}
 .lite .card{position:relative;inset:auto!important;opacity:1!important;transform:none!important;max-width:none;pointer-events:auto;text-align:left!important;padding:26px 22px 26px 24px;border-radius:var(--r);border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.01))}
@@ -407,7 +414,7 @@ footer a:hover{color:var(--ink)}
 <div class="sticky"><a class="btn btn-primary" href="#trial">Claim 3 free clips →</a></div>
 <div class="lightbox" id="lb" role="dialog" aria-label="Zoomed screenshot"><img alt=""></div>
 
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <script>
 (function(){
 var d=document.documentElement, $=function(s,r){return (r||document).querySelectorAll(s)};
@@ -457,14 +464,33 @@ function update(){ticking=false;var H=innerHeight,r=film.getBoundingClientRect()
 function onScroll(){if(!ticking){ticking=true;requestAnimationFrame(update)}}
 addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll);update();
 
-/* load the 3D lazily */
-function boot(){var s=document.createElement('script');s.type='module';s.src='js/film3d.js';s.onerror=fail;document.body.appendChild(s)}
-function fail(){d.classList.remove('full');d.classList.add('lite');removeEventListener('scroll',onScroll);cards.forEach(function(c){c.style.cssText=''})}
-try{var t=document.createElement('canvas');if(!(t.getContext('webgl2')||t.getContext('webgl')))return fail()}catch(e){return fail()}
-/* the poster IS the opening shot, so start the 3D on the visitor's first interaction: no cost to first paint */
+/* load the 3D after first paint (desktop + phones). film3d.js builds the scene in small chunks, runs a 2 s frame-rate test,
+   and calls __filmFail if the device can't keep up; we then switch to the light layout without moving what's on screen. */
+function boot(){
+  /* no WebGL, or only a software renderer (no GPU): skip the 3D before downloading anything */
+  try{var g=document.createElement('canvas'),x=g.getContext('webgl2')||g.getContext('webgl');if(!x)return fail();
+    var i=x.getExtension('WEBGL_debug_renderer_info'),n=i?String(x.getParameter(i.UNMASKED_RENDERER_WEBGL)):'';
+    var l=x.getExtension('WEBGL_lose_context');if(l)l.loseContext();
+    if(/swiftshader|llvmpipe|softpipe|software|basic render/i.test(n))return fail()}catch(e){return fail()}
+  var s=document.createElement('script');s.type='module';s.src='js/film3d.js';s.onerror=fail;document.body.appendChild(s)}
+function toLite(){d.classList.remove('full','below','gl-probe','gl-on');d.classList.add('lite','fb');removeEventListener('scroll',onScroll);removeEventListener('resize',onScroll);
+  cards.forEach(function(c){c.style.cssText=''});d.style.removeProperty('--bar');d.style.removeProperty('--p');window.__film=window.__filmRun=null}
+function fail(){if(!d.classList.contains('full'))return;
+  var H=innerHeight,r=film.getBoundingClientRect();
+  if(r.top>=H){toLite();return}                     /* film still below the fold (the usual case): nothing on screen moves */
+  if(solid.getBoundingClientRect().top<=0){         /* already past the film: keep the content they're reading exactly where it is */
+    var a=solid.getBoundingClientRect().top;toLite();scrollTo({top:scrollY+solid.getBoundingClientRect().top-a,behavior:'instant'});return}
+  /* mid-film: quick fade, swap to the stacked Acts, land on the Act they were reading */
+  var p=Math.min(1,Math.max(0,(H-r.top)/r.height)),k=0;cards.forEach(function(c,i){if(p>=+c.dataset.a-.02)k=i});
+  d.classList.add('swap');setTimeout(function(){toLite();var c=cards[k];if(p>.02&&c)scrollTo({top:scrollY+c.getBoundingClientRect().top-H*.25,behavior:'instant'});
+    requestAnimationFrame(function(){d.classList.remove('swap')})},220)}
+window.__filmFail=fail;
+/* start ~1.5 s after load when the browser is idle, or on the first interaction, whichever comes first */
 var booted=false,evs=['pointermove','pointerdown','wheel','scroll','keydown','touchstart'];
 function go(){if(booted)return;booted=true;evs.forEach(function(e){removeEventListener(e,go)});boot()}
 evs.forEach(function(e){addEventListener(e,go,{passive:true})});
+function later(){setTimeout(function(){if(window.requestIdleCallback)requestIdleCallback(go,{timeout:1000});else go()},1500)}
+if(document.readyState==='complete')later();else addEventListener('load',later);
 })();
 </script>
 </body>
