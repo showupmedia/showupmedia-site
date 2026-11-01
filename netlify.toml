@@ -11,8 +11,14 @@
 
 # Main website - clipping studio (film homepage)
 [[redirects]]
+  from = "/index-film.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/"
-  to = "/index-film.html"
+  to = "/index.html"
   status = 200
 
 # Booking Builder

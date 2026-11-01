@@ -1,0 +1,12 @@
+# Netlify cache headers (picked up automatically from the publish folder)
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+/img/*
+  Cache-Control: public, max-age=604800
+/proof/*
+  Cache-Control: public, max-age=604800
+/film/*
+  Cache-Control: public, max-age=604800
+/js/*
+  Cache-Control: public, max-age=86400

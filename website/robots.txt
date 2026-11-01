@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /crm
+Disallow: /admin
+Disallow: /financials
+Disallow: /thanks
+Disallow: /for/
+
+Sitemap: https://showupmedia.org/sitemap.xml

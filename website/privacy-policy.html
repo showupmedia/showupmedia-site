@@ -1,245 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-GB">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - Show Up Media</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: #f8f9fa;
-        }
-        
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .header {
-            text-align: center;
-            padding: 40px 0;
-            border-bottom: 2px solid #e5e7eb;
-            margin-bottom: 40px;
-        }
-        
-        .header h1 {
-            font-size: 2.5rem;
-            color: #2563eb;
-            margin-bottom: 10px;
-        }
-        
-        .header p {
-            font-size: 1.1rem;
-            color: #666;
-        }
-        
-        .content {
-            padding: 0 20px;
-        }
-        
-        .section {
-            margin-bottom: 40px;
-        }
-        
-        .section h2 {
-            font-size: 1.5rem;
-            color: #2563eb;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 10px;
-        }
-        
-        .section h3 {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            color: #1a1a1a;
-        }
-        
-        .section p {
-            margin-bottom: 15px;
-            line-height: 1.7;
-        }
-        
-        .section ul {
-            margin-left: 20px;
-            margin-bottom: 15px;
-        }
-        
-        .section li {
-            margin-bottom: 8px;
-        }
-        
-        .highlight {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #3b82f6;
-            margin: 20px 0;
-        }
-        
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #e5e7eb;
-            color: #666;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy Policy | Show Up Media</title>
+<meta name="description" content="How Show Up Media, a UK clipping and video editing agency, collects, uses and protects your data.">
+<link rel="canonical" href="https://showupmedia.org/privacy-policy">
+<meta name="theme-color" content="#05070d">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="img/logo-96.webp" type="image/webp">
+<link rel="apple-touch-icon" href="img/logo-512.png">
+<style>
+@font-face{font-family:Archivo;font-style:normal;font-weight:800 900;font-display:swap;src:url(fonts/archivo-800-900-latin.woff2) format('woff2')}
+@font-face{font-family:Inter;font-style:normal;font-weight:400 800;font-display:swap;src:url(fonts/inter-400-800-latin.woff2) format('woff2')}
+:root{--bg:#05070d;--bg2:#0a0f1c;--line:rgba(255,255,255,.08);--ink:#eef2fb;--mute:#97a1b6;--blue:#2d8eff;--cyan:#53e2ff;--violet:#8b5cff;--serif:Archivo,"Arial Black",Inter,system-ui,sans-serif;--sans:Inter,system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#030409}
+body{color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;background:radial-gradient(1200px 600px at 50% -10%,rgba(45,142,255,.16),transparent 60%),#030409}
+a{color:inherit;text-decoration:none}
+.wrap{width:min(1180px,100% - 32px);margin-inline:auto}
+nav{padding-top:16px}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px 10px 18px;border-radius:999px;background:rgba(10,15,28,.82);border:1px solid var(--line)}
+.logo{display:flex;gap:10px;align-items:center;font:800 17px var(--serif);white-space:nowrap}
+.logo img{width:34px;height:34px;border-radius:50%;background:#fff;object-fit:cover}
+.btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:999px;font:700 14px var(--sans);background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;box-shadow:0 10px 40px -8px rgba(45,142,255,.7);white-space:nowrap}
+@media(max-width:480px){.nav .btn{display:none}}
+main{max-width:760px;padding:70px 0 40px}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;font:600 13px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
+.eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+h1,h2{font-family:var(--serif);font-weight:900;letter-spacing:-.02em;line-height:1.05}
+h1{font-size:clamp(38px,6vw,64px);margin:16px 0 14px}
+.grad{background:linear-gradient(100deg,#fff 0%,#9fd8ff 40%,var(--cyan) 60%,var(--violet) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.updated{color:var(--mute);font-size:14px}
+.lead{color:#c3cbe0;font-size:18px;line-height:1.6;margin-top:22px}
+section{margin-top:40px;padding-top:28px;border-top:1px solid var(--line)}
+h2{font-size:clamp(22px,3vw,28px);margin-bottom:12px}
+p,li{color:var(--mute);font-size:16px;line-height:1.65}
+p+p,p+ul,ul+p{margin-top:12px}
+ul{list-style:none;display:grid;gap:9px}
+li{display:flex;gap:10px}
+li::before{content:"";flex:none;width:18px;height:18px;margin-top:3px;border-radius:50%;background:radial-gradient(circle,var(--cyan) 0 3px,transparent 4px),rgba(83,226,255,.14)}
+b{color:var(--ink)}
+main a{color:var(--cyan)}
+footer{padding:50px 0 60px;color:var(--mute);font-size:14px}
+footer .row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:30px}
+footer ul{display:flex;flex-wrap:wrap;gap:8px 18px}
+footer li{display:block;font-size:14px}footer li::before{display:none}
+footer a:hover{color:var(--ink)}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Privacy Policy</h1>
-            <p>Your privacy is important to us. This policy explains how we collect, use, and protect your information.</p>
-        </div>
-        
-        <div class="content">
-            <div class="section">
-                <h2>1. Information We Collect</h2>
-                <h3>Business Information</h3>
-                <p>When you create a booking system, we collect:</p>
-                <ul>
-                    <li>Business name and contact details</li>
-                    <li>Service offerings and pricing</li>
-                    <li>Business hours and availability</li>
-                    <li>Address and location information</li>
-                    <li>Logo and branding preferences</li>
-                </ul>
-                
-                <h3>Customer Information</h3>
-                <p>When customers book appointments, we collect:</p>
-                <ul>
-                    <li>Name and contact information</li>
-                    <li>Service preferences and booking details</li>
-                    <li>Payment information (if applicable)</li>
-                    <li>Communication preferences</li>
-                </ul>
-            </div>
-            
-            <div class="section">
-                <h2>2. How We Use Your Information</h2>
-                <h3>For Businesses</h3>
-                <p>We use your information to:</p>
-                <ul>
-                    <li>Create and maintain your booking system</li>
-                    <li>Process customer bookings and payments</li>
-                    <li>Provide analytics and reporting</li>
-                    <li>Send important notifications and updates</li>
-                    <li>Improve our services and user experience</li>
-                </ul>
-                
-                <h3>For Customers</h3>
-                <p>We use your information to:</p>
-                <ul>
-                    <li>Process and confirm bookings</li>
-                    <li>Send booking confirmations and reminders</li>
-                    <li>Communicate with businesses about appointments</li>
-                    <li>Provide customer support</li>
-                </ul>
-                
-                <h3>Financial Data Processing</h3>
-                <p>We process financial information for:</p>
-                <ul>
-                    <li>Processing customer payments securely through Stripe</li>
-                    <li>Calculating and distributing business earnings</li>
-                    <li>Generating financial reports and statements</li>
-                    <li>Managing payout processing and tracking</li>
-                    <li>Compliance with financial regulations and tax requirements</li>
-                </ul>
-            </div>
-            
-            <div class="section">
-                <h2>3. Data Protection and Security</h2>
-                <p>We take data protection seriously and implement appropriate security measures:</p>
-                <ul>
-                    <li><strong>Encryption:</strong> All data is encrypted in transit and at rest</li>
-                    <li><strong>Access Controls:</strong> Strict access controls limit who can view your data</li>
-                    <li><strong>Regular Backups:</strong> Data is backed up regularly to prevent loss</li>
-                    <li><strong>Secure Infrastructure:</strong> We use secure, compliant hosting providers</li>
-                </ul>
-                
-                <div class="highlight">
-                    <h3>GDPR Compliance</h3>
-                    <p>We comply with GDPR and other applicable data protection laws. Your rights include:</p>
-                    <ul>
-                        <li><strong>Access:</strong> Request a copy of your personal data</li>
-                        <li><strong>Correction:</strong> Update inaccurate personal information</li>
-                        <li><strong>Deletion:</strong> Request deletion of your personal data</li>
-                        <li><strong>Portability:</strong> Transfer your data to another service</li>
-                        <li><strong>Objection:</strong> Object to processing of your personal data</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="section">
-                <h2>4. Data Sharing</h2>
-                <p>We may share your information in limited circumstances:</p>
-                <ul>
-                    <li><strong>With Businesses:</strong> Share booking details with the business you're booking with</li>
-                    <li><strong>Service Providers:</strong> With trusted third-party services (payment processors, email services)</li>
-                    <li><strong>Legal Requirements:</strong> When required by law or to protect our rights</li>
-                </ul>
-                <p>We never sell your personal information to third parties for marketing purposes.</p>
-            </div>
-            
-            <div class="section">
-                <h2>5. Cookies and Tracking</h2>
-                <p>We use cookies and similar technologies to:</p>
-                <ul>
-                    <li>Remember your preferences and login status</li>
-                    <li>Analyze website usage and improve our services</li>
-                    <li>Provide personalized experiences</li>
-                </ul>
-                <p>You can control cookies through your browser settings.</p>
-            </div>
-            
-            <div class="section">
-                <h2>6. Your Rights and Choices</h2>
-                <p>You have the following rights regarding your personal information:</p>
-                <ul>
-                    <li><strong>Opt-out:</strong> Unsubscribe from marketing communications</li>
-                    <li><strong>Access:</strong> View and update your personal information</li>
-                    <li><strong>Delete:</strong> Request deletion of your account and data</li>
-                    <li><strong>Complaint:</strong> Report privacy concerns to data protection authorities</li>
-                </ul>
-            </div>
-            
-            <div class="section">
-                <h2>7. Contact Information</h2>
-                <p>If you have questions about this Privacy Policy or our data practices, please contact us:</p>
-                <ul>
-                    <li><strong>Email:</strong> <a href="mailto:privacy@showupmedia.org">privacy@showupmedia.org</a></li>
-                    <li><strong>Website:</strong> <a href="https://showupmedia.org">showupmedia.org</a></li>
-                </ul>
-            </div>
-            
-            <div class="section">
-                <h2>8. Policy Updates</h2>
-                <p>We may update this Privacy Policy from time to time. We will notify you of any changes by:</p>
-                <ul>
-                    <li>Emailing the address on file</li>
-                    <li>Posting on our website</li>
-                    <li>Updating the "Last updated" date below</li>
-                </ul>
-                <p><em>Last updated: April 2026</em></p>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>© 2026 Show Up Media. All rights reserved.</p>
-        </div>
-    </div>
+<nav aria-label="Main"><div class="wrap nav">
+  <a class="logo" href="index.html" aria-label="Show Up Media home"><img src="img/logo-96.webp" alt="Show Up Media logo" width="34" height="34">Show Up Media</a>
+  <a class="btn" href="index.html#trial">Get 3 free clips</a>
+</div></nav>
+<main class="wrap">
+  <span class="eyebrow">Legal</span>
+  <h1>Privacy <span class="grad">policy.</span></h1>
+  <p class="updated">Last updated: 1 November 2026</p>
+  <p class="lead">Show Up Media is a UK-based clipping and video editing agency. This page explains, in plain English, what information we hold about you, why we hold it and what you can ask us to do with it. If anything is unclear, email <a href="mailto:admin@showupmedia.org">admin@showupmedia.org</a>.</p>
+  <section>
+    <h2>Who we are</h2>
+    <p>Show Up Media ("we", "us") is the data controller for the information described here. We are based in the United Kingdom. You can reach us at <a href="mailto:admin@showupmedia.org">admin@showupmedia.org</a>.</p>
+  </section>
+  <section>
+    <h2>What we hold</h2>
+    <ul><li><span><b>Contact details:</b> your name, email address and channel or social links, from our free-sample form, emails or direct messages.</span></li><li><span><b>Content you share:</b> videos, audio, episode links and any other files you send us so we can edit them, plus the clips and edits we make from them.</span></li><li><span><b>Payment records:</b> invoices and records of payments made through PayPal or by bank transfer to our Tide business account. We never see or store your full card details.</span></li><li><span><b>Messages:</b> emails and messages about your work, feedback and approvals.</span></li></ul>
+    <p>We do not use advertising or tracking cookies on this website.</p>
+  </section>
+  <section>
+    <h2>Why we use it</h2>
+    <ul><li><span>To reply to you and send your free sample.</span></li><li><span>To deliver the editing work you ask for, and to post it to your platforms when you ask us to.</span></li><li><span>To send invoices, take payment and keep accounts.</span></li><li><span>To keep a record of what we agreed and what we delivered.</span></li></ul>
+    <p>Our legal reasons are: taking steps to enter, and then carry out, a contract with you; our legal duties (for example tax records); and our legitimate interest in running and improving our service. We will only send you marketing if you have agreed to it or are already a client, and you can opt out at any time.</p>
+  </section>
+  <section>
+    <h2>How long we keep it</h2>
+    <ul><li><span><b>Content files</b> (your raw footage and our edits): for as long as we work together, then deleted within 90 days of the work ending unless you ask us to keep them.</span></li><li><span><b>Contact details and messages:</b> for as long as we work together and up to 2 years after, so we can answer questions about past work.</span></li><li><span><b>Invoices and payment records:</b> 6 years, as UK tax law requires.</span></li><li><span><b>Free-sample requests</b> that do not become clients: up to 12 months.</span></li></ul>
+    <p>You can ask us to delete your data sooner, subject to what the law requires us to keep.</p>
+  </section>
+  <section>
+    <h2>Who we share it with</h2>
+    <p>We never sell your data. We only share it with the services we need to run the business:</p>
+    <ul><li><span><b>Proton</b>: our email and encrypted file storage.</span></li><li><span><b>PayPal</b> and <b>Tide</b>: to process and record payments.</span></li><li><span><b>Netlify</b>: hosts this website and receives free-sample form submissions.</span></li><li><span><b>Social and video platforms</b> (such as YouTube, TikTok, Instagram, Facebook and X): only when you ask us to upload or schedule posts for you.</span></li></ul>
+    <p>Some of these providers may process data outside the UK. Where they do, they use the safeguards UK law requires, such as approved contract clauses. We may also share information if the law requires it.</p>
+  </section>
+  <section>
+    <h2>Your rights</h2>
+    <p>Under UK GDPR you have the right to:</p>
+    <ul><li><span>Get a copy of the data we hold about you.</span></li><li><span>Ask us to correct anything that is wrong.</span></li><li><span>Ask us to delete your data.</span></li><li><span>Object to, or ask us to limit, how we use it.</span></li><li><span>Ask for your data in a portable format.</span></li><li><span>Withdraw consent at any time, where we rely on consent.</span></li></ul>
+    <p>To use any of these rights, email <a href="mailto:admin@showupmedia.org">admin@showupmedia.org</a>. We will reply within one month. If you are unhappy with how we handle your data, you can complain to the Information Commissioner's Office (ICO) at <a href="https://ico.org.uk" rel="noopener">ico.org.uk</a>.</p>
+  </section>
+  <section>
+    <h2>Keeping it safe</h2>
+    <p>We store files and email with encrypted services, limit access to the people doing your work, and delete files we no longer need.</p>
+  </section>
+  <section>
+    <h2>Changes and contact</h2>
+    <p>If we change this policy we will update the date at the top of this page. Questions? Email <a href="mailto:admin@showupmedia.org">admin@showupmedia.org</a>.</p>
+  </section>
+</main>
+<footer><div class="wrap row">
+  <div class="logo"><img src="img/logo-96.webp" alt="" width="34" height="34" loading="lazy">Show Up Media</div>
+  <ul aria-label="Footer"><li><a href="index.html#services">Services</a></li><li><a href="index.html#receipts">Results</a></li><li><a href="index.html#pricing">Pricing</a></li><li><a href="index.html#faq">FAQ</a></li><li><a href="index.html#trial">Free sample</a></li></ul>
+  <div>© 2026 Show Up Media · <a href="privacy-policy.html">Privacy</a> · <a href="terms-and-conditions.html">Terms</a></div>
+  <div><a href="https://www.instagram.com/_showupmedia/" rel="noopener">Instagram</a> · <a href="https://x.com/showupmedialtd" rel="noopener">X</a> · <a href="mailto:admin@showupmedia.org">Email</a></div>
+</div></footer>
 </body>
 </html>
